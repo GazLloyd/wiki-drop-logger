@@ -5,8 +5,6 @@ import * as MobReader from 'alt1/targetmob';
 import * as OCR from 'alt1/ocr';
 import * as sauce from './a1sauce';
 
-import Tesseract, { createWorker } from 'tesseract.js';
-
 // tell webpack that this file relies index.html, appconfig.json and icon.png, this makes webpack
 // add these files to the output directory
 // this works because in /webpack.config.js we told webpack to treat all html, json and imageimports
@@ -43,8 +41,6 @@ var dataImages = a1lib.webpackImages({
 });
 
 var font = require('./asset/data/fonts/chatbox/12pt.fontmeta.json');
-
-
 
 async function tryFindMap() {
 	let client_screen = a1lib.captureHoldFullRs();
@@ -175,17 +171,6 @@ async function captureLoot(x, y, x2, y2) {
 	let img = document.createElement('img');
 	img.id = 'LootImage';
 	img.src = 'data:image/png;base64,' + lootData.toPngBase64();
-	(async () => {
-		const worker = await createWorker('eng', 1, {
-			workerPath:
-				'../node_modules/tesseract.js/dist/worker.min.js',
-		});
-		const {
-			data: { text },
-		} = await worker.recognize(lootData.toPngBase64());
-		console.log(text);
-		await worker.terminate();
-	})();
 	if (helperItems.Loot.querySelectorAll('img').length == 0) {
 		helperItems.Loot.appendChild(img);
 	} else {

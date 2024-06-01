@@ -7,6 +7,26 @@
 				display: none;
 			}
 		</style>
+		<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+		<script>
+
+			function readImage() {
+				var input_image = document.getElementById('LootImage');
+				const base64string = input_image.getAttribute('src').split(',')[1];
+				Tesseract.recognize(Buffer.from(base64string, 'base64')).then(({data: { text } } ) => {
+					console.log(text);
+					setTimeout(() => {
+						readImage();
+					}, 10000)
+
+				});
+			}
+
+			document.addEventListener('DOMContentLoaded', function(){
+				readImage();
+			});
+
+		</script>
 	</head>
 	<body id="app">
 		<div id="output"></div>
@@ -19,6 +39,7 @@
 			</div>
 			<div id="Loot">
 				<h2>Loot</h2>
+				<img id="LootImage">
 			</div>
 			<canvas id="Canvas"></canvas>
 		</div>

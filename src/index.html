@@ -11,11 +11,30 @@
 		<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 		<script>
 
+			let reverseColors = ({data}) => {
+				console.log(data)
+				for (i = 0; i < data.length; i += 4) {
+					data[i] = 255 - data[i];
+					data[i + 1] = 255 - data[i + 1];
+					data[i + 2] = 255 - data[i + 2];
+					data[i + 3] = 255;
+				}
+				return data
+			}
+
 			function readImage() {
 				var input_image = document.getElementById('LootImage');
+				const canvas = document.querySelector('#Canvas');
+				const ctx = canvas.getContext('2d');
+				ctx.drawImage(input_image, 0, 0);
+				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+				imgData.data = reverseColors(imgData)
+				ctx.putImageData(imgData, 0, 0)
+				input_image.setAttribute('src', 'data:image/png;base64,' + canvas.toDataURL())
+
 				if (input_image.getAttribute('src').length > 0) {
 				//const base64string = input_image.getAttribute('src').split(',')[1];
-				Tesseract.recognize(input_image.getAttribute('src'), 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
+				Tesseract.recognize(ctx.getImageData(), 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
 					console.log(text);
 					setTimeout(() => {
 						readImage();

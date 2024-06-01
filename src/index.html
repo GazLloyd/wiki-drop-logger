@@ -7,11 +7,13 @@
 				display: none;
 			}
 		</style>
+		<meta http-equiv="Permissions-Policy" content="interest-cohort=(), user-id=()" />
 		<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 		<script>
 
 			function readImage() {
 				var input_image = document.getElementById('LootImage');
+				if (input_image.getAttribute('src').length) {
 				const base64string = input_image.getAttribute('src').split(',')[1];
 				Tesseract.recognize(Buffer.from(base64string, 'base64')).then(({data: { text } } ) => {
 					console.log(text);
@@ -20,6 +22,7 @@
 					}, 10000)
 
 				});
+			}
 			}
 
 			document.addEventListener('DOMContentLoaded', function(){

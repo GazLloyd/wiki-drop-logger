@@ -15,7 +15,7 @@
 				var input_image = document.getElementById('LootImage');
 				if (input_image.getAttribute('src').length) {
 				const base64string = input_image.getAttribute('src').split(',')[1];
-				Tesseract.recognize(Buffer.from(base64string, 'base64')).then(({data: { text } } ) => {
+				Tesseract.recognize(Buffer.from(base64string, 'base64'), 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
 					console.log(text);
 					setTimeout(() => {
 						readImage();
@@ -42,7 +42,7 @@
 			</div>
 			<div id="Loot">
 				<h2>Loot</h2>
-				<img id="LootImage">
+				<img id="LootImage" src="">
 			</div>
 			<canvas id="Canvas"></canvas>
 		</div>

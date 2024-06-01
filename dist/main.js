@@ -6796,17 +6796,18 @@ function captureLoot(x, y, x2, y2) {
             img.id = 'LootImage';
             img.src = 'data:image/png;base64,' + lootData.toPngBase64();
             (function () { return __awaiter(_this, void 0, void 0, function () {
-                var worker, ret;
+                var worker, text;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, (0,tesseract_js__WEBPACK_IMPORTED_MODULE_1__.createWorker)('eng')];
+                        case 0: return [4 /*yield*/, (0,tesseract_js__WEBPACK_IMPORTED_MODULE_1__.createWorker)('eng', 1, {
+                                workerPath: '../node_modules/tesseract.js/dist/worker.min.js',
+                            })];
                         case 1:
                             worker = _a.sent();
                             return [4 /*yield*/, worker.recognize(lootData.toPngBase64())];
                         case 2:
-                            ret = _a.sent();
-                            ;
-                            console.log(ret.data.text);
+                            text = (_a.sent()).data.text;
+                            console.log(text);
                             return [4 /*yield*/, worker.terminate()];
                         case 3:
                             _a.sent();

@@ -30,6 +30,7 @@
 				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 				imgData.data = reverseColors(imgData)
 				ctx.putImageData(imgData, 0, 0)
+				ctx.scale(2, 2);
 				input_image.setAttribute('src', 'data:image/png;base64,' + canvas.toDataURL())
 
 				if (input_image.getAttribute('src').length > 0) {
@@ -65,7 +66,7 @@
 				<h2>Loot</h2>
 				<img id="LootImage" src="">
 			</div>
-			<canvas id="Canvas"></canvas>
+			<canvas id="Canvas" height="2000"></canvas>
 		</div>
 		<div id="Settings">
 			<div class="container">

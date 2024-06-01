@@ -1,6 +1,6 @@
 var config = require('./appconfig.json');
 var appName = config.appName;
-appName = 'nyus-action-bar-tracker';
+appName = 'wiki-drop-logger';
 
 export function createHeading(size: string, content: string) {
 	let header = <HTMLElement>document.createElement(size);

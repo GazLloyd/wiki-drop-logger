@@ -15,7 +15,7 @@
 				var input_image = document.getElementById('LootImage');
 				if (input_image.getAttribute('src').length > 0) {
 				const base64string = input_image.getAttribute('src').split(',')[1];
-				Tesseract.recognize(Buffer.from(base64string, 'base64'), 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
+				Tesseract.recognize(base64string, 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
 					console.log(text);
 					setTimeout(() => {
 						readImage();

@@ -58,7 +58,7 @@
 				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 				imgData.data = reverseColors(imgData)
 				ctx.putImageData(imgData, 0, 0)
-				ctx.scale(2, 2);
+				// ctx.scale(2, 2);
 				input_image.setAttribute('src', 'data:image/png;base64,' + canvas.toDataURL())
 
 				if (input_image.getAttribute('src').length > 0) {
@@ -75,6 +75,9 @@
 
 			document.addEventListener('DOMContentLoaded', function(){
 				setTimeout(() => {
+					const canvas = document.querySelector('#Canvas');
+					const ctx = canvas.getContext('2d');
+					ctx.scale(2.5, 2.5);
 					readImage();
 				}, 10000)
 			});

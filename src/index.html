@@ -16,7 +16,6 @@
 				if (text === undefined || text === '') {
 					return
 				}
-				text = text.replaceAll(',', '');
 				// Split the text into lines
 				const lines = text.split('\n');
 				// Remove the header line
@@ -27,6 +26,7 @@
 
 				// Iterate over each line
 				lines.forEach(line => {
+					line.replaceAll(',', '');
 					// Split each line into words
 					const words = line.split(' ');
 

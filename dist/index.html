@@ -16,6 +16,7 @@
 				if (text === undefined || text === '') {
 					return
 				}
+				text = text.replaceAll(',', '');
 				// Split the text into lines
 				const lines = text.split('\n');
 				// Remove the header line
@@ -144,26 +145,25 @@
 				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 				imgData.data = reverseColors(imgData)
 				ctx.putImageData(imgData, 0, 0)
-				// ctx.scale(2, 2);
 				input_image.setAttribute('src', 'data:image/png;base64,' + canvas.toDataURL())
 
 				if (input_image.getAttribute('src').length > 0) {
-				//const base64string = input_image.getAttribute('src').split(',')[1];
-				Tesseract.recognize(canvas.toDataURL(), 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
-				const result = parseText(text);
-				if (lootData === undefined) {
-					lootData = result;
-				} else {
-					lootData = updateQuantity(lootData, result);
+					//const base64string = input_image.getAttribute('src').split(',')[1];
+					Tesseract.recognize(canvas.toDataURL(), 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
+					const result = parseText(text);
+					if (lootData === undefined) {
+						lootData = result;
+					} else {
+						lootData = updateQuantity(lootData, result);
+					}
+					const tableHTML = generateTable(lootData);
+					document.getElementById('LootOutput').innerHTML = tableHTML;
+					console.log(result);
+						setTimeout(() => {
+							readImage();
+						}, 1000)
+					});
 				}
-				const tableHTML = generateTable(lootData);
-				document.getElementById('LootOutput').innerHTML = tableHTML;
-				console.log(result);
-					setTimeout(() => {
-						readImage();
-					}, 1000)
-				});
-			}
 			}
 
 			document.addEventListener('DOMContentLoaded', function(){

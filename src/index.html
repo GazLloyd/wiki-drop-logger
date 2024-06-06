@@ -94,7 +94,7 @@
 				//const base64string = input_image.getAttribute('src').split(',')[1];
 				Tesseract.recognize(canvas.toDataURL(), 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
 				const result = parseText(text);
-				document.getElementById('LootOutput').innerText = result;
+				document.getElementById('LootOutput').innerText = text;
 				console.log(result);
 					setTimeout(() => {
 						readImage();

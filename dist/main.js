@@ -4773,7 +4773,7 @@ function tryFindMonster() {
 var lootPosition = undefined;
 function tryFindLoot() {
     return __awaiter(this, void 0, void 0, function () {
-        var client_screen, dropText, resetButton;
+        var client_screen, dropText, resetButton, dropTextPosition, resetButtonPosition;
         return __generator(this, function (_a) {
             if (lootPosition === undefined) {
                 console.log("Attempting to capture Runemetrics dropsmenu");
@@ -4786,18 +4786,26 @@ function tryFindLoot() {
                 };
                 if (dropText.screenPosition[0] !== undefined &&
                     resetButton.screenPosition[0] !== undefined) {
-                    lootPosition.dropText = dropText;
-                    lootPosition.resetButton = resetButton;
+                    dropTextPosition = {
+                        x: dropText.screenPosition[0].x,
+                        y: dropText.screenPosition[0].y,
+                    };
+                    resetButtonPosition = {
+                        x: resetButton.screenPosition[0].x,
+                        y: resetButton.screenPosition[0].y,
+                    };
+                    lootPosition.dropText = dropTextPosition;
+                    lootPosition.resetButton = resetButtonPosition;
                     alt1.overLaySetGroup('Loot');
-                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lootPosition.dropText.screenPosition[0].x, lootPosition.dropText.screenPosition[0].y, lootPosition.resetButton.screenPosition[0].x -
-                        lootPosition.dropText.screenPosition[0].x +
-                        22, lootPosition.resetButton.screenPosition[0].y -
-                        lootPosition.dropText.screenPosition[0].y -
+                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lootPosition.dropText.x, lootPosition.dropText.y, lootPosition.resetButton.x -
+                        lootPosition.dropText.x +
+                        22, lootPosition.resetButton.y -
+                        lootPosition.dropText.y -
                         4, 500, 2);
                 }
             }
             else {
-                captureLoot(lootPosition.dropText.screenPosition[0].x, lootPosition.dropText.screenPosition[0].y, lootPosition.resetButton.screenPosition[0].x + 22, lootPosition.resetButton.screenPosition[0].y - 4);
+                captureLoot(lootPosition.dropText.x, lootPosition.dropText.y, lootPosition.resetButton.x + 22, lootPosition.resetButton.y - 4);
             }
             return [2 /*return*/];
         });

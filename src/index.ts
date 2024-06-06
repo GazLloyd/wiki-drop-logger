@@ -119,19 +119,28 @@ async function tryFindLoot() {
 			dropText.screenPosition[0] !== undefined &&
 			resetButton.screenPosition[0] !== undefined
 		) {
-			lootPosition.dropText = dropText;
-			lootPosition.resetButton = resetButton;
+			let dropTextPosition = {
+				x: dropText.screenPosition[0].x,
+				y: dropText.screenPosition[0].y,
+			};
+
+			let resetButtonPosition = {
+				x: resetButton.screenPosition[0].x,
+				y: resetButton.screenPosition[0].y,
+			};
+			lootPosition.dropText = dropTextPosition;
+			lootPosition.resetButton = resetButtonPosition;
 
 			alt1.overLaySetGroup('Loot');
 			alt1.overLayRect(
 				a1lib.mixColor(255, 255, 255),
-				lootPosition.dropText.screenPosition[0].x,
-				lootPosition.dropText.screenPosition[0].y,
-				lootPosition.resetButton.screenPosition[0].x -
-					lootPosition.dropText.screenPosition[0].x +
+				lootPosition.dropText.x,
+				lootPosition.dropText.y,
+				lootPosition.resetButton.x -
+					lootPosition.dropText.x +
 					22,
-				lootPosition.resetButton.screenPosition[0].y -
-					lootPosition.dropText.screenPosition[0].y -
+				lootPosition.resetButton.y -
+					lootPosition.dropText.y -
 					4,
 				500,
 				2
@@ -139,10 +148,10 @@ async function tryFindLoot() {
 		}
 	} else {
 		captureLoot(
-			lootPosition.dropText.screenPosition[0].x,
-			lootPosition.dropText.screenPosition[0].y,
-			lootPosition.resetButton.screenPosition[0].x + 22,
-			lootPosition.resetButton.screenPosition[0].y - 4
+			lootPosition.dropText.x,
+			lootPosition.dropText.y,
+			lootPosition.resetButton.x + 22,
+			lootPosition.resetButton.y - 4
 		);
 	}
 }

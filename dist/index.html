@@ -64,7 +64,8 @@
 				if (input_image.getAttribute('src').length > 0) {
 				//const base64string = input_image.getAttribute('src').split(',')[1];
 				Tesseract.recognize(canvas.toDataURL(), 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
-					const lootOutput = documeny.getElementById('LootOutput');
+					let arrayText = text.split(/\r?\n/);
+					const lootOutput = document.getElementById('LootOutput');
 					lootOutput.text = text;
 					setTimeout(() => {
 						readImage();

@@ -14,12 +14,9 @@ import './appconfig.json';
 import './icon.png';
 import './css/styles.css';
 
-
 function getByID(id: string) {
 	return document.getElementById(id);
 }
-
-let recentlyDetected = false;
 
 let helperItems = {
 	Output: getByID('output'),
@@ -42,50 +39,55 @@ var dataImages = a1lib.webpackImages({
 
 var font = require('./asset/data/fonts/chatbox/12pt.fontmeta.json');
 
+const lastKnownMapPosition = undefined;
 async function tryFindMap() {
-	let client_screen = a1lib.captureHoldFullRs();
+	if (lastKnownMapPosition === undefined) {
+		let client_screen = a1lib.captureHoldFullRs();
 
-	let homeTeleport = {
-		screenPosition: client_screen.findSubimage(dataImages.homeTeleport),
-	};
-
-	let runIcon = {
-		screenPosition: client_screen.findSubimage(dataImages.runBorder),
-	}
-
-	if (homeTeleport.screenPosition[0] !== undefined && runIcon.screenPosition[0] !== undefined) {
-		let mapPosition = {
-			x: homeTeleport.screenPosition[0].x,
-			y: homeTeleport.screenPosition[0].y + 28,
+		let homeTeleport = {
+			screenPosition: client_screen.findSubimage(dataImages.homeTeleport),
 		};
 
-		let runPosition = {
-			x: runIcon.screenPosition[0].x + dataImages.runBorder.width,
-			y: runIcon.screenPosition[0].y,
+		let runIcon = {
+			screenPosition: client_screen.findSubimage(dataImages.runBorder),
 		};
 
-		alt1.overLaySetGroup('Map');
-		alt1.overLayRect(
-			a1lib.mixColor(255, 255, 255),
-			mapPosition.x,
-			runPosition.y,
-			runPosition.x - mapPosition.x,
-			mapPosition.y,
-			200,
-			2
-		);
+		if (
+			homeTeleport.screenPosition[0] !== undefined &&
+			runIcon.screenPosition[0] !== undefined
+		) {
+			let mapPosition = {
+				x: homeTeleport.screenPosition[0].x,
+				y: homeTeleport.screenPosition[0].y + 28,
+			};
 
-		captureMap(
-			mapPosition.x,
-			runPosition.y,
-			runPosition.x - mapPosition.x,
-			mapPosition.y
-		);
-		setTimeout(function () {
-			recentlyDetected = false;
-		}, 300);
+			let runPosition = {
+				x: runIcon.screenPosition[0].x + dataImages.runBorder.width,
+				y: runIcon.screenPosition[0].y,
+			};
+			lastKnownMapPosition.mapPosition = mapPosition;
+			lastKnownMapPosition.runPosition = runPosition;
+
+			alt1.overLaySetGroup('Map');
+			alt1.overLayRect(
+				a1lib.mixColor(255, 255, 255),
+				lastKnownMapPosition.mapPosition.x,
+				lastKnownMapPosition.runPosition.y,
+				lastKnownMapPosition.runPosition.x -
+					lastKnownMapPosition.mapPosition.x,
+				lastKnownMapPosition.mapPosition.y,
+				500,
+				2
+			);
+		}
 	} else {
-		console.log('No match found');
+		captureMap(
+			lastKnownMapPosition.mapPosition.x,
+			lastKnownMapPosition.runPosition.y,
+			lastKnownMapPosition.runPosition.x -
+				lastKnownMapPosition.mapPosition.x,
+			lastKnownMapPosition.mapPosition.y
+		);
 	}
 }
 
@@ -99,69 +101,65 @@ async function tryFindMonster() {
 	}
 }
 
+const lootPosition = undefined;
 async function tryFindLoot() {
-	let client_screen = a1lib.captureHoldFullRs();
+	if (lootPosition === undefined) {
+		console.log(`Attempting to capture Runemetrics dropsmenu`);
+		let client_screen = a1lib.captureHoldFullRs();
 
-	let dropText = {
-		screenPosition: client_screen.findSubimage(dataImages.dropText),
-	};
-
-	let resetButton = {
-		screenPosition: client_screen.findSubimage(dataImages.resetButton),
-	};
-
-	if (
-		dropText.screenPosition[0] !== undefined &&
-		resetButton.screenPosition[0] !== undefined
-	) {
-		let dropTextPosition = {
-			x: dropText.screenPosition[0].x,
-			y: dropText.screenPosition[0].y,
+		let dropText = {
+			screenPosition: client_screen.findSubimage(dataImages.dropText),
 		};
 
-		let resetButtonPosition = {
-			x: resetButton.screenPosition[0].x,
-			y: resetButton.screenPosition[0].y,
+		let resetButton = {
+			screenPosition: client_screen.findSubimage(dataImages.resetButton),
 		};
 
-		alt1.overLaySetGroup('Loot');
-		alt1.overLayRect(
-			a1lib.mixColor(255, 255, 255),
-			dropTextPosition.x,
-			dropTextPosition.y,
-			resetButtonPosition.x - dropTextPosition.x + 28,
-			resetButtonPosition.y - dropTextPosition.y - 4,
-			200,
-			2
-		);
+		if (
+			dropText.screenPosition[0] !== undefined &&
+			resetButton.screenPosition[0] !== undefined
+		) {
+			lootPosition.dropText = dropText;
+			lootPosition.resetButton = resetButton;
 
-		captureLoot(
-			dropTextPosition.x,
-			dropTextPosition.y,
-			resetButtonPosition.x + 28,
-			resetButtonPosition.y - 4
-		);
-		setTimeout(function () {
-			recentlyDetected = false;
-		}, 300);
+			alt1.overLaySetGroup('Loot');
+			alt1.overLayRect(
+				a1lib.mixColor(255, 255, 255),
+				lootPosition.dropText.screenPosition[0].x,
+				lootPosition.dropText.screenPosition[0].y,
+				lootPosition.resetButton.screenPosition[0].x -
+					lootPosition.dropText.screenPosition[0].x +
+					22,
+				lootPosition.resetButton.screenPosition[0].y -
+					lootPosition.dropText.screenPosition[0].y -
+					4,
+				500,
+				2
+			);
+		}
 	} else {
-		console.log('No match found');
+		captureLoot(
+			lootPosition.dropText.screenPosition[0].x,
+			lootPosition.dropText.screenPosition[0].y,
+			lootPosition.resetButton.screenPosition[0].x + 22,
+			lootPosition.resetButton.screenPosition[0].y - 4
+		);
 	}
 }
 
 async function captureMap(x, y, w, h) {
-		let mapImage = a1lib.captureHold(x, y, w, h);
-		let img = document.createElement('img');
-			img.id = 'MapImage';
-			img.src = 'data:image/png;base64,' + mapImage.toData().toPngBase64();
-			if (helperItems.Map.querySelectorAll('img').length == 0) {
-				helperItems.Map.appendChild(img);
-			} else {
-				helperItems.Map.querySelector('#MapImage').setAttribute(
-					'src',
-					'data:image/png;base64,' + mapImage.toData().toPngBase64()
-				);
-			}
+	let mapImage = a1lib.captureHold(x, y, w, h);
+	let img = document.createElement('img');
+	img.id = 'MapImage';
+	img.src = 'data:image/png;base64,' + mapImage.toData().toPngBase64();
+	if (helperItems.Map.querySelectorAll('img').length == 0) {
+		helperItems.Map.appendChild(img);
+	} else {
+		helperItems.Map.querySelector('#MapImage').setAttribute(
+			'src',
+			'data:image/png;base64,' + mapImage.toData().toPngBase64()
+		);
+	}
 }
 
 async function captureLoot(x, y, x2, y2) {
@@ -180,54 +178,6 @@ async function captureLoot(x, y, x2, y2) {
 		);
 	}
 }
-
-// var fontcolors: OCR.ColortTriplet[] = [
-// 	[255, 255, 255], //white
-// 	[29, 244, 2], //green2
-// 	[102, 152, 255], //blue
-// 	[163, 53, 238], //purple //TODO currently buggy
-// 	[255, 128, 0], //orange (1b+ and boss pets)
-// ];
-
-// async function readLoot(imgData: ImageData) {
-// 	OCR.debug.printcharscores = true;
-// 	OCR.debug.trackread = true;
-// 		for (var y = 44; y + 5 < imgData.height; y += 18) {
-// 			var itemstr = OCR.readLine(
-// 				imgData,
-// 				font,
-// 				fontcolors,
-// 				6,
-// 				y,
-// 				false,
-// 				false
-// 			);
-// 			var amount = OCR.readLine(
-// 				imgData,
-// 				font,
-// 				fontcolors,
-// 				218,
-// 				y,
-// 				false,
-// 				false
-// 			);
-// 			console.log(itemstr);
-// 			if (itemstr.text && amount.text) {
-// 				var name = itemstr.text;
-// 				var item = this.items[name];
-// 				if (!item) {
-// 					item = this.items[name] = { amount: 0 };
-// 				}
-// 				var n = +amount.text.replace(/,/g, '');
-// 				var d = n - item.amount;
-// 				if (d == 0) {
-// 					break;
-// 				}
-// 				item.amount = n;
-// 				console.log(item);
-// 			}
-// 		}
-// }
 
 export function startApp() {
 	if (!window.alt1) {

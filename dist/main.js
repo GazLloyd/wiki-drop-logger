@@ -4701,7 +4701,6 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 function getByID(id) {
     return document.getElementById(id);
 }
-var recentlyDetected = false;
 var helperItems = {
     Output: getByID('output'),
     Canvas: getByID('Canvas'),
@@ -4720,35 +4719,39 @@ var dataImages = alt1__WEBPACK_IMPORTED_MODULE_5__.webpackImages({
     dropText: __webpack_require__(/*! ./asset/data/droptext.data.png */ "./asset/data/droptext.data.png"),
 });
 var font = __webpack_require__(/*! ./asset/data/fonts/chatbox/12pt.fontmeta.json */ "./asset/data/fonts/chatbox/12pt.fontmeta.json");
+var lastKnownMapPosition = undefined;
 function tryFindMap() {
     return __awaiter(this, void 0, void 0, function () {
         var client_screen, homeTeleport, runIcon, mapPosition, runPosition;
         return __generator(this, function (_a) {
-            client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
-            homeTeleport = {
-                screenPosition: client_screen.findSubimage(dataImages.homeTeleport),
-            };
-            runIcon = {
-                screenPosition: client_screen.findSubimage(dataImages.runBorder),
-            };
-            if (homeTeleport.screenPosition[0] !== undefined && runIcon.screenPosition[0] !== undefined) {
-                mapPosition = {
-                    x: homeTeleport.screenPosition[0].x,
-                    y: homeTeleport.screenPosition[0].y + 28,
+            if (lastKnownMapPosition === undefined) {
+                client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
+                homeTeleport = {
+                    screenPosition: client_screen.findSubimage(dataImages.homeTeleport),
                 };
-                runPosition = {
-                    x: runIcon.screenPosition[0].x + dataImages.runBorder.width,
-                    y: runIcon.screenPosition[0].y,
+                runIcon = {
+                    screenPosition: client_screen.findSubimage(dataImages.runBorder),
                 };
-                alt1.overLaySetGroup('Map');
-                alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), mapPosition.x, runPosition.y, runPosition.x - mapPosition.x, mapPosition.y, 200, 2);
-                captureMap(mapPosition.x, runPosition.y, runPosition.x - mapPosition.x, mapPosition.y);
-                setTimeout(function () {
-                    recentlyDetected = false;
-                }, 300);
+                if (homeTeleport.screenPosition[0] !== undefined &&
+                    runIcon.screenPosition[0] !== undefined) {
+                    mapPosition = {
+                        x: homeTeleport.screenPosition[0].x,
+                        y: homeTeleport.screenPosition[0].y + 28,
+                    };
+                    runPosition = {
+                        x: runIcon.screenPosition[0].x + dataImages.runBorder.width,
+                        y: runIcon.screenPosition[0].y,
+                    };
+                    lastKnownMapPosition.mapPosition = mapPosition;
+                    lastKnownMapPosition.runPosition = runPosition;
+                    alt1.overLaySetGroup('Map');
+                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.runPosition.y, lastKnownMapPosition.runPosition.x -
+                        lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.mapPosition.y, 500, 2);
+                }
             }
             else {
-                console.log('No match found');
+                captureMap(lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.runPosition.y, lastKnownMapPosition.runPosition.x -
+                    lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.mapPosition.y);
             }
             return [2 /*return*/];
         });
@@ -4767,36 +4770,34 @@ function tryFindMonster() {
         });
     });
 }
+var lootPosition = undefined;
 function tryFindLoot() {
     return __awaiter(this, void 0, void 0, function () {
-        var client_screen, dropText, resetButton, dropTextPosition, resetButtonPosition;
+        var client_screen, dropText, resetButton;
         return __generator(this, function (_a) {
-            client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
-            dropText = {
-                screenPosition: client_screen.findSubimage(dataImages.dropText),
-            };
-            resetButton = {
-                screenPosition: client_screen.findSubimage(dataImages.resetButton),
-            };
-            if (dropText.screenPosition[0] !== undefined &&
-                resetButton.screenPosition[0] !== undefined) {
-                dropTextPosition = {
-                    x: dropText.screenPosition[0].x,
-                    y: dropText.screenPosition[0].y,
+            if (lootPosition === undefined) {
+                console.log("Attempting to capture Runemetrics dropsmenu");
+                client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
+                dropText = {
+                    screenPosition: client_screen.findSubimage(dataImages.dropText),
                 };
-                resetButtonPosition = {
-                    x: resetButton.screenPosition[0].x,
-                    y: resetButton.screenPosition[0].y,
+                resetButton = {
+                    screenPosition: client_screen.findSubimage(dataImages.resetButton),
                 };
-                alt1.overLaySetGroup('Loot');
-                alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), dropTextPosition.x, dropTextPosition.y, resetButtonPosition.x - dropTextPosition.x + 28, resetButtonPosition.y - dropTextPosition.y - 4, 200, 2);
-                captureLoot(dropTextPosition.x, dropTextPosition.y, resetButtonPosition.x + 28, resetButtonPosition.y - 4);
-                setTimeout(function () {
-                    recentlyDetected = false;
-                }, 300);
+                if (dropText.screenPosition[0] !== undefined &&
+                    resetButton.screenPosition[0] !== undefined) {
+                    lootPosition.dropText = dropText;
+                    lootPosition.resetButton = resetButton;
+                    alt1.overLaySetGroup('Loot');
+                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lootPosition.dropText.screenPosition[0].x, lootPosition.dropText.screenPosition[0].y, lootPosition.resetButton.screenPosition[0].x -
+                        lootPosition.dropText.screenPosition[0].x +
+                        22, lootPosition.resetButton.screenPosition[0].y -
+                        lootPosition.dropText.screenPosition[0].y -
+                        4, 500, 2);
+                }
             }
             else {
-                console.log('No match found');
+                captureLoot(lootPosition.dropText.screenPosition[0].x, lootPosition.dropText.screenPosition[0].y, lootPosition.resetButton.screenPosition[0].x + 22, lootPosition.resetButton.screenPosition[0].y - 4);
             }
             return [2 /*return*/];
         });
@@ -4839,52 +4840,6 @@ function captureLoot(x, y, x2, y2) {
         });
     });
 }
-// var fontcolors: OCR.ColortTriplet[] = [
-// 	[255, 255, 255], //white
-// 	[29, 244, 2], //green2
-// 	[102, 152, 255], //blue
-// 	[163, 53, 238], //purple //TODO currently buggy
-// 	[255, 128, 0], //orange (1b+ and boss pets)
-// ];
-// async function readLoot(imgData: ImageData) {
-// 	OCR.debug.printcharscores = true;
-// 	OCR.debug.trackread = true;
-// 		for (var y = 44; y + 5 < imgData.height; y += 18) {
-// 			var itemstr = OCR.readLine(
-// 				imgData,
-// 				font,
-// 				fontcolors,
-// 				6,
-// 				y,
-// 				false,
-// 				false
-// 			);
-// 			var amount = OCR.readLine(
-// 				imgData,
-// 				font,
-// 				fontcolors,
-// 				218,
-// 				y,
-// 				false,
-// 				false
-// 			);
-// 			console.log(itemstr);
-// 			if (itemstr.text && amount.text) {
-// 				var name = itemstr.text;
-// 				var item = this.items[name];
-// 				if (!item) {
-// 					item = this.items[name] = { amount: 0 };
-// 				}
-// 				var n = +amount.text.replace(/,/g, '');
-// 				var d = n - item.amount;
-// 				if (d == 0) {
-// 					break;
-// 				}
-// 				item.amount = n;
-// 				console.log(item);
-// 			}
-// 		}
-// }
 function startApp() {
     if (!window.alt1) {
         helperItems.Output.insertAdjacentHTML('beforeend', "<div>You need to run this page in alt1 to capture the screen</div>");

@@ -13,6 +13,9 @@
 
 			/* This function courtesy of ChatGPT */
 			function parseText(text) {
+				if (text === undefined || text === '') {
+					return
+				}
 				// Split the text into lines
 				const lines = text.split('\n');
 				// Remove the header line
@@ -44,6 +47,9 @@
 
 			/* This function courtesy of ChatGPT */
 			function generateTable(data) {
+				if (data === undefined) {
+					return;
+				}
 				let html = '<table>\n';
 				html += '<tr><th>Drop</th><th>Quantity</th></tr>\n';
 

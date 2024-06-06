@@ -58,6 +58,31 @@
 				return html;
 			}
 
+			/* Wouldn't you have guessed it? Courtesy of ChatGPT */
+			function updateQuantity(dataArray, dataArray2) {
+				// Create a map of names to quantities for quick lookup
+				const quantityMap = {};
+				dataArray2.forEach(item => {
+					quantityMap[item.name] = item.quantity;
+				});
+
+				// Update quantities in dataArray if corresponding name exists in dataArray2
+				dataArray.forEach(item => {
+					if (quantityMap.hasOwnProperty(item.name)) {
+						item.quantity = quantityMap[item.name];
+						delete quantityMap[item.name]; // Remove updated items from quantityMap
+					}
+				});
+
+				// Append new objects from dataArray2 to dataArray
+				dataArray2.forEach(item => {
+					if (!quantityMap.hasOwnProperty(item.name)) {
+						dataArray.push(item);
+					}
+				});
+
+				return dataArray;
+			}
 
 			function RGBToGrayScale(red,green,blue){
 				return (red * 6966 + green * 23436 + blue * 2366) >> 15;
@@ -98,6 +123,7 @@
 				return data
 			}
 
+			var lootData;
 			function readImage() {
 				var input_image = document.getElementById('LootImage');
 				const canvas = document.querySelector('#Canvas');
@@ -113,7 +139,8 @@
 				//const base64string = input_image.getAttribute('src').split(',')[1];
 				Tesseract.recognize(canvas.toDataURL(), 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
 				const result = parseText(text);
-				const tableHTML = generateTable(result);
+				lootData = updateQuantity(lootData, result);
+				const tableHTML = generateTable(lootData);
 				document.getElementById('LootOutput').innerHTML = tableHTML;
 				console.log(result);
 					setTimeout(() => {

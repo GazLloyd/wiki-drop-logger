@@ -211,8 +211,8 @@ export function startApp() {
 		return;
 	}
 
-	setInterval(tryFindMap, 300);
-	setInterval(tryFindLoot, 300);
+	setInterval(tryFindMap, 50);
+	setInterval(tryFindLoot, 50);
 	setInterval(tryFindMonster, 50);
 }
 

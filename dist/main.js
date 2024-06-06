@@ -157,11 +157,11 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
 }
 
 #LootOutput tr {
-  background-color: rgba(10, 34, 40, .5);
+  background-color: rgba(0, 0, 0, .1);
 }
 
 #LootOutput tr:hover {
-  background-color: rgba(18, 42, 48, .5);
+  background-color: rgba(0, 0, 0, 0);
 }
 
 #LootOutput tr:nth-child(2n) {
@@ -4836,8 +4836,8 @@ function startApp() {
         helperItems.Output.insertAdjacentHTML('beforeend', "<div><p>Attempted to use Overlay but app overlay permission is not enabled. Please enable \"Show Overlay\" permission in Alt1 settinsg (wrench icon in corner).</p></div>");
         return;
     }
-    setInterval(tryFindMap, 300);
-    setInterval(tryFindLoot, 300);
+    setInterval(tryFindMap, 50);
+    setInterval(tryFindLoot, 50);
     setInterval(tryFindMonster, 50);
 }
 var settingsObject = {

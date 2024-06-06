@@ -40,11 +40,11 @@ body {
 }
 
 #LootOutput tr {
-  background-color: rgba(10, 34, 40, .5);
+  background-color: rgba(0, 0, 0, .1);
 }
 
 #LootOutput tr:hover {
-  background-color: rgba(18, 42, 48, .5);
+  background-color: rgba(0, 0, 0, 0);
 }
 
 #LootOutput tr:nth-child(2n) {

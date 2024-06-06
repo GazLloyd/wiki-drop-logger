@@ -36,6 +36,7 @@ body {
   padding: .25rem 3rem .25rem 0;
   font-size: 12px;
   font-family: 'Noto Sans', sans-serif;
+  text-shadow: 1px 1px 0px rgba(0,0,0,.8);
 }
 
 #LootOutput tr {

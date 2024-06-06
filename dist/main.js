@@ -153,6 +153,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
   padding: .25rem 3rem .25rem 0;
   font-size: 12px;
   font-family: 'Noto Sans', sans-serif;
+  text-shadow: 1px 1px 0px rgba(0,0,0,.8);
 }
 
 #LootOutput tr {
@@ -4835,8 +4836,8 @@ function startApp() {
         helperItems.Output.insertAdjacentHTML('beforeend', "<div><p>Attempted to use Overlay but app overlay permission is not enabled. Please enable \"Show Overlay\" permission in Alt1 settinsg (wrench icon in corner).</p></div>");
         return;
     }
-    setInterval(tryFindMap, 3000);
-    setInterval(tryFindLoot, 3000);
+    setInterval(tryFindMap, 300);
+    setInterval(tryFindLoot, 300);
     setInterval(tryFindMonster, 50);
 }
 var settingsObject = {

@@ -11,7 +11,7 @@
 		<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 		<script>
 
-			/* Courtesy of ChatGPT */
+			/* This function courtesy of ChatGPT */
 			function parseText(text) {
 				// Split the text into lines
 				const lines = text.split('\n');
@@ -37,6 +37,19 @@
 				});
 
 				return items;
+			}
+
+			/* This function courtesy of ChatGPT */
+			function generateTable(data) {
+				let html = '<table>\n';
+				html += '<tr><th>Name</th><th>Quantity</th></tr>\n';
+
+				data.forEach(item => {
+					html += `<tr><td>${item.name}</td><td>${item.quantity}</td></tr>\n`;
+				});
+
+				html += '</table>';
+				return html;
 			}
 
 
@@ -94,7 +107,8 @@
 				//const base64string = input_image.getAttribute('src').split(',')[1];
 				Tesseract.recognize(canvas.toDataURL(), 'eng', { logger: m => console.log(m) }).then(({data: { text } } ) => {
 				const result = parseText(text);
-				document.getElementById('LootOutput').innerText = text;
+				const tableHTML = generateTable(text);
+				document.getElementById('LootOutput').innerText = tableHTML;
 				console.log(result);
 					setTimeout(() => {
 						readImage();

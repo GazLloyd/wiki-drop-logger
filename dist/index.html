@@ -76,7 +76,7 @@
 
 				// Append new objects from dataArray2 to dataArray
 				dataArray2.forEach(item => {
-					if (!quantityMap.hasOwnProperty(item.name)) {
+					if (!dataArray.find(element => element.name === item.name)) {
 						dataArray.push(item);
 					}
 				});

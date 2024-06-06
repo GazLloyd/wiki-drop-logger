@@ -16,8 +16,10 @@
 				if (text === undefined || text === '') {
 					return
 				}
+
+				let regex = /\,/g;
 				// Split the text into lines
-				const lines = text.split('\n');
+				const lines = text.replace(regex, '').split('\n');
 				// Remove the header line
 				lines.shift();
 
@@ -33,7 +35,7 @@
 					const name = words.slice(0, -1).join(' ');
 
 					// Extract the quantity
-					const quantity = parseInt(words.replaceAll(',', '')[words.replaceAll(',', '').length - 1], 10);
+					const quantity = parseInt(words[words.length - 1], 10);
 
 					// Construct the object and push it to the array
 					if (name === '' || quantity === null || isNaN(quantity)) {

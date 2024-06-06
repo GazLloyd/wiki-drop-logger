@@ -20,32 +20,38 @@ body {
 
 #LootOutput {
   width: 95%;
-  margin: 0 auto;
+  margin: .5rem auto 1.5rem;
   text-align: left;
   max-height: 350px;
   overflow-y: auto;
+  display: flex;
+  justify-content: center;
+}
+
+#LootOutput table {
+  border-spacing: 0;
 }
 
 #LootOutput td {
-  padding-right: 3rem;
+  padding: .25rem 3rem .25rem 0;
   font-size: 12px;
   font-family: 'Noto Sans', sans-serif;
 }
 
 #LootOutput tr {
-  background-color: rgba(10, 34, 40, .85);
+  background-color: rgba(10, 34, 40, .5);
 }
 
 #LootOutput tr:hover {
-background-color: rgba(18, 42, 48, .85);
+background-color: rgba(18, 42, 48, .5);
 }
 
 #LootOutput tr:nth-child(2n) {
-  background-color: rgba(18, 31, 39, .85);
+  background-color: rgba(18, 31, 39, .5);
 }
 
 #LootOutput tr:nth-child(2n):hover {
-background-color: rgba(26, 39, 47, .85);
+background-color: rgba(26, 39, 47, .5);
 }
 
 #Settings {

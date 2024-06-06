@@ -44,15 +44,15 @@ body {
 }
 
 #LootOutput tr:hover {
-background-color: rgba(18, 42, 48, .5);
+  background-color: rgba(18, 42, 48, .5);
 }
 
 #LootOutput tr:nth-child(2n) {
-  background-color: rgba(18, 31, 39, .5);
+  background-color: rgba(255, 255, 255, .05);
 }
 
 #LootOutput tr:nth-child(2n):hover {
-background-color: rgba(26, 39, 47, .5);
+  background-color: rgba(255, 255, 255, .1);
 }
 
 #Settings {

@@ -45,6 +45,9 @@
 				html += '<tr><th>Name</th><th>Quantity</th></tr>\n';
 
 				data.forEach(item => {
+					if (item.name === '' || isNaN(item.quantity)) {
+						return;
+					}
 					html += `<tr><td>${item.name}</td><td>${item.quantity}</td></tr>\n`;
 				});
 
@@ -139,7 +142,7 @@
 			</div>
 			<div id="Loot">
 				<h2>Loot</h2>
-				<div id="LootOutput" style="width:95%;margin:0 auto;height:600px;"></div>
+				<div id="LootOutput"></div>
 				<img id="LootImage" src="" style="display:none;">
 			</div>
 			<canvas id="Canvas" width="2000" height="2000" style="display:none;"></canvas>

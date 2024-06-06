@@ -39,9 +39,9 @@ var dataImages = a1lib.webpackImages({
 
 var font = require('./asset/data/fonts/chatbox/12pt.fontmeta.json');
 
-const lastKnownMapPosition = undefined;
+const lastKnownMapPosition = {mapPosition: {x: undefined, y: undefined}, runPosition: {x: undefined, y: undefined}};
 async function tryFindMap() {
-	if (lastKnownMapPosition === undefined) {
+	if (lastKnownMapPosition.mapPosition.x === undefined) {
 		let client_screen = a1lib.captureHoldFullRs();
 
 		let homeTeleport = {
@@ -101,9 +101,9 @@ async function tryFindMonster() {
 	}
 }
 
-const lootPosition = undefined;
+const lastKnownLootPosition = {dropText: {x: undefined, y: undefined}, resetButton: {x: undefined, y: undefined}};
 async function tryFindLoot() {
-	if (lootPosition === undefined) {
+	if (lastKnownLootPosition.dropText.x === undefined) {
 		console.log(`Attempting to capture Runemetrics dropsmenu`);
 		let client_screen = a1lib.captureHoldFullRs();
 
@@ -128,19 +128,19 @@ async function tryFindLoot() {
 				x: resetButton.screenPosition[0].x,
 				y: resetButton.screenPosition[0].y,
 			};
-			lootPosition.dropText = dropTextPosition;
-			lootPosition.resetButton = resetButtonPosition;
+			lastKnownLootPosition.dropText = dropTextPosition;
+			lastKnownLootPosition.resetButton = resetButtonPosition;
 
 			alt1.overLaySetGroup('Loot');
 			alt1.overLayRect(
 				a1lib.mixColor(255, 255, 255),
-				lootPosition.dropText.x,
-				lootPosition.dropText.y,
-				lootPosition.resetButton.x -
-					lootPosition.dropText.x +
+				lastKnownLootPosition.dropText.x,
+				lastKnownLootPosition.dropText.y,
+				lastKnownLootPosition.resetButton.x -
+					lastKnownLootPosition.dropText.x +
 					22,
-				lootPosition.resetButton.y -
-					lootPosition.dropText.y -
+				lastKnownLootPosition.resetButton.y -
+					lastKnownLootPosition.dropText.y -
 					4,
 				500,
 				2
@@ -148,10 +148,10 @@ async function tryFindLoot() {
 		}
 	} else {
 		captureLoot(
-			lootPosition.dropText.x,
-			lootPosition.dropText.y,
-			lootPosition.resetButton.x + 22,
-			lootPosition.resetButton.y - 4
+			lastKnownLootPosition.dropText.x,
+			lastKnownLootPosition.dropText.y,
+			lastKnownLootPosition.resetButton.x + 22,
+			lastKnownLootPosition.resetButton.y - 4
 		);
 	}
 }

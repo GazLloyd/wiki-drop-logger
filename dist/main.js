@@ -4719,12 +4719,12 @@ var dataImages = alt1__WEBPACK_IMPORTED_MODULE_5__.webpackImages({
     dropText: __webpack_require__(/*! ./asset/data/droptext.data.png */ "./asset/data/droptext.data.png"),
 });
 var font = __webpack_require__(/*! ./asset/data/fonts/chatbox/12pt.fontmeta.json */ "./asset/data/fonts/chatbox/12pt.fontmeta.json");
-var lastKnownMapPosition = undefined;
+var lastKnownMapPosition = { mapPosition: { x: undefined, y: undefined }, runPosition: { x: undefined, y: undefined } };
 function tryFindMap() {
     return __awaiter(this, void 0, void 0, function () {
         var client_screen, homeTeleport, runIcon, mapPosition, runPosition;
         return __generator(this, function (_a) {
-            if (lastKnownMapPosition === undefined) {
+            if (lastKnownMapPosition.mapPosition.x === undefined) {
                 client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
                 homeTeleport = {
                     screenPosition: client_screen.findSubimage(dataImages.homeTeleport),
@@ -4770,12 +4770,12 @@ function tryFindMonster() {
         });
     });
 }
-var lootPosition = undefined;
+var lastKnownLootPosition = { dropText: { x: undefined, y: undefined }, resetButton: { x: undefined, y: undefined } };
 function tryFindLoot() {
     return __awaiter(this, void 0, void 0, function () {
         var client_screen, dropText, resetButton, dropTextPosition, resetButtonPosition;
         return __generator(this, function (_a) {
-            if (lootPosition === undefined) {
+            if (lastKnownLootPosition.dropText.x === undefined) {
                 console.log("Attempting to capture Runemetrics dropsmenu");
                 client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
                 dropText = {
@@ -4794,18 +4794,18 @@ function tryFindLoot() {
                         x: resetButton.screenPosition[0].x,
                         y: resetButton.screenPosition[0].y,
                     };
-                    lootPosition.dropText = dropTextPosition;
-                    lootPosition.resetButton = resetButtonPosition;
+                    lastKnownLootPosition.dropText = dropTextPosition;
+                    lastKnownLootPosition.resetButton = resetButtonPosition;
                     alt1.overLaySetGroup('Loot');
-                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lootPosition.dropText.x, lootPosition.dropText.y, lootPosition.resetButton.x -
-                        lootPosition.dropText.x +
-                        22, lootPosition.resetButton.y -
-                        lootPosition.dropText.y -
+                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lastKnownLootPosition.dropText.x, lastKnownLootPosition.dropText.y, lastKnownLootPosition.resetButton.x -
+                        lastKnownLootPosition.dropText.x +
+                        22, lastKnownLootPosition.resetButton.y -
+                        lastKnownLootPosition.dropText.y -
                         4, 500, 2);
                 }
             }
             else {
-                captureLoot(lootPosition.dropText.x, lootPosition.dropText.y, lootPosition.resetButton.x + 22, lootPosition.resetButton.y - 4);
+                captureLoot(lastKnownLootPosition.dropText.x, lastKnownLootPosition.dropText.y, lastKnownLootPosition.resetButton.x + 22, lastKnownLootPosition.resetButton.y - 4);
             }
             return [2 /*return*/];
         });

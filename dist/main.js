@@ -109,6 +109,7 @@ var ___CSS_LOADER_URL_IMPORT_3___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_URL_IMPORT_4___ = new URL(/* asset import */ __webpack_require__(/*! ../asset/resource/scrollhor.png */ "./asset/resource/scrollhor.png"), __webpack_require__.b);
 var ___CSS_LOADER_URL_IMPORT_5___ = new URL(/* asset import */ __webpack_require__(/*! ../asset/resource/nisbutton.png */ "./asset/resource/nisbutton.png"), __webpack_require__.b);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+___CSS_LOADER_EXPORT___.push([module.id, "@import url(https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap);"]);
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 var ___CSS_LOADER_URL_REPLACEMENT_1___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_1___);
 var ___CSS_LOADER_URL_REPLACEMENT_2___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_2___);
@@ -145,6 +146,23 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
 #LootOutput td {
   padding-right: 3rem;
   font-size: 12px;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+#LootOutput tr {
+  background-color: rgba(10, 34, 40, .85);
+}
+
+#LootOutput tr:hover {
+background-color: rgba(18, 42, 48, .85);
+}
+
+#LootOutput tr:nth-child(2n) {
+  background-color: rgba(18, 31, 39, .85);
+}
+
+#LootOutput tr:nth-child(2n):hover {
+background-color: rgba(26, 39, 47, .85);
 }
 
 #Settings {

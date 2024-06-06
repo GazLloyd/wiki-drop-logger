@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
 body {
   display: block;
   padding: 0 .5rem;
@@ -27,6 +29,23 @@ body {
 #LootOutput td {
   padding-right: 3rem;
   font-size: 12px;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+#LootOutput tr {
+  background-color: rgba(10, 34, 40, .85);
+}
+
+#LootOutput tr:hover {
+background-color: rgba(18, 42, 48, .85);
+}
+
+#LootOutput tr:nth-child(2n) {
+  background-color: rgba(18, 31, 39, .85);
+}
+
+#LootOutput tr:nth-child(2n):hover {
+background-color: rgba(26, 39, 47, .85);
 }
 
 #Settings {

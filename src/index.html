@@ -60,6 +60,9 @@
 
 			/* Wouldn't you have guessed it? Courtesy of ChatGPT */
 			function updateQuantity(dataArray, dataArray2) {
+				if (dataArray.length === 0 || dataArray2.length ===0) {
+					return;
+				}
 				// Create a map of names to quantities for quick lookup
 				const quantityMap = {};
 				dataArray2.forEach(item => {

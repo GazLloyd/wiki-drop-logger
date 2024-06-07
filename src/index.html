@@ -146,7 +146,7 @@
 				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 				imgData.data = reverseColors(imgData)
 				ctx.putImageData(imgData, 0, 0)
-				input_image.setAttribute('src', 'data:image/png;base64,' + canvas.toDataURL())
+				input_image.setAttribute('src', canvas.toDataURL())
 
 				if (input_image.getAttribute('src').length > 0) {
 					//const base64string = input_image.getAttribute('src').split(',')[1];

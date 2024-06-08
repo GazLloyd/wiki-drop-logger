@@ -108,7 +108,7 @@
 					kc++;
 				}
 
-				document.getElementById('KillCount').innerHTML = `Kills: ${kc.toString()}`
+				document.querySelectorAll('#KillCount')[0].innerHTML = `Kills: ${kc.toString()}`
 				return dataArray;
 			}
 
@@ -210,8 +210,8 @@
 			</div>
 			<div id="Mob">
 				<h2>NPC</h2>
-				<h3 id="KillCount">Kill Count</h3>
 			</div>
+			<h3 id="KillCount">Kill Count</h3>
 			<div id="Loot">
 				<h2>Loot</h2>
 				<div id="LootOutput"></div>

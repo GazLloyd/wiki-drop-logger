@@ -137,8 +137,13 @@
 				return data
 			}
 
+			const { createWorker } = require('tesseract.js');
+			var worker;
 			var lootData;
 			async function readImage() {
+				if (worker === undefined) {
+					const worker = await createWorker('eng');
+				}
 				var input_image = document.getElementById('LootImage');
 				const canvas = document.querySelector('#Canvas');
 				const ctx = canvas.getContext('2d');
@@ -166,9 +171,6 @@
 					});
 				}
 			}
-
-			const { createWorker } = require('tesseract.js');
-			const worker = createWorker('eng');
 
 			document.addEventListener('DOMContentLoaded', function(){
 				setTimeout(() => {

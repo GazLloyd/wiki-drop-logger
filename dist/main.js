@@ -4788,17 +4788,18 @@ function tryFindLoot() {
 }
 function captureMap(x, y, w, h) {
     return __awaiter(this, void 0, void 0, function () {
-        var mapImage, img;
+        var mapImage, mapData, img;
         return __generator(this, function (_a) {
             mapImage = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHold(x, y, w, h);
-            img = document.createElement('img');
-            img.id = 'MapImage';
-            img.src = 'data:image/png;base64,' + mapImage.toData().toPngBase64();
+            mapData = mapImage.toData().toPngBase64();
             if (helperItems.Map.querySelectorAll('img').length == 0) {
+                img = document.createElement('img');
+                img.id = 'MapImage';
+                img.src = 'data:image/png;base64,' + mapData;
                 helperItems.Map.appendChild(img);
             }
             else {
-                helperItems.Map.querySelector('#MapImage').setAttribute('src', 'data:image/png;base64,' + mapImage.toData().toPngBase64());
+                helperItems.Map.querySelector('#MapImage').setAttribute('src', 'data:image/png;base64,' + mapData);
             }
             return [2 /*return*/];
         });
@@ -4809,15 +4810,15 @@ function captureLoot(x, y, x2, y2) {
         var lootImage, lootData, img;
         return __generator(this, function (_a) {
             lootImage = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHold(x, y, x2 - x, y2 - y);
-            lootData = lootImage.toData();
-            img = document.createElement('img');
-            img.id = 'LootImage';
-            img.src = 'data:image/png;base64,' + lootData.toPngBase64();
+            lootData = lootImage.toData().toPngBase64();
             if (helperItems.Loot.querySelectorAll('img').length == 0) {
+                img = document.createElement('img');
+                img.id = 'LootImage';
+                img.src = 'data:image/png;base64,' + lootData;
                 helperItems.Loot.appendChild(img);
             }
             else {
-                helperItems.Loot.querySelector('#LootImage').setAttribute('src', 'data:image/png;base64,' + lootData.toPngBase64());
+                helperItems.Loot.querySelector('#LootImage').setAttribute('src', 'data:image/png;base64,' + lootData);
             }
             return [2 /*return*/];
         });

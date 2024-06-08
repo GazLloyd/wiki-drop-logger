@@ -158,32 +158,32 @@ async function tryFindLoot() {
 
 async function captureMap(x, y, w, h) {
 	let mapImage = a1lib.captureHold(x, y, w, h);
-	let img = document.createElement('img');
-	img.id = 'MapImage';
-	img.src = 'data:image/png;base64,' + mapImage.toData().toPngBase64();
+	let mapData = mapImage.toData().toPngBase64();
 	if (helperItems.Map.querySelectorAll('img').length == 0) {
+		let img = document.createElement('img');
+		img.id = 'MapImage';
+		img.src = 'data:image/png;base64,' + mapData;
 		helperItems.Map.appendChild(img);
 	} else {
 		helperItems.Map.querySelector('#MapImage').setAttribute(
 			'src',
-			'data:image/png;base64,' + mapImage.toData().toPngBase64()
+			'data:image/png;base64,' + mapData
 		);
 	}
 }
 
 async function captureLoot(x, y, x2, y2) {
 	let lootImage = a1lib.captureHold(x, y, x2 - x, y2 - y);
-	let lootData = lootImage.toData();
-	//readLoot(lootData);
-	let img = document.createElement('img');
-	img.id = 'LootImage';
-	img.src = 'data:image/png;base64,' + lootData.toPngBase64();
+	let lootData = lootImage.toData().toPngBase64();
 	if (helperItems.Loot.querySelectorAll('img').length == 0) {
+		let img = document.createElement('img');
+		img.id = 'LootImage';
+		img.src = 'data:image/png;base64,' + lootData
 		helperItems.Loot.appendChild(img);
 	} else {
 		helperItems.Loot.querySelector('#LootImage').setAttribute(
 			'src',
-			'data:image/png;base64,' + lootData.toPngBase64()
+			'data:image/png;base64,' + lootData
 		);
 	}
 }

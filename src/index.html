@@ -157,7 +157,7 @@
 			async function readImage() {
 				if (worker === undefined) {
 					worker = await Tesseract.createWorker('eng');
-					console.log('Worker1 created');
+					console.log('Worker created');
 				}
 				var input_image = document.getElementById('LootImage');
 				const canvas = document.querySelector('#Canvas');
@@ -166,14 +166,18 @@
 				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 				imgData.data = reverseColors(imgData)
 				ctx.putImageData(imgData, 0, 0)
-				input_image.setAttribute('src', canvas.toDataURL())
+				let canvasData = canvas.toDataURL();
+				input_image.setAttribute('src', canvasData)
 
 				if (input_image.getAttribute('src').length > 0) {
-					if (canvas.toDataURL() == lastSource) {
+					console.log(lastSource);
+					console.log(canvasData);
+					console.log(canvasData == lastSource);
+					if (canvasData == lastSource) {
 						console.log('Drops image is same as last check - skipping OCR step');
 						return;
 					}
-					const { data: { text } } = await worker.recognize(canvas.toDataURL());
+					const { data: { text } } = await worker.recognize(canvasData);
 					if (text !== undefined) {
 						const result = parseText(text);
 						if (lootData === undefined) {
@@ -188,7 +192,7 @@
 								readImage();
 							}, 200)
 					}
-					lastSource = canvas.toDataURL();
+					lastSource = canvasData;
 				};
 			}
 

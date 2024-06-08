@@ -155,18 +155,20 @@
 				if (input_image.getAttribute('src').length > 0) {
 					//const base64string = input_image.getAttribute('src').split(',')[1];
 					const { data: { text } } = worker.recognize(canvas.toDataURL());
-					const result = parseText(text);
-					if (lootData === undefined) {
-						lootData = result;
-					} else {
-						lootData = updateQuantity(lootData, result);
+					if (text !== undefined) {
+						const result = parseText(text);
+						if (lootData === undefined) {
+							lootData = result;
+						} else {
+							lootData = updateQuantity(lootData, result);
+						}
+						const tableHTML = generateTable(lootData);
+						document.getElementById('LootOutput').innerHTML = tableHTML;
+						console.log(result);
+							setTimeout(() => {
+								readImage();
+							}, 1000)
 					}
-					const tableHTML = generateTable(lootData);
-					document.getElementById('LootOutput').innerHTML = tableHTML;
-					console.log(result);
-						setTimeout(() => {
-							readImage();
-						}, 1000)
 				};
 			}
 

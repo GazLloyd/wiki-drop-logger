@@ -151,12 +151,16 @@
 			}
 
 			var worker;
+			var worker2;
+			var worker3;
 			var lootData;
 			var lastSource;
 			var kc = 0;
 			async function readImage() {
 				if (worker === undefined) {
 					worker = await Tesseract.createWorker('eng');
+					worker2 = await Tesseract.createWorker('eng');
+					worker3 = await Tesseract.createWorker('eng');
 				}
 				var input_image = document.getElementById('LootImage');
 				const canvas = document.querySelector('#Canvas');
@@ -185,7 +189,7 @@
 						console.log(result);
 							setTimeout(() => {
 								readImage();
-							}, 1000)
+							}, 50)
 					}
 					lastSource = canvas.toDataURL();
 				};

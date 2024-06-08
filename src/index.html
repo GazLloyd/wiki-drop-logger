@@ -68,6 +68,7 @@
 			}
 
 			function areEqual (arr1, arr2, sortProperty) {
+				console.log(_.difference(_.sortBy(arr1, sortProperty), _.sortBy(arr2, sortProperty)));
 				return _.difference(_.sortBy(arr1, sortProperty), _.sortBy(arr2, sortProperty))
 			}
 

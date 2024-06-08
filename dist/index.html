@@ -66,6 +66,14 @@
 				return html;
 			}
 
+			function deepEqual(x, y) {
+				const ok = Object.keys, tx = typeof x, ty = typeof y;
+				return x && y && tx === 'object' && tx === ty ? (
+					ok(x).length === ok(y).length &&
+					ok(x).every(key => deepEqual(x[key], y[key]))
+				) : (x === y);
+			}
+
 			/* Wouldn't you have guessed it? Courtesy of ChatGPT */
 			function updateQuantity(dataArray, dataArray2) {
 				if (dataArray === undefined || dataArray2 === undefined) {
@@ -74,27 +82,33 @@
 				if (dataArray.length === 0 || dataArray2.length === 0) {
 					return;
 				}
-				// Create a map of names to quantities for quick lookup
-				const quantityMap = {};
-				dataArray2.forEach(item => {
-					quantityMap[item.name] = item.quantity;
-				});
+				if (deepEqual(dataArray, dataArray2)) {
+					console.log('Data is the same');
+					return;
+				} else {
+					kc++;
+					// Create a map of names to quantities for quick lookup
+					const quantityMap = {};
+					dataArray2.forEach(item => {
+						quantityMap[item.name] = item.quantity;
+					});
 
-				// Update quantities in dataArray if corresponding name exists in dataArray2
-				dataArray.forEach(item => {
-					if (quantityMap.hasOwnProperty(item.name)) {
-						item.quantity = quantityMap[item.name];
-						delete quantityMap[item.name]; // Remove updated items from quantityMap
-					}
-				});
+					// Update quantities in dataArray if corresponding name exists in dataArray2
+					dataArray.forEach(item => {
+						if (quantityMap.hasOwnProperty(item.name)) {
+							item.quantity = quantityMap[item.name];
+							delete quantityMap[item.name]; // Remove updated items from quantityMap
+						}
+					});
 
-				// Append new objects from dataArray2 to dataArray
-				dataArray2.forEach(item => {
-					if (!dataArray.find(element => element.name === item.name)) {
-						dataArray.push(item);
-					}
-				});
-
+					// Append new objects from dataArray2 to dataArray
+					dataArray2.forEach(item => {
+						if (!dataArray.find(element => element.name === item.name)) {
+							dataArray.push(item);
+						}
+					});
+				}
+				console.log(kc);
 				return dataArray;
 			}
 
@@ -139,6 +153,7 @@
 			var worker;
 			var lootData;
 			var lastSource;
+			var kc;
 			async function readImage() {
 				if (worker === undefined) {
 					worker = await Tesseract.createWorker('eng');
@@ -153,7 +168,7 @@
 				input_image.setAttribute('src', canvas.toDataURL())
 
 				if (input_image.getAttribute('src').length > 0) {
-					if (input_image.getAttribute('src') == lastSource) {
+					if (canvas.toDataURL() == lastSource) {
 						console.log('Drops image is same as last check - skipping OCR step');
 						return;
 					}
@@ -162,6 +177,7 @@
 						const result = parseText(text);
 						if (lootData === undefined) {
 							lootData = result;
+							kc++;
 						} else {
 							lootData = updateQuantity(lootData, result);
 						}
@@ -172,7 +188,7 @@
 								readImage();
 							}, 1000)
 					}
-					lastSource = input_image.getAttribute('src');
+					lastSource = canvas.toDataURL();
 				};
 			}
 

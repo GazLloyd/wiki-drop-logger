@@ -67,13 +67,6 @@
 				return html;
 			}
 
-			const difference = (array1, array2, prop = 'name') =>
-				array1.filter(item1 =>
-					!array2.some(item2 =>
-					item2[prop] === item1[prop],
-				),
-			);
-
 			/* Wouldn't you have guessed it? Courtesy of ChatGPT */
 			function updateQuantity(dataArray, dataArray2) {
 				if (dataArray === undefined || dataArray2 === undefined) {
@@ -82,32 +75,41 @@
 				if (dataArray.length === 0 || dataArray2.length === 0) {
 					return;
 				}
-				if (difference(dataArray, dataArray2).length === 0) {
-					console.log('Data is the same');
-					return dataArray;
-				} else {
+
+
+				// Create a map of names to quantities for quick lookup
+				const quantityMap = {};
+				dataArray2.forEach(item => {
+					quantityMap[item.name] = item.quantity;
+				});
+
+				// Update quantities in dataArray if corresponding name exists in dataArray2
+				let updatedQuantity = false;
+				dataArray.forEach(item => {
+					if (quantityMap.hasOwnProperty(item.name)) {
+						item.quantity = quantityMap[item.name];
+						if (item.quantity != quantityMap[item.quantity]) {
+							updatedQuantity = true;
+						}
+						delete quantityMap[item.name]; // Remove updated items from quantityMap
+					}
+				});
+
+				// at least one item updated its quantity so increment kc
+				if (updatedQuantity) {
 					kc++;
-					// Create a map of names to quantities for quick lookup
-					const quantityMap = {};
-					dataArray2.forEach(item => {
-						quantityMap[item.name] = item.quantity;
-					});
-
-					// Update quantities in dataArray if corresponding name exists in dataArray2
-					dataArray.forEach(item => {
-						if (quantityMap.hasOwnProperty(item.name)) {
-							item.quantity = quantityMap[item.name];
-							delete quantityMap[item.name]; // Remove updated items from quantityMap
-						}
-					});
-
-					// Append new objects from dataArray2 to dataArray
-					dataArray2.forEach(item => {
-						if (!dataArray.find(element => element.name === item.name)) {
-							dataArray.push(item);
-						}
-					});
 				}
+
+				// Append new objects from dataArray2 to dataArray
+				dataArray2.forEach(item => {
+					if (!dataArray.find(element => element.name === item.name)) {
+						dataArray.push(item);
+
+						// We had an item that didn't exist in the array previously - so increment kc for the new drop
+						kc++;
+					}
+				});
+
 				console.log(kc);
 				return dataArray;
 			}
@@ -198,7 +200,7 @@
 					const ctx = canvas.getContext('2d');
 					ctx.scale(2.25, 2.25);
 					readImage();
-				}, 10000)
+				}, 3000)
 			});
 
 		</script>

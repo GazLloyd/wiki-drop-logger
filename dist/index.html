@@ -141,7 +141,7 @@
 			var lootData;
 			async function readImage() {
 				if (worker === undefined) {
-					const worker = await Tesseract.createWorker('eng');
+					worker = await Tesseract.createWorker('eng');
 				}
 				var input_image = document.getElementById('LootImage');
 				const canvas = document.querySelector('#Canvas');

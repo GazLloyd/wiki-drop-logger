@@ -154,7 +154,7 @@
 
 				if (input_image.getAttribute('src').length > 0) {
 					//const base64string = input_image.getAttribute('src').split(',')[1];
-					const { data: { text } } = worker.recognize(canvas.toDataURL());
+					const { data: { text } } = await worker.recognize(canvas.toDataURL());
 					if (text !== undefined) {
 						const result = parseText(text);
 						if (lootData === undefined) {

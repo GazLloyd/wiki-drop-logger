@@ -87,16 +87,17 @@
 				let updatedQuantity = false;
 				dataArray.forEach(item => {
 					if (quantityMap.hasOwnProperty(item.name)) {
-						item.quantity = quantityMap[item.name];
-						if (item.quantity != quantityMap[item.quantity]) {
+						if (item.quantity !== quantityMap[item.name]) {
 							updatedQuantity = true;
 						}
+						item.quantity = quantityMap[item.name];
 						delete quantityMap[item.name]; // Remove updated items from quantityMap
 					}
 				});
 
 				// at least one item updated its quantity so increment kc
 				if (updatedQuantity) {
+					console.log('Updated a drop\'s quantity - adding a kill to kc!');
 					kc++;
 				}
 
@@ -106,6 +107,7 @@
 						dataArray.push(item);
 
 						// We had an item that didn't exist in the array previously - so increment kc for the new drop
+						console.log('New item dropped - adding a kill to kc!');
 						kc++;
 					}
 				});

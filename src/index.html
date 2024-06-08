@@ -170,10 +170,7 @@
 				input_image.setAttribute('src', canvasData)
 
 				if (input_image.getAttribute('src').length > 0) {
-					console.log(lastSource);
-					console.log(canvasData);
-					console.log(canvasData == lastSource);
-					if (canvasData == lastSource) {
+					if (canvasData.slice(0,40) == lastSource.slice(0,40)) {
 						console.log('Drops image is same as last check - skipping OCR step');
 						return;
 					}

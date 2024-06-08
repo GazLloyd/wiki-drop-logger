@@ -13,7 +13,7 @@
 		<script>
 
 			/* This function courtesy of ChatGPT */
-			function parseText(text) {
+			async function parseText(text) {
 				if (text === undefined || text === '') {
 					return
 				}
@@ -169,7 +169,7 @@
 
 				if (input_image.getAttribute('src').length > 0) {
 					if (lastSource !== undefined) {
-						if (canvasData.slice(0,300) == lastSource.slice(0,300)) {
+						if (canvasData.slice(0,225) == lastSource.slice(0,225)) {
 							console.log('Drops image is same as last check - skipping OCR step');
 							setTimeout(() => {
 								readImage(canvas, ctx);
@@ -179,7 +179,7 @@
 					}
 					const { data: { text } } = await worker.recognize(canvasData);
 					if (text !== undefined) {
-						const result = parseText(text);
+						const result = await parseText(text);
 						if (lootData === undefined) {
 							lootData = result;
 						} else {
@@ -192,7 +192,7 @@
 					lastSource = canvasData;
 					setTimeout(() => {
 						readImage(canvas, ctx);
-					}, 300)
+					}, 500)
 				};
 			}
 

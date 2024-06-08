@@ -83,6 +83,17 @@
 					quantityMap[item.name] = item.quantity;
 				});
 
+				// Append new objects from dataArray2 to dataArray
+				dataArray2.forEach(item => {
+					if (!dataArray.find(element => element.name === item.name)) {
+						dataArray.push(item);
+
+						// We had an item that didn't exist in the array previously - so increment kc for the new drop
+						console.log('New item dropped - adding a kill to kc!');
+						kc++;
+					}
+				});
+
 				// Update quantities in dataArray if corresponding name exists in dataArray2
 				let updatedQuantity = false;
 				dataArray.forEach(item => {
@@ -100,17 +111,6 @@
 					console.log('Updated a drop\'s quantity - adding a kill to kc!');
 					kc++;
 				}
-
-				// Append new objects from dataArray2 to dataArray
-				dataArray2.forEach(item => {
-					if (!dataArray.find(element => element.name === item.name)) {
-						dataArray.push(item);
-
-						// We had an item that didn't exist in the array previously - so increment kc for the new drop
-						console.log('New item dropped - adding a kill to kc!');
-						kc++;
-					}
-				});
 
 				console.log(kc);
 				return dataArray;
@@ -181,7 +181,6 @@
 						const result = parseText(text);
 						if (lootData === undefined) {
 							lootData = result;
-							kc++;
 						} else {
 							lootData = updateQuantity(lootData, result);
 						}

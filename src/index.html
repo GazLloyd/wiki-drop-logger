@@ -49,7 +49,7 @@
 			}
 
 			/* This function courtesy of ChatGPT */
-			function generateTable(data) {
+			async function generateTable(data) {
 				if (data === undefined) {
 					return;
 				}
@@ -68,7 +68,7 @@
 			}
 
 			/* Wouldn't you have guessed it? Courtesy of ChatGPT */
-			function updateQuantity(dataArray, dataArray2) {
+			async function updateQuantity(dataArray, dataArray2) {
 				if (dataArray === undefined || dataArray2 === undefined) {
 					return;
 				}
@@ -96,15 +96,17 @@
 				});
 
 				// Append new objects from dataArray2 to dataArray
+				let addedItem = false;
 				dataArray2.forEach(item => {
 					if (!dataArray.find(element => element.name === item.name)) {
 						dataArray.push(item);
+						addedItem = true;
 					}
 				});
 
 				// New drops update quantity as well - so this counts new and updated drops
-				if (updatedQuantity) {
-					console.log('Updated a drop\'s quantity - adding a kill to kc!');
+				if (updatedQuantity || addedItem) {
+					console.log('Drop update detected! Adding to kc');
 					kc++;
 				}
 
@@ -152,7 +154,7 @@
 
 			var worker;
 			var lootData;
-			var lastSource;
+			var lastCanvasData;
 			var kc = 0;
 			async function readImage(canvas, ctx) {
 				if (worker === undefined) {
@@ -168,8 +170,8 @@
 				input_image.setAttribute('src', canvasData)
 
 				if (input_image.getAttribute('src').length > 0) {
-					if (lastSource !== undefined) {
-						if (canvasData.slice(0,225) == lastSource.slice(0,225)) {
+					if (lastCanvasData !== undefined) {
+						if (canvasData.slice(0,225) == lastCanvasData.slice(0,225)) {
 							console.log('Drops image is same as last check - skipping OCR step');
 							setTimeout(() => {
 								readImage(canvas, ctx);
@@ -183,16 +185,16 @@
 						if (lootData === undefined) {
 							lootData = result;
 						} else {
-							lootData = updateQuantity(lootData, result);
+							lootData = await updateQuantity(lootData, result);
 						}
-						const tableHTML = generateTable(lootData);
+						const tableHTML = await generateTable(lootData);
 						document.getElementById('LootOutput').innerHTML = tableHTML;
 						console.log(result);
 					}
-					lastSource = canvasData;
+					lastCanvasData = canvasData;
 					setTimeout(() => {
 						readImage(canvas, ctx);
-					}, 500)
+					}, 600)
 				};
 			}
 

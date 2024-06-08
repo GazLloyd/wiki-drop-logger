@@ -9,7 +9,7 @@
 		</style>
 		<meta http-equiv="Permissions-Policy" content="interest-cohort=(), user-id=()" />
 		<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
-		<script>
+		<script type="module">
 
 			/* This function courtesy of ChatGPT */
 			function parseText(text) {
@@ -168,7 +168,7 @@
 			}
 
 			const { createWorker } = require('tesseract.js');
-			const worker = await createWorker('eng');
+			const worker = createWorker('eng');
 
 			document.addEventListener('DOMContentLoaded', function(){
 				setTimeout(() => {

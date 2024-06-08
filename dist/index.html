@@ -139,6 +139,7 @@
 
 			var worker;
 			var lootData;
+			var lastSource;
 			async function readImage() {
 				if (worker === undefined) {
 					worker = await Tesseract.createWorker('eng');
@@ -153,7 +154,10 @@
 				input_image.setAttribute('src', canvas.toDataURL())
 
 				if (input_image.getAttribute('src').length > 0) {
-					//const base64string = input_image.getAttribute('src').split(',')[1];
+					if (input_image.getAttribute('src') == lastSource) {
+						console.log('Drops image is same as last check - skipping OCR step');
+						return;
+					}
 					const { data: { text } } = await worker.recognize(canvas.toDataURL());
 					if (text !== undefined) {
 						const result = parseText(text);
@@ -169,6 +173,7 @@
 								readImage();
 							}, 1000)
 					}
+					lastSource = input_image.getAttribute('src');
 				};
 			}
 

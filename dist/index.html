@@ -173,7 +173,7 @@
 							console.log('Drops image is same as last check - skipping OCR step');
 							setTimeout(() => {
 								readImage(canvas, ctx);
-							}, 20)
+							}, 300)
 							return;
 						}
 					}
@@ -190,7 +190,7 @@
 						console.log(result);
 							setTimeout(() => {
 								readImage(canvas, ctx);
-							}, 200)
+							}, 300)
 					}
 					lastSource = canvasData;
 				};

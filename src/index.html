@@ -9,6 +9,7 @@
 		</style>
 		<meta http-equiv="Permissions-Policy" content="interest-cohort=(), user-id=()" />
 		<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+		<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js "></script>
 		<script>
 
 			/* This function courtesy of ChatGPT */
@@ -66,12 +67,8 @@
 				return html;
 			}
 
-			function deepEqual(x, y) {
-				const ok = Object.keys, tx = typeof x, ty = typeof y;
-				return x && y && tx === 'object' && tx === ty ? (
-					ok(x).length === ok(y).length &&
-					ok(x).every(key => deepEqual(x[key], y[key]))
-				) : (x === y);
+			function areEqual (arr1, arr2, sortProperty) {
+				return _.areEqual(_.sortBy(arr1, sortProperty), _.sortBy(arr2, sortProperty))
 			}
 
 			/* Wouldn't you have guessed it? Courtesy of ChatGPT */
@@ -82,7 +79,7 @@
 				if (dataArray.length === 0 || dataArray2.length === 0) {
 					return;
 				}
-				if (deepEqual(dataArray, dataArray2)) {
+				if (areEqual(dataArray, dataArray2, 'name')) {
 					console.log('Data is the same');
 					return;
 				} else {
@@ -153,7 +150,7 @@
 			var worker;
 			var lootData;
 			var lastSource;
-			var kc;
+			var kc = 0;
 			async function readImage() {
 				if (worker === undefined) {
 					worker = await Tesseract.createWorker('eng');

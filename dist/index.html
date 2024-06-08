@@ -83,17 +83,6 @@
 					quantityMap[item.name] = item.quantity;
 				});
 
-				// Append new objects from dataArray2 to dataArray
-				dataArray2.forEach(item => {
-					if (!dataArray.find(element => element.name === item.name)) {
-						dataArray.push(item);
-
-						// We had an item that didn't exist in the array previously - so increment kc for the new drop
-						console.log('New item dropped - adding a kill to kc!');
-						kc++;
-					}
-				});
-
 				// Update quantities in dataArray if corresponding name exists in dataArray2
 				let updatedQuantity = false;
 				dataArray.forEach(item => {
@@ -106,13 +95,20 @@
 					}
 				});
 
-				// at least one item updated its quantity so increment kc
+				// Append new objects from dataArray2 to dataArray
+				dataArray2.forEach(item => {
+					if (!dataArray.find(element => element.name === item.name)) {
+						dataArray.push(item);
+					}
+				});
+
+				// New drops update quantity as well - so this counts new and updated drops
 				if (updatedQuantity) {
 					console.log('Updated a drop\'s quantity - adding a kill to kc!');
 					kc++;
 				}
 
-				console.log(kc);
+				document.getElementById('KillCount').innerText = `Kills: ${kc.toSTring()}`
 				return dataArray;
 			}
 
@@ -214,6 +210,7 @@
 			</div>
 			<div id="Mob">
 				<h2>NPC</h2>
+				<h3 id="KillCount">Kill Count</h3>
 			</div>
 			<div id="Loot">
 				<h2>Loot</h2>

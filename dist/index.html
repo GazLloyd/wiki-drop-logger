@@ -68,7 +68,7 @@
 			}
 
 			function areEqual (arr1, arr2, sortProperty) {
-				return _.areEqual(_.sortBy(arr1, sortProperty), _.sortBy(arr2, sortProperty))
+				return _.isEqual(_.sortBy(arr1, sortProperty), _.sortBy(arr2, sortProperty))
 			}
 
 			/* Wouldn't you have guessed it? Courtesy of ChatGPT */

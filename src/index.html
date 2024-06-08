@@ -171,7 +171,7 @@
 
 				if (input_image.getAttribute('src').length > 0) {
 					if (lastSource !== undefined) {
-						if (canvasData.slice(0,100) == lastSource.slice(0,100)) {
+						if (canvasData.slice(0,500) == lastSource.slice(0,500)) {
 							console.log('Drops image is same as last check - skipping OCR step');
 							setTimeout(() => {
 								readImage();

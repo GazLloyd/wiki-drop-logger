@@ -201,7 +201,7 @@
 			document.addEventListener('DOMContentLoaded', function(){
 				setTimeout(() => {
 					const canvas = document.querySelector('#Canvas');
-					const ctx = canvas.getContext('2d');
+					const ctx = canvas.getContext('2d', { willReadFrequently: true });
 					ctx.scale(2.25, 2.25);
 					readImage(canvas, ctx);
 				}, 3000);

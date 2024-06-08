@@ -159,8 +159,7 @@
 			async function readImage() {
 				if (worker === undefined) {
 					worker = await Tesseract.createWorker('eng');
-					worker2 = await Tesseract.createWorker('eng');
-					worker3 = await Tesseract.createWorker('eng');
+					console.log('Worker1 created');
 				}
 				var input_image = document.getElementById('LootImage');
 				const canvas = document.querySelector('#Canvas');
@@ -189,7 +188,83 @@
 						console.log(result);
 							setTimeout(() => {
 								readImage();
-							}, 50)
+							}, 200)
+					}
+					lastSource = canvas.toDataURL();
+				};
+			}
+
+			async function readImage2() {
+				if (worker2 === undefined) {
+					worker2 = await Tesseract.createWorker('eng');
+					console.log('Worker 2 created');
+				}
+				var input_image = document.getElementById('LootImage');
+				const canvas = document.querySelector('#Canvas');
+				const ctx = canvas.getContext('2d');
+				ctx.drawImage(input_image, 0, 0);
+				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+				imgData.data = reverseColors(imgData)
+				ctx.putImageData(imgData, 0, 0)
+				input_image.setAttribute('src', canvas.toDataURL())
+
+				if (input_image.getAttribute('src').length > 0) {
+					if (canvas.toDataURL() == lastSource) {
+						console.log('Drops image is same as last check - skipping OCR step');
+						return;
+					}
+					const { data: { text } } = await worker2.recognize(canvas.toDataURL());
+					if (text !== undefined) {
+						const result = parseText(text);
+						if (lootData === undefined) {
+							lootData = result;
+						} else {
+							lootData = updateQuantity(lootData, result);
+						}
+						const tableHTML = generateTable(lootData);
+						document.getElementById('LootOutput').innerHTML = tableHTML;
+						console.log(result);
+							setTimeout(() => {
+								readImage2();
+							}, 200)
+					}
+					lastSource = canvas.toDataURL();
+				};
+			}
+
+			async function readImage3() {
+				if (worker3 === undefined) {
+					worker3 = await Tesseract.createWorker('eng');
+					console.log('Worker 3 created');
+				}
+				var input_image = document.getElementById('LootImage');
+				const canvas = document.querySelector('#Canvas');
+				const ctx = canvas.getContext('2d');
+				ctx.drawImage(input_image, 0, 0);
+				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+				imgData.data = reverseColors(imgData)
+				ctx.putImageData(imgData, 0, 0)
+				input_image.setAttribute('src', canvas.toDataURL())
+
+				if (input_image.getAttribute('src').length > 0) {
+					if (canvas.toDataURL() == lastSource) {
+						console.log('Drops image is same as last check - skipping OCR step');
+						return;
+					}
+					const { data: { text } } = await worker3.recognize(canvas.toDataURL());
+					if (text !== undefined) {
+						const result = parseText(text);
+						if (lootData === undefined) {
+							lootData = result;
+						} else {
+							lootData = updateQuantity(lootData, result);
+						}
+						const tableHTML = generateTable(lootData);
+						document.getElementById('LootOutput').innerHTML = tableHTML;
+						console.log(result);
+							setTimeout(() => {
+								readImage3();
+							}, 200)
 					}
 					lastSource = canvas.toDataURL();
 				};
@@ -201,7 +276,13 @@
 					const ctx = canvas.getContext('2d');
 					ctx.scale(2.25, 2.25);
 					readImage();
-				}, 3000)
+				}, 3000);
+				setTimeout(() => {
+					readImage2();
+				}, 3200);
+				setTimeout(() => {
+					readImage3();
+				}, 3400);
 			});
 
 		</script>

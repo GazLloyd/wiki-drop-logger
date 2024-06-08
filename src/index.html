@@ -137,12 +137,11 @@
 				return data
 			}
 
-			const { createWorker } = require('tesseract.js');
 			var worker;
 			var lootData;
 			async function readImage() {
 				if (worker === undefined) {
-					const worker = await createWorker('eng');
+					const worker = await Tesseract.createWorker('eng');
 				}
 				var input_image = document.getElementById('LootImage');
 				const canvas = document.querySelector('#Canvas');

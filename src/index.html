@@ -170,12 +170,14 @@
 				input_image.setAttribute('src', canvasData)
 
 				if (input_image.getAttribute('src').length > 0) {
-					if (canvasData.slice(0,40) == lastSource.slice(0,40)) {
-						console.log('Drops image is same as last check - skipping OCR step');
-						setTimeout(() => {
-							readImage();
-						}, 20)
-						return;
+					if (lastSource !== undefined) {
+						if (canvasData.slice(0,40) == lastSource.slice(0,40)) {
+							console.log('Drops image is same as last check - skipping OCR step');
+							setTimeout(() => {
+								readImage();
+							}, 20)
+							return;
+						}
 					}
 					const { data: { text } } = await worker.recognize(canvasData);
 					if (text !== undefined) {

@@ -173,7 +173,7 @@
 							console.log('Drops image is same as last check - skipping OCR step');
 							setTimeout(() => {
 								readImage(canvas, ctx);
-							}, 300)
+							}, 50)
 							return;
 						}
 					}
@@ -188,11 +188,11 @@
 						const tableHTML = generateTable(lootData);
 						document.getElementById('LootOutput').innerHTML = tableHTML;
 						console.log(result);
-							setTimeout(() => {
-								readImage(canvas, ctx);
-							}, 300)
 					}
 					lastSource = canvasData;
+					setTimeout(() => {
+						readImage(canvas, ctx);
+					}, 300)
 				};
 			}
 

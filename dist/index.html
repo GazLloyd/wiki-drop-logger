@@ -67,10 +67,12 @@
 				return html;
 			}
 
-			function areEqual (arr1, arr2, sortProperty) {
-				console.log(_.difference(_.sortBy(arr1, sortProperty), _.sortBy(arr2, sortProperty)));
-				return _.difference(_.sortBy(arr1, sortProperty), _.sortBy(arr2, sortProperty))
-			}
+			const difference = (array1, array2, prop = 'name') =>
+				array1.filter(item1 =>
+					!array2.some(item2 =>
+					item2[prop] === item1[prop],
+				),
+			);
 
 			/* Wouldn't you have guessed it? Courtesy of ChatGPT */
 			function updateQuantity(dataArray, dataArray2) {
@@ -80,7 +82,7 @@
 				if (dataArray.length === 0 || dataArray2.length === 0) {
 					return;
 				}
-				if (areEqual(dataArray, dataArray2, 'name').length === 0) {
+				if (difference(dataArray, dataArray2).length === 0) {
 					console.log('Data is the same');
 					return;
 				} else {

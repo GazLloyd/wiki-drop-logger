@@ -68,7 +68,7 @@
 			}
 
 			function areEqual (arr1, arr2, sortProperty) {
-				return _.isEqual(_.sortBy(arr1, sortProperty), _.sortBy(arr2, sortProperty))
+				return _.difference(_.sortBy(arr1, sortProperty), _.sortBy(arr2, sortProperty))
 			}
 
 			/* Wouldn't you have guessed it? Courtesy of ChatGPT */
@@ -79,7 +79,7 @@
 				if (dataArray.length === 0 || dataArray2.length === 0) {
 					return;
 				}
-				if (areEqual(dataArray, dataArray2, 'name')) {
+				if (areEqual(dataArray, dataArray2, 'name').length === 0) {
 					console.log('Data is the same');
 					return;
 				} else {

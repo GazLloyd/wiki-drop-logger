@@ -154,14 +154,14 @@
 			var lootData;
 			var lastSource;
 			var kc = 0;
+			const canvas = document.querySelector('#Canvas');
+			const ctx = canvas.getContext('2d');
 			async function readImage() {
 				if (worker === undefined) {
 					worker = await Tesseract.createWorker('eng');
 					console.log('Worker created');
 				}
 				var input_image = document.getElementById('LootImage');
-				const canvas = document.querySelector('#Canvas');
-				const ctx = canvas.getContext('2d');
 				ctx.drawImage(input_image, 0, 0);
 				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 				imgData.data = reverseColors(imgData)
@@ -171,7 +171,7 @@
 
 				if (input_image.getAttribute('src').length > 0) {
 					if (lastSource !== undefined) {
-						if (canvasData.slice(0,500) == lastSource.slice(0,500)) {
+						if (canvasData.slice(0,300) == lastSource.slice(0,300)) {
 							console.log('Drops image is same as last check - skipping OCR step');
 							setTimeout(() => {
 								readImage();

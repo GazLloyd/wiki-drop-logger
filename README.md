@@ -2,10 +2,12 @@
 
 Drop logger for the wiki.
 
+This is a fork of the original for dev and debug
+
 ## How to Install & Required Settings
 
 To install Wiki Drop Logger copy & paste this link into Alt1's browser app:
-`alt1://addapp/https://nadyanayme.github.io/wiki-drop-logger/dist/appconfig.json`
+`alt1://addapp/https://gazlloyd.github.io/wiki-drop-logger/dist/appconfig.json`
 
 If you do not have Alt1 Toolkit installed already you can [download it from runeapps.org](https://runeapps.org/alt1). In order for Wiki Drop Logger to work make sure your Runescape settings for Game and UI Scale settings are set to `100%` as this is required for Alt1 to be able to read your game screen.
 

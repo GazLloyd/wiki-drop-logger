@@ -150,7 +150,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
-#RecentLoot table tr:nth-child(n+6) {
+#RecentLoot table tr:nth-child(n+10) {
     display:none;
 }
 
@@ -164,30 +164,30 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
   justify-content: center;
 }
 
-#LootOutput table {
+.loottable table {
   border-spacing: 0;
 }
 
-#LootOutput td {
+.loottable td {
   padding: .25rem 3rem .25rem 0;
   font-size: 12px;
   font-family: 'Noto Sans', sans-serif;
   text-shadow: 1px 1px 0px rgba(0,0,0,.8);
 }
 
-#LootOutput tr {
+.loottable tr {
   background-color: rgba(0, 0, 0, .1);
 }
 
-#LootOutput tr:hover {
+.loottable tr:hover {
   background-color: rgba(0, 0, 0, 0);
 }
 
-#LootOutput tr:nth-child(2n) {
+.loottable tr:nth-child(2n) {
   background-color: rgba(255, 255, 255, .05);
 }
 
-#LootOutput tr:nth-child(2n):hover {
+.loottable tr:nth-child(2n):hover {
   background-color: rgba(255, 255, 255, .1);
 }
 

@@ -259,8 +259,8 @@
 					username: username,
 					loot: diffs,
 					mapPng: toHex(window.current_map_data.data),
-					beforePng: typedArrayToHex(await prevCanvasData.arrayBuffer()),
-					afterPng: typedArrayToHex(await currCanvasData.arrayBuffer())
+					beforePng: arrayBufferToHex(await prevCanvasData.arrayBuffer()),
+					afterPng: arrayBufferToHex(await currCanvasData.arrayBuffer())
 				}
 				let tr = document.createElement('tr');
 				tr.setAttribute('id', 'RecentOutputRow-'+kcid.toString());

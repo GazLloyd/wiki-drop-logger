@@ -29,6 +29,10 @@
 				return toHex(new Uint8Array(buffer))
 			}
 
+			function hasFoundMobName() {
+				return document.getElementById('#Mob').getAttribute('data-found') === 'true';
+			}
+
 			/* This function courtesy of ChatGPT */
 			async function parseText(text) {
 				if (text === undefined || text === '') {
@@ -223,7 +227,7 @@
 							currCanvasData = await canvasToBlob(canvas);
 							document.getElementById('LootOutput').innerHTML = tableHTML;
 							console.log(lootDiff);
-							sendToAPI(lootDiff, kc); // not awaiting, we don't want to wait for it here
+							sendToAPI(lootDiff, kc).then(console.log); // not awaiting, we don't want to wait for it here
 							//pendingLootDiffs.push(lootDiff);
 						}
 					}
@@ -235,15 +239,15 @@
 			}
 
 			async function sendToAPI(diffs, kcid) {
-				let mobname = document.getElementById('Mob').innerText;
-				if (mobname === '(not yet detected)' || mobname === null || mobname === undefined || mobname === 'null' || mobname === 'undefined') {
-					return;
-				}
+				if (diffs.length===0) return;
+				let mobel = document.getElementById('Mob')
+				if (!hasFoundMobName()) return;
+				let mobname = mobel.innerText;
 				let username = document.getElementById('username').value;
 				if (typeof(username) === 'string') {
 					username = username.trim();
 				}
-				if (mobname === null || mobname === undefined || username === '' || mobname === 'null' || mobname === 'undefined') {
+				if (username === null || username === undefined || username === '' || username === 'null' || username === 'undefined') {
 					return;
 				}
 				let data = {
@@ -257,12 +261,17 @@
 				let tr = document.createElement('tr');
 				tr.setAttribute('id', 'RecentOutputRow-'+kcid.toString());
 				let td = document.createElement('td');
+				td.innerText = kcid.toString();
+				tr.appendChild(td);
+
+				td = document.createElement('td');
 				td.innerText = JSON.stringify(diffs);
 				tr.appendChild(td);
+
 				let successTd = document.createElement('td')
 				tr.appendChild(successTd);
 				document.getElementById('RecentLootHeader').after(tr);
-				console.log(`sending request for ${username} - ${mobname} - ${JSON.stringify(diffs)}`)
+				console.log(`sending request for username: ${data.username} - mob: ${data.monsterName} - lootdiff: ${JSON.stringify(data.loot)} - map bytes length: ${data.mapPng.length} - before bytes length: ${data.beforePng.length} - after bytes length: ${data.afterPng.length}`)
 				let r = await fetch('https://chisel.weirdgloop.org/droplogs-alt1/submit', {body: JSON.strinigfy(data)});
 				console.log(r.status, await r.text());
 				let jsr = await r.json();
@@ -292,13 +301,14 @@
 				<h2>Map</h2>
 			</div>
 			<div id="MobKC">
-				<div id="Mob">(not yet detected)</div>
+				<div id="Mob" data-found="false">(not yet detected)</div>
 				<div id="KillCount">0</div>
 			</div>
 			<div id="RecentLoot">
 				<h2>Recent Loot</h2>
 				<table id="RecentLootOutput">
 					<tr id="RecentLootHeader">
+						<th>KC number</th>
 						<th>Loot</th>
 						<th>Submitted</th>
 					</tr>

@@ -124,7 +124,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
   background-image: url(${___CSS_LOADER_URL_REPLACEMENT_0___});
   color: #FFFFFF;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: scroll;
   margin: 0;
   font-family: 'trajan-pro-3', sans-serif;
 }

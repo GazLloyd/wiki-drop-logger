@@ -144,6 +144,11 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
 }
 #MobKC {
   display:flex;
+  justify-content: center;
+}
+#MobKC div {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }
 #RecentLoot table tr:nth-child(n+6) {
     display:none;
@@ -4753,8 +4758,10 @@ function tryFindMonster() {
         return __generator(this, function (_a) {
             if (mobReader) {
                 mobReader.read();
-                if (mobReader.state !== null)
+                if (mobReader.state !== null) {
                     helperItems.Mob.innerText = mobReader.read().name;
+                    helperItems.Mob.setAttribute('data-found', "true");
+                }
             }
             return [2 /*return*/];
         });

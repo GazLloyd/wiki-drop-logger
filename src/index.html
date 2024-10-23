@@ -214,6 +214,7 @@
 						const parsed = await parseText(text);
 						if (totalLootData === undefined) {
 							totalLootData = parsed;
+							lootDiff = [];
 						} else {
 							[totalLootData, lootDiff] = await updateQuantity(totalLootData, parsed);
 						}

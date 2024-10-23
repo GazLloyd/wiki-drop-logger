@@ -239,10 +239,10 @@
 			}
 
 			async function sendToAPI(diffs, kcid) {
+				console.log('sendToAPI', diffs, kcid);
 				if (diffs.length===0) return;
-				let mobel = document.getElementById('Mob')
 				if (!hasFoundMobName()) return;
-				let mobname = mobel.innerText;
+				let mobname = document.getElementById('Mob').innerText;
 				let username = document.getElementById('username').value;
 				if (typeof(username) === 'string') {
 					username = username.trim();
@@ -272,7 +272,7 @@
 				tr.appendChild(successTd);
 				document.getElementById('RecentLootHeader').after(tr);
 				console.log(`sending request for username: ${data.username} - mob: ${data.monsterName} - lootdiff: ${JSON.stringify(data.loot)} - map bytes length: ${data.mapPng.length} - before bytes length: ${data.beforePng.length} - after bytes length: ${data.afterPng.length}`)
-				let r = await fetch('https://chisel.weirdgloop.org/droplogs-alt1/submit', {body: JSON.strinigfy(data)});
+				let r = await fetch('https://chisel.weirdgloop.org/droplogs-alt1/submit', {method:'POST', body: JSON.stringify(data)});
 				console.log(r.status, await r.text());
 				let jsr = await r.json();
 				if (jsr.success) {

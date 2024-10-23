@@ -133,6 +133,20 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
   text-align: center;
   transform-origin: top;
   white-space: nowrap;
+  font-size: 10pt;
+}
+
+#Mob:before {
+  content: "NPC: ";
+}
+#KillCount:before {
+  content: "Kills: ";
+}
+#MobKC {
+  display:flex;
+}
+#RecentLoot table tr:nth-child(n+6) {
+    display:none;
 }
 
 #LootOutput {
@@ -173,15 +187,12 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
 }
 
 #Settings {
-  display: none;
   background-color: #0f0f0f;
   background-image: url(${___CSS_LOADER_URL_REPLACEMENT_0___});
   color: #F1F1F1;
-}
-
-#Settings {
-  padding: .5rem;
-  font-size:smaller;
+  padding: 0.5rem;
+  font-size: 80%;
+  white-space: normal;
 }
 
 #Settings label {
@@ -193,7 +204,6 @@ hr {
 }
 
 h2 {
-  font-size: 1.25rem;
   margin-bottom: 0;
 }
 

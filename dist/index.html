@@ -2,7 +2,6 @@
 <html>
 	<head>
 		<style>
-			#Settings,
 			body {
 				display: none;
 			}
@@ -131,7 +130,7 @@
 					kc++;
 				}
 
-				document.querySelectorAll('#KillCount')[0].innerHTML = `Kills: ${kc.toString()}`
+				document.querySelectorAll('#KillCount')[0].innerHTML = kc.toString();
 				return [totalLootData, diffs];
 			}
 
@@ -224,7 +223,7 @@
 							currCanvasData = await canvasToBlob(canvas);
 							document.getElementById('LootOutput').innerHTML = tableHTML;
 							console.log(lootDiff);
-							sendToAPI(lootDiff) // not awaiting, we don't want to wait for it here
+							sendToAPI(lootDiff, kc); // not awaiting, we don't want to wait for it here
 							//pendingLootDiffs.push(lootDiff);
 						}
 					}
@@ -235,12 +234,12 @@
 				};
 			}
 
-			async function sendToAPI(diffs) {
+			async function sendToAPI(diffs, kcid) {
 				let mobname = document.getElementById('Mob').innerText;
-				if (mobname === 'NPC' || mobname === null || mobname === undefined || mobname === 'null' || mobname === 'undefined') {
+				if (mobname === '(not yet detected)' || mobname === null || mobname === undefined || mobname === 'null' || mobname === 'undefined') {
 					return;
 				}
-				let username = document.getElementById('#username').value;
+				let username = document.getElementById('username').value;
 				if (typeof(username) === 'string') {
 					username = username.trim();
 				}
@@ -255,9 +254,24 @@
 					beforePng: arrayBufferToHex(prevCanvasData),
 					afterPng: arrayBufferToHex(currCanvasData)
 				}
+				let tr = document.createElement('tr');
+				tr.setAttribute('id', 'RecentOutputRow-'+kcid.toString());
+				let td = document.createElement('td');
+				td.innerText = JSON.stringify(diffs);
+				tr.appendChild(td);
+				let successTd = document.createElement('td')
+				tr.appendChild(successTd);
+				document.getElementById('RecentLootHeader').after(tr);
 				console.log(`sending request for ${username} - ${mobname} - ${JSON.stringify(diffs)}`)
 				let r = await fetch('https://chisel.weirdgloop.org/droplogs-alt1/submit', {body: JSON.strinigfy(data)});
-				console.log(r.status, await r.text())
+				console.log(r.status, await r.text());
+				let jsr = await r.json();
+				if (jsr.success) {
+					successTd.innerText = "✔️";
+				} else {
+					successTd.innerText = "❌";
+					successTd.setAttribute('title', jsr.error+'\n'+jsr.details);
+				}
 			}
 
 			document.addEventListener('DOMContentLoaded', function(){
@@ -277,12 +291,21 @@
 			<div id="Map">
 				<h2>Map</h2>
 			</div>
-			<div id="Mob">
-				<h2>NPC</h2>
+			<div id="MobKC">
+				<div id="Mob">(not yet detected)</div>
+				<div id="KillCount">0</div>
 			</div>
-			<h3 id="KillCount">Kill Count</h3>
+			<div id="RecentLoot">
+				<h2>Recent Loot</h2>
+				<table id="RecentLootOutput">
+					<tr id="RecentLootHeader">
+						<th>Loot</th>
+						<th>Submitted</th>
+					</tr>
+				</table>
+			</div>
 			<div id="Loot">
-				<h2>Loot</h2>
+				<h2>All Loot</h2>
 				<div id="LootOutput"></div>
 				<img id="LootImage" src="" style="display:none;">
 			</div>

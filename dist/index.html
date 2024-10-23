@@ -258,7 +258,7 @@
 					monsterName: mobname,
 					username: username,
 					loot: diffs,
-					mapPng: arrayBufferToHex(window.current_map_data.data.toFileBytes()),
+					mapPng: arrayBufferToHex(window.current_map_data.toFileBytes()),
 					beforePng: arrayBufferToHex(await prevCanvasData.arrayBuffer()),
 					afterPng: arrayBufferToHex(await currCanvasData.arrayBuffer())
 				}

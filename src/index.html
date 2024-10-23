@@ -18,15 +18,18 @@
 			  LUT_HEX_8b[n] = `${LUT_HEX_4b[(n >>> 4) & 0xF]}${LUT_HEX_4b[n & 0xF]}`;
 			}
 			// End Pre-Init
-			function toHex(buffer) {
+			function _toHex(buffer, length) {
 			  let out = '';
-			  for (let idx = 0, edx = buffer.length; idx < edx; idx++) {
+			  for (let idx = 0, edx = length; idx < edx; idx++) {
 				out += LUT_HEX_8b[buffer[idx]];
 			  }
 			  return out;
 			}
-			function arrayBufferToHex(buffer) {
-				return toHex(new Uint8Array(buffer))
+			function toHex(buffer) { // for regular style arrays like ImageData.data
+				return _toHex(buffer, buffer.length)
+			}
+			function typedArrayToHex(buffer) { //for typed arrays like Blob.bytes()
+				return _toHex(buffer, buffer.byteLength)
 			}
 
 			function hasFoundMobName() {
@@ -255,8 +258,8 @@
 					username: username,
 					loot: diffs,
 					mapPng: toHex(window.current_map_data.data),
-					beforePng: toHex(await prevCanvasData.bytes()),
-					afterPng: toHex(await currCanvasData.bytes())
+					beforePng: typedArrayToHex(await prevCanvasData.bytes()),
+					afterPng: typedArrayToHex(await currCanvasData.bytes())
 				}
 				let tr = document.createElement('tr');
 				tr.setAttribute('id', 'RecentOutputRow-'+kcid.toString());

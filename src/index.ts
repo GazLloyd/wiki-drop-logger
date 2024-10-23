@@ -96,8 +96,10 @@ let mobReader = new MobReader.default();
 async function tryFindMonster() {
 	if (mobReader) {
 		mobReader.read();
-		if (mobReader.state !== null)
+		if (mobReader.state !== null) {
 			helperItems.Mob.innerText = mobReader.read().name;
+			helperItems.Mob.setAttribute('data-found', "true");
+		}
 	}
 }
 

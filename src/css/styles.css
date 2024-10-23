@@ -27,6 +27,11 @@ body {
 }
 #MobKC {
   display:flex;
+  justify-content: center;
+}
+#MobKC div {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
 }
 #RecentLoot table tr:nth-child(n+6) {
     display:none;

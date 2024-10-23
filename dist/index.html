@@ -11,6 +11,24 @@
 		<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 		<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js "></script>
 		<script>
+			// byte array to hex string: https://www.xaymar.com/articles/2020/12/08/fastest-uint8array-to-hex-string-conversion-in-javascript/
+			// Pre-Init
+			const LUT_HEX_4b = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+			const LUT_HEX_8b = new Array(0x100);
+			for (let n = 0; n < 0x100; n++) {
+			  LUT_HEX_8b[n] = `${LUT_HEX_4b[(n >>> 4) & 0xF]}${LUT_HEX_4b[n & 0xF]}`;
+			}
+			// End Pre-Init
+			function toHex(buffer) {
+			  let out = '';
+			  for (let idx = 0, edx = buffer.length; idx < edx; idx++) {
+				out += LUT_HEX_8b[buffer[idx]];
+			  }
+			  return out;
+			}
+			function arrayBufferToHex(buffer) {
+				return toHex(new Uint8Array(buffer))
+			}
 
 			/* This function courtesy of ChatGPT */
 			async function parseText(text) {
@@ -155,9 +173,17 @@
 				return data
 			}
 
+			async function canvasToBlob(canvas) {
+				return new Promise(resolve=>canvas.toBlob(resolve));
+			}
+
 			var worker;
 			var totalLootData;
 			var lastCanvasData;
+			var pendingLootDiffs = [];
+			var prevLootImg = null;
+			var prevCanvasData = null;
+			var currCanvasData = null;
 			var kc = 0;
 			async function readImage(canvas, ctx) {
 				if (worker === undefined) {
@@ -192,15 +218,45 @@
 							[totalLootData, lootDiff] = await updateQuantity(totalLootData, parsed);
 						}
 						const tableHTML = await generateTable(totalLootData);
-						document.getElementById('LootOutput').innerHTML = tableHTML;
-						console.log(parsed);
-						console.log(lootDiff);
+						if (lootDiff.length>0) {
+							prevCanvasData = currCanvasData;
+							currCanvasData = await canvasToBlob(canvas);
+							document.getElementById('LootOutput').innerHTML = tableHTML;
+							console.log(lootDiff);
+							sendToAPI(lootDiff) // not awaiting, we don't want to wait for it here
+							//pendingLootDiffs.push(lootDiff);
+						}
 					}
 					lastCanvasData = canvasData;
 					setTimeout(() => {
 						readImage(canvas, ctx);
 					}, 150)
 				};
+			}
+
+			async function sendToAPI(diffs) {
+				let mobname = document.getElementById('Mob').innerText;
+				if (mobname === 'NPC' || mobname === null || mobname === undefined || mobname === 'null' || mobname === 'undefined') {
+					return;
+				}
+				let username = document.getElementById('#username').value;
+				if (typeof(username) === 'string') {
+					username = username.trim();
+				}
+				if (mobname === null || mobname === undefined || username === '' || mobname === 'null' || mobname === 'undefined') {
+					return;
+				}
+				let data = {
+					monsterName: mobname,
+					username: username,
+					loot: diffs,
+					mapPng: toHex(toBlobwindow.current_map_data.data),
+					beforePng: arrayBufferToHex(prevCanvasData),
+					afterPng: arrayBufferToHex(currCanvasData)
+				}
+				console.log(`sending request for ${username} - ${mobname} - ${JSON.stringify(diffs)}`)
+				let r = await fetch('https://chisel.weirdgloop.org/droplogs-alt1/submit', {body: JSON.strinigfy(data)});
+				console.log(r.status, await r.text())
 			}
 
 			document.addEventListener('DOMContentLoaded', function(){
@@ -233,6 +289,12 @@
 		</div>
 		<div id="Settings">
 			<div class="container">
+				<div class="info">
+					The username entered below is not publicly visible.
+				</div>
+				<div class="setting">
+					<label for="username">Username:</label><input type="text" id="username" name="username"/>
+				</div>
 			</div>
 		</div>
 		<script src="./main.js" defer></script>

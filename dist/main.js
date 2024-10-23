@@ -181,6 +181,11 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
 
 #Settings {
   padding: .5rem;
+  font-size:smaller;
+}
+
+#Settings label {
+  margin-right: 0.5em;
 }
 
 hr {
@@ -4788,10 +4793,12 @@ function tryFindLoot() {
 }
 function captureMap(x, y, w, h) {
     return __awaiter(this, void 0, void 0, function () {
-        var mapImage, mapData, img;
+        var mapImage, mapDataRaw, mapData, img;
         return __generator(this, function (_a) {
             mapImage = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHold(x, y, w, h);
-            mapData = mapImage.toData().toPngBase64();
+            mapDataRaw = mapImage.toData();
+            mapData = mapDataRaw.toPngBase64();
+            globalThis.current_map_data = mapDataRaw;
             if (helperItems.Map.querySelectorAll('img').length == 0) {
                 img = document.createElement('img');
                 img.id = 'MapImage';

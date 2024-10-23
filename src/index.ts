@@ -158,7 +158,9 @@ async function tryFindLoot() {
 
 async function captureMap(x, y, w, h) {
 	let mapImage = a1lib.captureHold(x, y, w, h);
-	let mapData = mapImage.toData().toPngBase64();
+	let mapDataRaw = mapImage.toData();
+	let mapData = mapDataRaw.toPngBase64();
+	globalThis.current_map_data = mapDataRaw;
 	if (helperItems.Map.querySelectorAll('img').length == 0) {
 		let img = document.createElement('img');
 		img.id = 'MapImage';

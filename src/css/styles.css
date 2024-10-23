@@ -64,6 +64,11 @@ body {
 
 #Settings {
   padding: .5rem;
+  font-size:smaller;
+}
+
+#Settings label {
+  margin-right: 0.5em;
 }
 
 hr {

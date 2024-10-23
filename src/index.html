@@ -254,7 +254,7 @@
 					monsterName: mobname,
 					username: username,
 					loot: diffs,
-					mapPng: toHex(toBlobwindow.current_map_data.data),
+					mapPng: toHex(window.current_map_data.data),
 					beforePng: arrayBufferToHex(prevCanvasData),
 					afterPng: arrayBufferToHex(currCanvasData)
 				}
@@ -290,6 +290,10 @@
 					ctx.scale(2.25, 2.25);
 					readImage(canvas, ctx);
 				}, 3000);
+				document.getElementById('username').value = window.localStorage.getItem('username')
+				document.getElementById('username').addEventListener('input', function(){
+					window.localStorage.setItem('username', document.getElementById('username').value);
+				});
 			});
 
 		</script>

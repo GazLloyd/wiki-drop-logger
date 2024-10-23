@@ -49,6 +49,7 @@
 			}
 
 			/* This function courtesy of ChatGPT */
+			/* frick AI */
 			async function generateTable(data) {
 				if (data === undefined) {
 					return;
@@ -68,27 +69,29 @@
 			}
 
 			/* Wouldn't you have guessed it? Courtesy of ChatGPT */
-			async function updateQuantity(dataArray, dataArray2) {
-				if (dataArray === undefined || dataArray2 === undefined) {
+			async function updateQuantity(totalLootData, parsed) {
+				if (totalLootData === undefined || parsed === undefined) {
 					return;
 				}
-				if (dataArray.length === 0 || dataArray2.length === 0) {
+				if (totalLootData.length === 0 || parsed.length === 0) {
 					return;
 				}
+				const diffs = [];
 
 
 				// Create a map of names to quantities for quick lookup
 				const quantityMap = {};
-				dataArray2.forEach(item => {
+				parsed.forEach(item => {
 					quantityMap[item.name] = item.quantity;
 				});
 
 				// Update quantities in dataArray if corresponding name exists in dataArray2
 				let updatedQuantity = false;
-				dataArray.forEach(item => {
+				totalLootData.forEach(item => {
 					if (quantityMap.hasOwnProperty(item.name)) {
 						if (item.quantity !== quantityMap[item.name]) {
 							updatedQuantity = true;
+							diffs.push({ name: item.name, quantity: quantityMap[item.name]-item.quantity })
 						}
 						item.quantity = quantityMap[item.name];
 						delete quantityMap[item.name]; // Remove updated items from quantityMap
@@ -97,9 +100,9 @@
 
 				// Append new objects from dataArray2 to dataArray
 				let addedItem = false;
-				dataArray2.forEach(item => {
-					if (!dataArray.find(element => element.name === item.name)) {
-						dataArray.push(item);
+				parsed.forEach(item => {
+					if (!totalLootData.find(element => element.name === item.name)) {
+						totalLootData.push(item);
 						addedItem = true;
 					}
 				});
@@ -111,7 +114,7 @@
 				}
 
 				document.querySelectorAll('#KillCount')[0].innerHTML = `Kills: ${kc.toString()}`
-				return dataArray;
+				return [totalLootData, diffs];
 			}
 
 			function RGBToGrayScale(red,green,blue){
@@ -153,7 +156,7 @@
 			}
 
 			var worker;
-			var lootData;
+			var totalLootData;
 			var lastCanvasData;
 			var kc = 0;
 			async function readImage(canvas, ctx) {
@@ -179,17 +182,19 @@
 							return;
 						}
 					}
+					var lootDiff;
 					const { data: { text } } = await worker.recognize(canvasData);
 					if (text !== undefined) {
-						const result = await parseText(text);
-						if (lootData === undefined) {
-							lootData = result;
+						const parsed = await parseText(text);
+						if (totalLootData === undefined) {
+							totalLootData = parsed;
 						} else {
-							lootData = await updateQuantity(lootData, result);
+							[totalLootData, lootDiff] = await updateQuantity(totalLootData, parsed);
 						}
-						const tableHTML = await generateTable(lootData);
+						const tableHTML = await generateTable(totalLootData);
 						document.getElementById('LootOutput').innerHTML = tableHTML;
-						console.log(result);
+						console.log(parsed);
+						console.log(lootDiff);
 					}
 					lastCanvasData = canvasData;
 					setTimeout(() => {

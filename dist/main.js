@@ -136,10 +136,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
   font-size: 10pt;
 }
 
-#Map.visible {
+div.visible {
   display: block;
 }
-#Map.hidden {
+div.hidden {
   display: none;
 }
 
@@ -4408,9 +4408,9 @@ function startApp() {
         helperItems.Output.insertAdjacentHTML('beforeend', "<div><p>Attempted to use Overlay but app overlay permission is not enabled. Please enable \"Show Overlay\" permission in Alt1 settinsg (wrench icon in corner).</p></div>");
         return;
     }
-    setInterval(tryFindMap, 50);
-    setInterval(tryFindLoot, 50);
-    setInterval(tryFindMonster, 50);
+    setInterval(tryFindMap, 400);
+    setInterval(tryFindLoot, 400);
+    setInterval(tryFindMonster, 400);
 }
 //const settingsObject = {
 //	settingsHeader: sauce.createHeading('h2', 'Settings'),

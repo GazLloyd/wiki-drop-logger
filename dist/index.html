@@ -50,6 +50,7 @@
 				let regex = /\,/g;
 				// Split the text into lines
 				const lines = text.replace(regex, '').split('\n');
+				console.log(lines);
 				// Remove the header line
 				lines.shift();
 
@@ -239,9 +240,10 @@
 							currCanvasData = await canvasToBlob(canvas);
 							document.getElementById('LootOutput').innerHTML = tableHTML;
 							console.log(lootDiff);
-							sendToAPI(lootDiff, kc).then(console.log); // not awaiting, we don't want to wait for it here
+							sendToAPI(lootDiff, kc);//.then(()=>{}); // not awaiting, we don't want to wait for it here
 							//pendingLootDiffs.push(lootDiff);
-						} else if (prevCanvasData === null) {
+						}
+						if (prevCanvasData === null) {
 							prevCanvasData = await canvasToBlob(canvas);
 						}
 					}

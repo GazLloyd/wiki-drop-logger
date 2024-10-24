@@ -253,7 +253,7 @@
 				usernameTimout = -1;
 			// waits for typing to finish
 			async function finishedUsernameTyping() {
-				while (!usernametyping) {
+				while (usernametyping) {
 					await timeout(200);
 				}
 				return true;

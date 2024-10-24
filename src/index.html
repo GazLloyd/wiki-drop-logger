@@ -227,7 +227,11 @@
 							totalLootData = parsed;
 							lootDiff = [];
 						} else {
-							[totalLootData, lootDiff] = await updateQuantity(totalLootData, parsed);
+							try {
+								[totalLootData, lootDiff] = await updateQuantity(totalLootData, parsed);
+							} catch(e){
+								return
+							}
 						}
 						const tableHTML = await generateTable(totalLootData);
 						if (lootDiff.length>0) {

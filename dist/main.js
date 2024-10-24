@@ -136,6 +136,13 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
   font-size: 10pt;
 }
 
+#Map.visible {
+  display: block;
+}
+#Map.hidden {
+  display: none;
+}
+
 #Mob:before {
   content: "NPC: ";
 }
@@ -202,6 +209,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, `body {
 
 #Settings label {
   margin-right: 0.5em;
+}
+
+#Settings[data-needs-username="1"] {
+  display:block !important;
 }
 
 hr {
@@ -838,473 +849,6 @@ function styleTagTransform(css, styleElement) {
   }
 }
 module.exports = styleTagTransform;
-
-/***/ }),
-
-/***/ "./a1sauce.ts":
-/*!********************!*\
-  !*** ./a1sauce.ts ***!
-  \********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   createButton: () => (/* binding */ createButton),
-/* harmony export */   createCheckboxSetting: () => (/* binding */ createCheckboxSetting),
-/* harmony export */   createDropdownSetting: () => (/* binding */ createDropdownSetting),
-/* harmony export */   createHeading: () => (/* binding */ createHeading),
-/* harmony export */   createNumberSetting: () => (/* binding */ createNumberSetting),
-/* harmony export */   createProfileManager: () => (/* binding */ createProfileManager),
-/* harmony export */   createRangeSetting: () => (/* binding */ createRangeSetting),
-/* harmony export */   createSeperator: () => (/* binding */ createSeperator),
-/* harmony export */   createSmallText: () => (/* binding */ createSmallText),
-/* harmony export */   createText: () => (/* binding */ createText),
-/* harmony export */   createTextSetting: () => (/* binding */ createTextSetting),
-/* harmony export */   getSetting: () => (/* binding */ getSetting),
-/* harmony export */   loadSettings: () => (/* binding */ loadSettings),
-/* harmony export */   setDefaultSettings: () => (/* binding */ setDefaultSettings),
-/* harmony export */   settingsExist: () => (/* binding */ settingsExist),
-/* harmony export */   timeout: () => (/* binding */ timeout),
-/* harmony export */   updateSetting: () => (/* binding */ updateSetting)
-/* harmony export */ });
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-var config = __webpack_require__(/*! ./appconfig.json */ "./appconfig.json");
-var appName = config.appName;
-appName = 'wiki-drop-logger';
-function createHeading(size, content) {
-    var header = document.createElement(size);
-    header.innerHTML = content;
-    return header;
-}
-function createText(content) {
-    var text = document.createElement('p');
-    text.innerHTML = content;
-    return text;
-}
-function createSmallText(content) {
-    var text = document.createElement('small');
-    text.innerHTML = content;
-    return text;
-}
-function createSeperator() {
-    return document.createElement('hr');
-}
-function createButton(content, fn, options) {
-    var _a = options.classes, classes = _a === void 0 ? options.classes : _a;
-    var button = document.createElement('button');
-    button.innerHTML = content;
-    if (options.classes.length) {
-        for (var i = options.classes.length; i--; i >= 0) {
-            button.classList.add(options.classes[i]);
-        }
-    }
-    button.addEventListener('click', function () {
-        fn();
-    });
-    return button;
-}
-function createDropdownSetting(name, description, defaultValue, options) {
-    var select = createDropdown(name, defaultValue, options);
-    var label = createLabel(name, description);
-    var container = createFlexContainer('reverse-setting');
-    container.appendChild(select);
-    container.appendChild(label);
-    return container;
-}
-function createTextSetting(name, description, defaultValue) {
-    var input = createInput('text', name, defaultValue);
-    var label = createLabel(name, description);
-    label.setAttribute('for', name);
-    var container = createFlexContainer();
-    container.appendChild(input);
-    container.appendChild(label);
-    return container;
-}
-function createCheckboxSetting(name, description, defaultValue) {
-    var input = createCheckboxInput(name, defaultValue);
-    var label = createLabel(name, description);
-    var checkboxLabel = createLabel(name, '');
-    var checkbox = document.createElement('span');
-    checkbox.classList.add('checkbox');
-    var container = createFlexContainer('reverse-setting');
-    checkboxLabel.appendChild(input);
-    checkboxLabel.appendChild(checkbox);
-    container.appendChild(checkboxLabel);
-    container.appendChild(label);
-    container.addEventListener('click', function (e) {
-        if (e.target == container) {
-            input.checked = !input.checked;
-            input.dispatchEvent(new CustomEvent('change', { bubbles: true }));
-            updateSetting(name, input.checked);
-        }
-    });
-    return container;
-}
-function createNumberSetting(name, description, options) {
-    var _a, _b, _c;
-    if (options === void 0) { options = {}; }
-    var _d = options.defaultValue, defaultValue = _d === void 0 ? (_a = options.defaultValue) !== null && _a !== void 0 ? _a : 10 : _d, _e = options.min, min = _e === void 0 ? (_b = options.min) !== null && _b !== void 0 ? _b : 1 : _e, _f = options.max, max = _f === void 0 ? (_c = options.max) !== null && _c !== void 0 ? _c : 20 : _f;
-    var input = createInput('number', name, defaultValue);
-    input.setAttribute('min', min.toString());
-    input.setAttribute('max', max.toString());
-    var label = createLabel(name, description);
-    var container = createFlexContainer('reverse-setting');
-    container.appendChild(input);
-    container.appendChild(label);
-    return container;
-}
-function createRangeSetting(name, description, options) {
-    var _a, _b, _c, _d, _e;
-    if (options === void 0) { options = {}; }
-    var _f = options.classes, classes = _f === void 0 ? (_a = options.classes) !== null && _a !== void 0 ? _a : '' : _f, _g = options.defaultValue, defaultValue = _g === void 0 ? (_b = options.defaultValue) !== null && _b !== void 0 ? _b : '100' : _g, _h = options.min, min = _h === void 0 ? (_c = options.min) !== null && _c !== void 0 ? _c : 0 : _h, _j = options.max, max = _j === void 0 ? (_d = options.max) !== null && _d !== void 0 ? _d : 100 : _j, _k = options.unit, unit = _k === void 0 ? (_e = options.unit) !== null && _e !== void 0 ? _e : '%' : _k;
-    var input = createInput('range', name, defaultValue);
-    input.setAttribute('min', min.toString());
-    input.setAttribute('max', max.toString());
-    var label = createLabel(name, description);
-    label.classList.add('full');
-    if (getSetting(name) != undefined) {
-        input.value = getSetting(name);
-    }
-    var output = createOutput();
-    output.setAttribute('id', "".concat(name, "Output"));
-    output.setAttribute('for', name);
-    output.innerHTML = input.value + unit;
-    output.after(unit);
-    var container = createFlexContainer();
-    if (classes.length) {
-        for (var i = classes.length; i--; i >= 0) {
-            container.classList.add(classes[i]);
-        }
-    }
-    container.classList.add('flex-wrap');
-    container.appendChild(label);
-    container.appendChild(input);
-    container.appendChild(output);
-    input.addEventListener('input', function () {
-        output.innerHTML = input.value + unit;
-    });
-    return container;
-}
-function createProfileManager() {
-    function saveProfile() {
-        var profileNameInput = container.querySelector('#ProfileName');
-        var profileName = profileNameInput.value;
-        if (profileName.indexOf('|') > -1) {
-            console.log('Pipe character is not allowed in profile names.');
-            return;
-        }
-        var profiles = localStorage.getItem('bbb_profiles');
-        var profilesArray = localStorage
-            .getItem('bbb_profiles')
-            .split('|')
-            .filter(function (str) { return str !== ''; });
-        // If we do not have profiles set it to be empty
-        if (profiles == undefined) {
-            profiles = '';
-        }
-        // If the profile name doesn't exist in our profiles - add it
-        if (!profilesArray.includes(profileName)) {
-            profiles = profiles + '|' + profileName + '|';
-            localStorage.setItem('bbb_profiles', profiles);
-        }
-        // Create and update or store any data
-        var data = {};
-        data['Buffs'] = localStorage['Buffs'];
-        data['Buffs2'] = localStorage['Buffs2'];
-        data['Buffs3'] = localStorage['Buffs3'];
-        data['UntrackedBuffs'] = localStorage['UntrackedBuffs'];
-        data['Settings'] = JSON.parse(localStorage[appName]);
-        localStorage.setItem("bbb_profile_".concat(profileName), JSON.stringify(data));
-        console.log("".concat(profileName, " added to profiles. Existing profiles: \n ").concat(profiles));
-        location.reload();
-    }
-    function deleteProfile() {
-        var index = container.querySelector('select').selectedIndex;
-        var profileName = container.querySelector('select').options[index].text;
-        console.log("Deleting: ".concat(profileName, " profile"));
-        var profiles = localStorage
-            .getItem('bbb_profiles')
-            .split('|')
-            .filter(function (str) { return str !== ''; });
-        profiles = profiles.filter(function (item) { return item !== profileName; });
-        localStorage.setItem('bbb_profiles', profiles.join('|') + '|');
-        localStorage.removeItem("bbb_profile_".concat(profileName));
-        location.reload();
-    }
-    function loadProfile() {
-        var index = container.querySelector('select').selectedIndex;
-        if (index !== 0) {
-            var profiles_1 = localStorage
-                .getItem('bbb_profiles')
-                .split('|')
-                .filter(function (str) { return str !== ''; });
-            var storageName = profiles_1[index - 1];
-            var data = JSON.parse(localStorage.getItem("bbb_profile_".concat(storageName)));
-            if (data['Buffs'] !== undefined && data['Buffs'] !== '') {
-                localStorage.setItem('Buffs', data['Buffs']);
-            }
-            if (data['Buffs2'] !== undefined && data['Buffs2'] !== '') {
-                localStorage.setItem('Buffs2', data['Buffs2']);
-            }
-            if (data['Buffs3'] !== undefined && data['Buffs3'] !== '') {
-                localStorage.setItem('Buffs3', data['Buffs3']);
-            }
-            if (data['UntrackedBuffs'] !== undefined &&
-                data['UntrackedBuffs'] !== '') {
-                localStorage.setItem('UntrackedBuffs', data['UntrackedBuffs']);
-            }
-            Object.entries(data['Settings']).forEach(function (setting) {
-                updateSetting(setting[0], setting[1]);
-            });
-        }
-        location.reload();
-    }
-    var profileOptions = [{ value: '0', name: 'Select Profile' }];
-    var profiles;
-    if (localStorage.getItem('bbb_profiles')) {
-        profiles = localStorage
-            .getItem('bbb_profiles')
-            .split('|')
-            .filter(function (str) { return str !== ''; });
-        profiles.forEach(function (profile, index) {
-            profileOptions.push({ value: index.toString(), name: profile });
-        });
-    }
-    else {
-        profiles = '|';
-    }
-    var profileHeader = createHeading('h3', 'Profiles');
-    var profileText = createText('Select a profile to load or delete. To save a new profile, give it a name in the field below and then click Save. To update an existing profile save a profile using the same name.');
-    var saveButton = createButton('Save', saveProfile, {
-        classes: ['nisbutton'],
-    });
-    var profileName = createInput('text', 'ProfileName', '');
-    profileName.classList.add('profile-name');
-    var loadOptions = createDropdownSetting('Profile', '', 'Add', profileOptions);
-    loadOptions.classList.add('profile-list');
-    loadOptions.querySelector('select').selectedIndex = 0;
-    var loadButton = createButton('Load', loadProfile, {
-        classes: ['nisbutton'],
-    });
-    loadButton.classList.add('load-btn');
-    var deleteButton = createButton('Delete', deleteProfile, {
-        classes: ['nisbutton', 'delete'],
-    });
-    var container = createFlexContainer();
-    container.classList.remove('flex');
-    var endSeperator = createSeperator();
-    container.classList.add('flex-wrap');
-    container.appendChild(profileHeader);
-    container.appendChild(profileText);
-    container.appendChild(loadOptions);
-    container.appendChild(document.createElement('br'));
-    container.appendChild(saveButton);
-    container.appendChild(profileName);
-    container.appendChild(loadButton);
-    container.appendChild(deleteButton);
-    //container.appendChild(deleteButton);
-    container.appendChild(endSeperator);
-    return container;
-}
-function createLabel(name, description) {
-    var label = document.createElement('label');
-    label.setAttribute('for', name);
-    label.innerHTML = description;
-    return label;
-}
-function createInput(type, name, defaultValue) {
-    var _a;
-    var input = document.createElement('input');
-    input.id = name;
-    input.type = type;
-    input.dataset.setting = name;
-    input.dataset.defaultValue = defaultValue;
-    input.value = input.dataset.defaultValue;
-    if (getSetting(name)) {
-        input.value = (_a = getSetting(name)) !== null && _a !== void 0 ? _a : input.dataset.defaultValue;
-    }
-    else {
-        updateSetting(name, input.dataset.defaultValue);
-    }
-    input.addEventListener('change', function () {
-        if (type == 'text') {
-            updateSetting(name, input.value);
-        }
-        else if (type == 'number' || type == 'range') {
-            updateSetting(name, parseInt(input.value, 10));
-        }
-    });
-    return input;
-}
-function createCheckboxInput(name, defaultValue) {
-    var input = document.createElement('input');
-    input.id = name;
-    input.type = 'checkbox';
-    input.dataset.setting = name;
-    input.dataset.defaultValue = defaultValue;
-    input.checked = defaultValue;
-    if (getSetting(name)) {
-        input.checked = getSetting(name);
-    }
-    else {
-        updateSetting(name, input.checked);
-    }
-    input.addEventListener('change', function () {
-        updateSetting(name, input.checked);
-    });
-    return input;
-}
-function createDropdown(name, defaultValue, options) {
-    var select = document.createElement('select');
-    select.id = name;
-    select.dataset.setting = name;
-    select.dataset.defaultValue = defaultValue;
-    select.value = defaultValue;
-    if (getSetting(name)) {
-        select.value = getSetting(name);
-    }
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement('option');
-        option.value = options[i].value;
-        option.text = options[i].name;
-        select.appendChild(option);
-    }
-    if (getSetting(name)) {
-        select.value = getSetting(name);
-    }
-    else {
-        updateSetting(name, select.value);
-    }
-    select.addEventListener('change', function () {
-        updateSetting(name, select.value);
-    });
-    return select;
-}
-function createOutput() {
-    var output = document.createElement('output');
-    return output;
-}
-function createFlexContainer(classes) {
-    var container = document.createElement('div');
-    container.classList.add('flex');
-    container.classList.add('setting');
-    if (classes) {
-        container.classList.add(classes);
-    }
-    return container;
-}
-function setDefaultSettings() {
-    var settings = document.querySelectorAll('[data-setting]');
-    settings.forEach(function (setting) {
-        switch (setting.type) {
-            case 'number':
-            case 'range':
-                updateSetting(setting.dataset.setting, parseInt(setting.dataset.defaultValue, 10));
-                break;
-            case 'checkbox':
-                if (setting.dataset.defaultValue == 'false') {
-                    updateSetting(setting.dataset.setting, false);
-                }
-                else {
-                    updateSetting(setting.dataset.setting, true);
-                }
-                break;
-            default:
-                updateSetting(setting.dataset.setting, setting.dataset.defaultValue);
-        }
-    });
-}
-function loadSettings() {
-    var settings = document.querySelectorAll('[data-setting]');
-    settings.forEach(function (setting) {
-        var _a;
-        switch (setting.type) {
-            case 'number':
-            case 'range':
-                setting.value =
-                    (_a = getSetting(setting.dataset.setting)) !== null && _a !== void 0 ? _a : setting.dataset.defaultValue;
-                break;
-            case 'checkbox':
-                setting.checked =
-                    getSetting(setting.dataset.setting) ||
-                        setting.dataset.defaultValue;
-                break;
-            default:
-                setting.value =
-                    getSetting(setting.dataset.setting) ||
-                        setting.dataset.defaultValue;
-        }
-    });
-}
-function settingsExist() {
-    if (!localStorage[appName]) {
-        setDefaultSettings();
-    }
-    else {
-        loadSettings();
-    }
-}
-function getSetting(setting) {
-    if (!localStorage[appName]) {
-        localStorage.setItem(appName, JSON.stringify({}));
-        setDefaultSettings();
-    }
-    return JSON.parse(localStorage[appName])[setting];
-}
-function updateSetting(setting, value) {
-    if (!localStorage.getItem(appName)) {
-        localStorage.setItem(appName, JSON.stringify({}));
-    }
-    var save_data = JSON.parse(localStorage[appName]);
-    save_data[setting] = value;
-    localStorage.setItem(appName, JSON.stringify(save_data));
-}
-function timeout(millis) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            return [2 /*return*/, new Promise(function (resolve) {
-                    setTimeout(resolve, millis);
-                })];
-        });
-    });
-}
-
 
 /***/ }),
 
@@ -4635,15 +4179,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   startApp: () => (/* binding */ startApp)
 /* harmony export */ });
-/* harmony import */ var alt1__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! alt1 */ "../node_modules/alt1/dist/base/index.js");
-/* harmony import */ var alt1__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(alt1__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var alt1_targetmob__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! alt1/targetmob */ "../node_modules/alt1/dist/targetmob/index.js");
-/* harmony import */ var alt1_targetmob__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(alt1_targetmob__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _a1sauce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a1sauce */ "./a1sauce.ts");
-/* harmony import */ var _index_html__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.html */ "./index.html");
-/* harmony import */ var _appconfig_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./appconfig.json */ "./appconfig.json");
-/* harmony import */ var _icon_png__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./icon.png */ "./icon.png");
-/* harmony import */ var _css_styles_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./css/styles.css */ "./css/styles.css");
+/* harmony import */ var alt1__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! alt1 */ "../node_modules/alt1/dist/base/index.js");
+/* harmony import */ var alt1__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(alt1__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var alt1_targetmob__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! alt1/targetmob */ "../node_modules/alt1/dist/targetmob/index.js");
+/* harmony import */ var alt1_targetmob__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(alt1_targetmob__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _index_html__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.html */ "./index.html");
+/* harmony import */ var _appconfig_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./appconfig.json */ "./appconfig.json");
+/* harmony import */ var _icon_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./icon.png */ "./icon.png");
+/* harmony import */ var _css_styles_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./css/styles.css */ "./css/styles.css");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -4684,7 +4227,6 @@ var __generator = (undefined && undefined.__generator) || function (thisArg, bod
 // also gives your editor info about the window.alt1 api
 
 
-
 // tell webpack that this file relies index.html, appconfig.json and icon.png, this makes webpack
 // add these files to the output directory
 // this works because in /webpack.config.js we told webpack to treat all html, json and imageimports
@@ -4704,7 +4246,7 @@ var helperItems = {
     Loot: getByID('Loot'),
     settings: getByID('Settings'),
 };
-var dataImages = alt1__WEBPACK_IMPORTED_MODULE_5__.webpackImages({
+var dataImages = alt1__WEBPACK_IMPORTED_MODULE_4__.webpackImages({
     homeTeleport: __webpack_require__(/*! ./asset/data/map-corner.data.png */ "./asset/data/map-corner.data.png"),
     lootButton: __webpack_require__(/*! ./asset/data/lootbutton.data.png */ "./asset/data/lootbutton.data.png"),
     runBorder: __webpack_require__(/*! ./asset/data/map-border-corner.data.png */ "./asset/data/map-border-corner.data.png"),
@@ -4720,7 +4262,7 @@ function tryFindMap() {
         var client_screen, homeTeleport, runIcon, mapPosition, runPosition;
         return __generator(this, function (_a) {
             if (lastKnownMapPosition.mapPosition.x === undefined) {
-                client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
+                client_screen = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHoldFullRs();
                 homeTeleport = {
                     screenPosition: client_screen.findSubimage(dataImages.homeTeleport),
                 };
@@ -4740,7 +4282,7 @@ function tryFindMap() {
                     lastKnownMapPosition.mapPosition = mapPosition;
                     lastKnownMapPosition.runPosition = runPosition;
                     alt1.overLaySetGroup('Map');
-                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.runPosition.y, lastKnownMapPosition.runPosition.x -
+                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_4__.mixColor(255, 255, 255), lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.runPosition.y, lastKnownMapPosition.runPosition.x -
                         lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.mapPosition.y, 500, 2);
                 }
             }
@@ -4752,15 +4294,18 @@ function tryFindMap() {
         });
     });
 }
-var mobReader = new (alt1_targetmob__WEBPACK_IMPORTED_MODULE_6___default())();
+var mobReader = new (alt1_targetmob__WEBPACK_IMPORTED_MODULE_5___default())();
 function tryFindMonster() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             if (mobReader) {
                 mobReader.read();
                 if (mobReader.state !== null) {
-                    helperItems.Mob.innerText = mobReader.read().name;
-                    helperItems.Mob.setAttribute('data-found', "true");
+                    try {
+                        helperItems.Mob.innerText = mobReader.read().name;
+                        helperItems.Mob.setAttribute('data-found', "true");
+                    }
+                    catch (e) { } //nothing
                 }
             }
             return [2 /*return*/];
@@ -4774,7 +4319,7 @@ function tryFindLoot() {
         return __generator(this, function (_a) {
             if (lastKnownLootPosition.dropText.x === undefined) {
                 console.log("Attempting to capture Runemetrics dropsmenu");
-                client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
+                client_screen = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHoldFullRs();
                 dropText = {
                     screenPosition: client_screen.findSubimage(dataImages.dropText),
                 };
@@ -4794,7 +4339,7 @@ function tryFindLoot() {
                     lastKnownLootPosition.dropText = dropTextPosition;
                     lastKnownLootPosition.resetButton = resetButtonPosition;
                     alt1.overLaySetGroup('Loot');
-                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lastKnownLootPosition.dropText.x, lastKnownLootPosition.dropText.y, lastKnownLootPosition.resetButton.x -
+                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_4__.mixColor(255, 255, 255), lastKnownLootPosition.dropText.x, lastKnownLootPosition.dropText.y, lastKnownLootPosition.resetButton.x -
                         lastKnownLootPosition.dropText.x +
                         22, lastKnownLootPosition.resetButton.y -
                         lastKnownLootPosition.dropText.y -
@@ -4812,18 +4357,20 @@ function captureMap(x, y, w, h) {
     return __awaiter(this, void 0, void 0, function () {
         var mapImage, mapDataRaw, mapData, img;
         return __generator(this, function (_a) {
-            mapImage = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHold(x, y, w, h);
+            mapImage = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHold(x, y, w, h);
             mapDataRaw = mapImage.toData();
             mapData = mapDataRaw.toPngBase64();
             globalThis.current_map_data = mapDataRaw;
-            if (helperItems.Map.querySelectorAll('img').length == 0) {
-                img = document.createElement('img');
-                img.id = 'MapImage';
-                img.src = 'data:image/png;base64,' + mapData;
-                helperItems.Map.appendChild(img);
-            }
-            else {
-                helperItems.Map.querySelector('#MapImage').setAttribute('src', 'data:image/png;base64,' + mapData);
+            if (helperItems.Map.classList.contains('visible')) {
+                if (helperItems.Map.querySelectorAll('img').length == 0) {
+                    img = document.createElement('img');
+                    img.id = 'MapImage';
+                    img.src = 'data:image/png;base64,' + mapData;
+                    helperItems.Map.appendChild(img);
+                }
+                else {
+                    helperItems.Map.querySelector('#MapImage').setAttribute('src', 'data:image/png;base64,' + mapData);
+                }
             }
             return [2 /*return*/];
         });
@@ -4833,7 +4380,7 @@ function captureLoot(x, y, x2, y2) {
     return __awaiter(this, void 0, void 0, function () {
         var lootImage, lootData, img;
         return __generator(this, function (_a) {
-            lootImage = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHold(x, y, x2 - x, y2 - y);
+            lootImage = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHold(x, y, x2 - x, y2 - y);
             lootData = lootImage.toData().toPngBase64();
             if (helperItems.Loot.querySelectorAll('img').length == 0) {
                 img = document.createElement('img');
@@ -4865,9 +4412,9 @@ function startApp() {
     setInterval(tryFindLoot, 50);
     setInterval(tryFindMonster, 50);
 }
-var settingsObject = {
-    settingsHeader: _a1sauce__WEBPACK_IMPORTED_MODULE_0__.createHeading('h2', 'Settings'),
-};
+//const settingsObject = {
+//	settingsHeader: sauce.createHeading('h2', 'Settings'),
+//};
 window.onload = function () {
     //check if we are running inside alt1 by checking if the alt1 global exists
     if (window.alt1) {
@@ -4875,9 +4422,9 @@ window.onload = function () {
         //this makes alt1 show the add app button when running inside the embedded browser
         //also updates app settings if they are changed
         alt1.identifyAppUrl('./appconfig.json');
-        Object.values(settingsObject).forEach(function (val) {
-            helperItems.settings.before(val);
-        });
+        //Object.values(settingsObject).forEach((val) => {
+        //	helperItems.settings.before(val);
+        //});
         startApp();
     }
     else {

@@ -19,10 +19,10 @@ body {
   font-size: 10pt;
 }
 
-#Map.visible {
+div.visible {
   display: block;
 }
-#Map.hidden {
+div.hidden {
   display: none;
 }
 

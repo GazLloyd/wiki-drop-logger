@@ -68,7 +68,7 @@
 					const quantity = parseInt(words[words.length - 1], 10);
 
 					// Construct the object and push it to the array
-					if (name === '' || quantity === null || isNaN(quantity)) {
+					if (name === '' || quantity === null || isNaN(quantity) || quantity < 1) {
 						return
 					}
 					items.push({ 'name': name, 'quantity': quantity });
@@ -215,7 +215,7 @@
 							console.log('Drops image is same as last check - skipping OCR step');
 							setTimeout(() => {
 								readImage(canvas, ctx);
-							}, 50)
+							}, 250)
 							return;
 						}
 					}
@@ -248,7 +248,7 @@
 					lastCanvasData = canvasData;
 					setTimeout(() => {
 						readImage(canvas, ctx);
-					}, 150)
+					}, 250)
 				};
 			}
 			var usernametyping = false,
@@ -302,6 +302,16 @@
 				}
 			}
 
+			function stringify(x) {
+				if (!Array.isArray(x)) {
+					x = [x];
+				}
+				out = []
+				for (let y of x) {
+					out.push(`${y.name} × ${y.quantity.toString()}`);
+				}
+				return out.join('; ')
+			}
 			async function sendToAPI(diffs, kcid) {
 				console.log('sendToAPI', diffs, kcid);
 				if (diffs.length===0) return;
@@ -323,7 +333,7 @@
 				tr.appendChild(td);
 
 				td = document.createElement('td');
-				td.innerText = JSON.stringify(diffs);
+				td.innerText = stringify(diffs);
 				tr.appendChild(td);
 
 				let successTd = document.createElement('td')

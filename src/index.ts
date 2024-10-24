@@ -219,9 +219,9 @@ export function startApp() {
 		return;
 	}
 
-	setInterval(tryFindMap, 50);
-	setInterval(tryFindLoot, 50);
-	setInterval(tryFindMonster, 50);
+	setInterval(tryFindMap, 400);
+	setInterval(tryFindLoot, 400);
+	setInterval(tryFindMonster, 400);
 }
 
 //const settingsObject = {

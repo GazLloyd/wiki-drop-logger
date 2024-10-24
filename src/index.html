@@ -270,7 +270,7 @@
 				uname = uname.trim();
 				usernameIsGood(uname);
 				window.localStorage.setItem('username', uname);
-				if (ev !== undefined || ev !== null) {
+				if (ev !== undefined && ev !== null) {
 					// this is the event
 					clearTimeout(usernameTimout);
 					if (ev.type === 'input') {

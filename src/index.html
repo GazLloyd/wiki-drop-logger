@@ -33,6 +33,10 @@
 				return _toHex(view, view.byteLength)
 			}
 
+			// simple setTimeout callback=>async
+			async function timeout(x) {
+				return new Promise(resolve=>setTimeout(resolve,x));
+			}
 			function hasFoundMobName() {
 				return document.getElementById('Mob').getAttribute('data-found') === 'true';
 			}
@@ -241,19 +245,59 @@
 					}, 150)
 				};
 			}
+			var usernametyping = false,
+				usernameTimout = -1;
+			// waits for typing to finish
+			async function finishedUsernameTyping() {
+				while (!usernametyping) {
+					await timeout(200);
+				}
+				return true;
+			}
+			function usernameIsGood(uname) {
+				if (uname === undefined || uname === null || uname === '' || uname === 'undefined' || uname === 'null') {
+					window.alt1.setTooltip('Please set a username! Data submission paused');
+					document.getElementById('Settings').setAttribute('data-needs-username','1');
+					return false;
+				} else {
+					window.alt1.clearTooltip();
+					document.getElementById('Settings').setAttribute('data-needs-username','0');
+					return true;
+				}
+			}
+			function setUsername(ev) {
+				let uname = document.getElementById('username').value;
+				uname = uname.trim();
+				usernameIsGood(uname);
+				window.localStorage.setItem('username', uname);
+				if (ev !== undefined || ev !== null) {
+					// this is the event
+					usernametyping = true;
+					clearTimeout(usernameTimout);
+					usernameTimout = setTimeout(() => {
+						usernametyping = false;
+					}, 3000);
+				}
+			}
+			// waits for the username to be entered and valid
+			async function getUsername() {
+				let el = document.getElementById('username');
+				while (true) {
+					await finishedUsernameTyping();
+					let uname = uname.value.trim();
+					if (usernameIsGood(uname)) {
+						return uname;
+					}
+					await timeout(200);
+				}
+			}
 
 			async function sendToAPI(diffs, kcid) {
 				console.log('sendToAPI', diffs, kcid);
 				if (diffs.length===0) return;
 				if (!hasFoundMobName()) return;
 				let mobname = document.getElementById('Mob').innerText;
-				let username = document.getElementById('username').value;
-				if (typeof(username) === 'string') {
-					username = username.trim();
-				}
-				if (username === null || username === undefined || username === '' || username === 'null' || username === 'undefined') {
-					return;
-				}
+				let username = await getUsername();
 				let data = {
 					monsterName: mobname,
 					username: username,
@@ -288,16 +332,28 @@
 			}
 
 			document.addEventListener('DOMContentLoaded', function(){
+				document.getElementById('username').value = window.localStorage.getItem('username');
+				setUsername();
+				document.getElementById('username').addEventListener('input', setUsername);
+				document.querySelectorAll('.toggle').forEach((el,i)=>{
+					el.addEventListener('click', (ev)=>{
+						let tog = document.getElementById(el.getAttribute('data-toggle'));
+						if (tog !== null && tog.classList.contains('visible')) {
+							tog.className = 'hidden';
+							tog.innerText = '[show]';
+						} else {
+							tog.className = 'visible';
+							tog.innerText = '[hide]';
+						}
+					})
+				});
+
 				setTimeout(() => {
 					const canvas = document.querySelector('#Canvas');
 					const ctx = canvas.getContext('2d', { willReadFrequently: true });
 					ctx.scale(2.25, 2.25);
 					readImage(canvas, ctx);
 				}, 3000);
-				document.getElementById('username').value = window.localStorage.getItem('username')
-				document.getElementById('username').addEventListener('input', function(){
-					window.localStorage.setItem('username', document.getElementById('username').value);
-				});
 			});
 
 		</script>
@@ -305,9 +361,6 @@
 	<body id="app">
 		<div id="output"></div>
 		<div id="DropLog">
-			<div id="Map">
-				<h2>Map</h2>
-			</div>
 			<div id="MobKC">
 				<div id="Mob" data-found="false">(not yet detected)</div>
 				<div id="KillCount">0</div>
@@ -329,13 +382,20 @@
 			</div>
 			<canvas id="Canvas" width="2000" height="2000" style="display:none;"></canvas>
 		</div>
+		<div id="Map" class="hidden">
+			<h2>Map</h2>
+		</div>
 		<div id="Settings">
-			<div class="container">
+			<h2>Settings <span class="toggle" data-toggle="SettingsContainer">[show]</span></h2>
+			<div class="container hidden" id="SettingsContainer">
 				<div class="info">
 					The username entered below is not publicly visible.
 				</div>
 				<div class="setting">
 					<label for="username">Username:</label><input type="text" id="username" name="username"/>
+				</div>
+				<div class="setting">
+					<span>Show map: <span class="toggle" data-toggle="Map">[show]</span></span>
 				</div>
 			</div>
 		</div>

@@ -97,8 +97,10 @@ async function tryFindMonster() {
 	if (mobReader) {
 		mobReader.read();
 		if (mobReader.state !== null) {
-			helperItems.Mob.innerText = mobReader.read().name;
-			helperItems.Mob.setAttribute('data-found', "true");
+			try {
+				helperItems.Mob.innerText = mobReader.read().name;
+				helperItems.Mob.setAttribute('data-found', "true");
+			} catch(e) {}//nothing
 		}
 	}
 }
@@ -163,16 +165,18 @@ async function captureMap(x, y, w, h) {
 	let mapDataRaw = mapImage.toData();
 	let mapData = mapDataRaw.toPngBase64();
 	globalThis.current_map_data = mapDataRaw;
-	if (helperItems.Map.querySelectorAll('img').length == 0) {
-		let img = document.createElement('img');
-		img.id = 'MapImage';
-		img.src = 'data:image/png;base64,' + mapData;
-		helperItems.Map.appendChild(img);
-	} else {
-		helperItems.Map.querySelector('#MapImage').setAttribute(
-			'src',
-			'data:image/png;base64,' + mapData
-		);
+	if (helperItems.Map.classList.contains('visible')) {
+		if (helperItems.Map.querySelectorAll('img').length == 0) {
+			let img = document.createElement('img');
+			img.id = 'MapImage';
+			img.src = 'data:image/png;base64,' + mapData;
+			helperItems.Map.appendChild(img);
+		} else {
+			helperItems.Map.querySelector('#MapImage').setAttribute(
+				'src',
+				'data:image/png;base64,' + mapData
+			);
+		}
 	}
 }
 
@@ -220,9 +224,9 @@ export function startApp() {
 	setInterval(tryFindMonster, 50);
 }
 
-const settingsObject = {
-	settingsHeader: sauce.createHeading('h2', 'Settings'),
-};
+//const settingsObject = {
+//	settingsHeader: sauce.createHeading('h2', 'Settings'),
+//};
 
 window.onload = function () {
 	//check if we are running inside alt1 by checking if the alt1 global exists
@@ -232,9 +236,9 @@ window.onload = function () {
 		//also updates app settings if they are changed
 
 		alt1.identifyAppUrl('./appconfig.json');
-		Object.values(settingsObject).forEach((val) => {
-			helperItems.settings.before(val);
-		});
+		//Object.values(settingsObject).forEach((val) => {
+		//	helperItems.settings.before(val);
+		//});
 		startApp();
 	} else {
 		let addappurl = `alt1://addapp/${

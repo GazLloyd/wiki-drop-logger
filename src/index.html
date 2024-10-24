@@ -340,10 +340,10 @@
 						let tog = document.getElementById(el.getAttribute('data-toggle'));
 						if (tog !== null && tog.classList.contains('visible')) {
 							tog.className = 'hidden';
-							tog.innerText = '[show]';
+							el.innerText = '[show]';
 						} else {
 							tog.className = 'visible';
-							tog.innerText = '[hide]';
+							el.innerText = '[hide]';
 						}
 					})
 				});

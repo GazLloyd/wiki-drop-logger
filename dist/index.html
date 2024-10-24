@@ -272,11 +272,15 @@
 				window.localStorage.setItem('username', uname);
 				if (ev !== undefined || ev !== null) {
 					// this is the event
-					usernametyping = true;
 					clearTimeout(usernameTimout);
-					usernameTimout = setTimeout(() => {
+					if (ev.type === 'input') {
+						usernametyping = true;
+						usernameTimout = setTimeout(() => {
+							usernametyping = false;
+						}, 3000);
+					} else if (ev.type === 'change') {
 						usernametyping = false;
-					}, 3000);
+					}
 				}
 			}
 			// waits for the username to be entered and valid
@@ -284,7 +288,7 @@
 				let el = document.getElementById('username');
 				while (true) {
 					await finishedUsernameTyping();
-					let uname = uname.value.trim();
+					let uname = el.value.trim();
 					if (usernameIsGood(uname)) {
 						return uname;
 					}
@@ -335,6 +339,7 @@
 				document.getElementById('username').value = window.localStorage.getItem('username');
 				setUsername();
 				document.getElementById('username').addEventListener('input', setUsername);
+				document.getElementById('username').addEventListener('change', setUsername);
 				document.querySelectorAll('.toggle').forEach((el,i)=>{
 					el.addEventListener('click', (ev)=>{
 						let tog = document.getElementById(el.getAttribute('data-toggle'));

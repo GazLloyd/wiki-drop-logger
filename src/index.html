@@ -241,6 +241,8 @@
 							console.log(lootDiff);
 							sendToAPI(lootDiff, kc).then(console.log); // not awaiting, we don't want to wait for it here
 							//pendingLootDiffs.push(lootDiff);
+						} else if (prevCanvasData === null) {
+							prevCanvasData = await canvasToBlob(canvas);
 						}
 					}
 					lastCanvasData = canvasData;

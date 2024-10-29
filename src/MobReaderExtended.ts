@@ -3,10 +3,10 @@ import * as a1lib from "alt1/base";
 import * as OCR from "alt1/ocr";
 import { webpackImages, ImgRef } from "alt1/base";
 
-var chatfont = require("alt1/fonts/aa_8px.fontmeta.json");
+var chatfont = require("./asset/data/fonts/aa_8px.fontmeta.json");
 
 var imgs = webpackImages({
-	detectimg: require("alt1/targetmob/imgs/detectimg.data.png")
+	detectimg: require("./asset/data/detectimg.data.png")
 });
 
 export default class TargetMobReader extends MobReader.default {

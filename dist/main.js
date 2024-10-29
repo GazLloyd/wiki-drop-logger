@@ -881,6 +881,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var chatfont = __webpack_require__(/*! ./asset/data/fonts/aa_8px.fontmeta.json */ "./asset/data/fonts/aa_8px.fontmeta.json");
+var chatfont_mono = __webpack_require__(/*! ./asset/data/fonts/aa_8px_mono.fontmeta.json */ "./asset/data/fonts/aa_8px_mono.fontmeta.json");
 var imgs = (0,alt1_base__WEBPACK_IMPORTED_MODULE_0__.webpackImages)({
     detectimg: __webpack_require__(/*! ./asset/data/detectimg.data.png */ "./asset/data/detectimg.data.png")
 });
@@ -898,7 +899,7 @@ var TargetMobReader /*extends MobReader.default*/ = /** @class */ (function () {
             var data = img.toData(pos[0].x - 151, pos[0].y - 16, 220, 44);
             var mobname = alt1_ocr__WEBPACK_IMPORTED_MODULE_1__.findReadLine(data, chatfont, [[255, 255, 255]], 62, 18, 20, 1);
             var mobhp = alt1_ocr__WEBPACK_IMPORTED_MODULE_1__.findReadLine(data, chatfont, [[255, 203, 5]], 92, 39, 20, 1);
-            var moblvl = alt1_ocr__WEBPACK_IMPORTED_MODULE_1__.findReadLine(data, chatfont, [[0x04, 0xc3, 0x0b]], 182, 11, 20, 1);
+            var moblvl = alt1_ocr__WEBPACK_IMPORTED_MODULE_1__.findReadLine(data, chatfont_mono, [[0x04, 0xc3, 0x0b]], 182, 11, 20, 1);
             this.lastpos = pos[0];
             this.state = {
                 name: mobname.text,
@@ -937,6 +938,17 @@ module.exports = "data:font/opentype;base64,d09GRk9UVE8AAIM0AAwAAAAAr4QAAAAAAAAA
 
 "use strict";
 module.exports = __webpack_require__.p + "aa_8px.fontmeta.json";
+
+/***/ }),
+
+/***/ "./asset/data/fonts/aa_8px_mono.fontmeta.json":
+/*!****************************************************!*\
+  !*** ./asset/data/fonts/aa_8px_mono.fontmeta.json ***!
+  \****************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "aa_8px_mono.fontmeta.json";
 
 /***/ }),
 

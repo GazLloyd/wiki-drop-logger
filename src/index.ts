@@ -95,12 +95,13 @@ let mobReader = new MobReader.default();
 
 async function tryFindMonster() {
 	if (mobReader) {
-		mobReader.read();
-		if (mobReader.state !== null) {
+		let state = mobReader.read();
+		console.log(state);
+		if (state !== null) {
 			try {
-				helperItems.Mob.innerText = mobReader.state.name;
+				helperItems.Mob.innerText = state.name;
 				helperItems.Mob.setAttribute('data-found', "true");
-				helperItems.Mob.setAttribute('data-lvl', mobReader.state.level.toString())
+				helperItems.Mob.setAttribute('data-lvl', state.level.toString())
 			} catch(e) {}//nothing
 		}
 	}

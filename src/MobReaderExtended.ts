@@ -9,7 +9,7 @@ var imgs = webpackImages({
 	detectimg: require("./asset/data/detectimg.data.png")
 });
 
-export default class TargetMobReader extends MobReader.default {
+export default class TargetMobReader /*extends MobReader.default*/ {
 
 	state: { hp: number, name: string, level: number } | null = null;
 	lastpos: a1lib.PointLike | null = null;

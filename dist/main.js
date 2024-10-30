@@ -885,6 +885,7 @@ var chatfont_mono = __webpack_require__(/*! ./asset/data/fonts/aa_8px_mono.fontm
 var imgs = (0,alt1_base__WEBPACK_IMPORTED_MODULE_0__.webpackImages)({
     detectimg: __webpack_require__(/*! ./asset/data/detectimg.data.png */ "./asset/data/detectimg.data.png")
 });
+globalThis.console.log(chatfont, chatfont_mono, imgs);
 var TargetMobReader /*extends MobReader.default*/ = /** @class */ (function () {
     function TargetMobReader() {
         this.state = null;

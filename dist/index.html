@@ -232,7 +232,10 @@
 					const { data: { text } } = await worker.recognize(canvasData);
 					if (text !== undefined) {
 						const parsed = await parseText(text);
-						if (parsed === false || parsed.length === 0) { //explicitly false
+						if (parsed === undefined) {
+							return //nothing
+						}
+						else if (parsed === false || parsed.length === 0) { //explicitly false
 							totalLootData = {};
 							lootDiff = [];
 						} else if (totalLootData === undefined) {

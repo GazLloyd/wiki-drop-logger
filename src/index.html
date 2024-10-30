@@ -339,6 +339,7 @@
 					username: username,
 					loot: diffs,
 					mapPng: arrayBufferToHex(await window.current_map_data.toFileBytes()),
+					targetPng: arrayBufferToHex(await window.target_interface_data.toFileBytes()),
 					beforePng: arrayBufferToHex(await prevCanvasData.arrayBuffer()),
 					afterPng: arrayBufferToHex(await currCanvasData.arrayBuffer())
 				}

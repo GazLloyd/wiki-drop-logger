@@ -1,7 +1,8 @@
 // alt1 base libs, provides all the commonly used methods for image matching and capture
 // also gives your editor info about the window.alt1 api
 import * as a1lib from 'alt1';
-import * as MobReader from './MobReaderExtended';
+//import * as MobReader from './MobReaderExtended';
+import * as MobReader from 'alt1/targetmob';
 import * as OCR from 'alt1/ocr';
 import * as sauce from './a1sauce';
 
@@ -91,17 +92,17 @@ async function tryFindMap() {
 	}
 }
 
-let mobReader = new MobReader.default();
+globalThis.mobReader = new MobReader.default();
 
 async function tryFindMonster() {
-	if (mobReader) {
-		let state = mobReader.read();
-		console.log(state);
+	if (globalThis.mobReader) {
+		let state = globalThis.mobReader.read();
+		//console.log(state);
 		if (state !== null) {
 			try {
 				helperItems.Mob.innerText = state.name;
 				helperItems.Mob.setAttribute('data-found', "true");
-				helperItems.Mob.setAttribute('data-lvl', state.level.toString())
+				globalThis.target_interface_data = a1lib.capture(globalThis.mobReader.lastpos.x-151, globalThis.mobReader.lastpos.y-16, 220, 44);
 			} catch(e) {}//nothing
 		}
 	}

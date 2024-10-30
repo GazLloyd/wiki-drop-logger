@@ -866,12 +866,13 @@ module.exports = styleTagTransform;
 /*!******************************!*\
   !*** ./MobReaderExtended.ts ***!
   \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
+__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (/* binding */ TargetMobReader)
 /* harmony export */ });
 /* harmony import */ var alt1_base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alt1/base */ "../node_modules/alt1/dist/base/index.js");
 /* harmony import */ var alt1_base__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alt1_base__WEBPACK_IMPORTED_MODULE_0__);
@@ -881,18 +882,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var chatfont = __webpack_require__(/*! ./asset/data/fonts/aa_8px.fontmeta.json */ "./asset/data/fonts/aa_8px.fontmeta.json");
-var chatfont_mono = __webpack_require__(/*! ./asset/data/fonts/aa_8px_mono.fontmeta.json */ "./asset/data/fonts/aa_8px_mono.fontmeta.json");
+var chatfont = await (await fetch(__webpack_require__(/*! ./asset/data/fonts/aa_8px.fontmeta.json */ "./asset/data/fonts/aa_8px.fontmeta.json"))).json();
+var chatfont_mono = await (await fetch(__webpack_require__(/*! ./asset/data/fonts/aa_8px_mono.fontmeta.json */ "./asset/data/fonts/aa_8px_mono.fontmeta.json"))).json();
 var imgs = (0,alt1_base__WEBPACK_IMPORTED_MODULE_0__.webpackImages)({
     detectimg: __webpack_require__(/*! ./asset/data/detectimg.data.png */ "./asset/data/detectimg.data.png")
 });
 globalThis.console.log(chatfont, chatfont_mono, imgs);
-var TargetMobReader /*extends MobReader.default*/ = /** @class */ (function () {
-    function TargetMobReader() {
-        this.state = null;
-        this.lastpos = null;
-    }
-    TargetMobReader.prototype.read = function (img) {
+class TargetMobReader /*extends MobReader.default*/ {
+    state = null;
+    lastpos = null;
+    read(img) {
         if (!img) {
             img = alt1_base__WEBPACK_IMPORTED_MODULE_0__.captureHoldFullRs();
         }
@@ -914,11 +913,222 @@ var TargetMobReader /*extends MobReader.default*/ = /** @class */ (function () {
             this.state = null;
         }
         return this.state;
-    };
-    return TargetMobReader;
-}());
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TargetMobReader);
+    }
+}
 
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } }, 1);
+
+/***/ }),
+
+/***/ "./index.ts":
+/*!******************!*\
+  !*** ./index.ts ***!
+  \******************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   startApp: () => (/* binding */ startApp)
+/* harmony export */ });
+/* harmony import */ var alt1__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! alt1 */ "../node_modules/alt1/dist/base/index.js");
+/* harmony import */ var alt1__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(alt1__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _MobReaderExtended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MobReaderExtended */ "./MobReaderExtended.ts");
+/* harmony import */ var _index_html__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.html */ "./index.html");
+/* harmony import */ var _appconfig_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./appconfig.json */ "./appconfig.json");
+/* harmony import */ var _icon_png__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./icon.png */ "./icon.png");
+/* harmony import */ var _css_styles_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./css/styles.css */ "./css/styles.css");
+var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_MobReaderExtended__WEBPACK_IMPORTED_MODULE_0__]);
+_MobReaderExtended__WEBPACK_IMPORTED_MODULE_0__ = (__webpack_async_dependencies__.then ? (await __webpack_async_dependencies__)() : __webpack_async_dependencies__)[0];
+// alt1 base libs, provides all the commonly used methods for image matching and capture
+// also gives your editor info about the window.alt1 api
+
+
+// tell webpack that this file relies index.html, appconfig.json and icon.png, this makes webpack
+// add these files to the output directory
+// this works because in /webpack.config.js we told webpack to treat all html, json and imageimports
+// as assets
+
+
+
+
+function getByID(id) {
+    return document.getElementById(id);
+}
+let helperItems = {
+    Output: getByID('output'),
+    Canvas: getByID('Canvas'),
+    Map: getByID('Map'),
+    Mob: getByID('Mob'),
+    Loot: getByID('Loot'),
+    settings: getByID('Settings'),
+};
+var dataImages = alt1__WEBPACK_IMPORTED_MODULE_5__.webpackImages({
+    homeTeleport: __webpack_require__(/*! ./asset/data/map-corner.data.png */ "./asset/data/map-corner.data.png"),
+    lootButton: __webpack_require__(/*! ./asset/data/lootbutton.data.png */ "./asset/data/lootbutton.data.png"),
+    runBorder: __webpack_require__(/*! ./asset/data/map-border-corner.data.png */ "./asset/data/map-border-corner.data.png"),
+    scrollTop: __webpack_require__(/*! ./asset/data/scrolltop.data.png */ "./asset/data/scrolltop.data.png"),
+    resetButton: __webpack_require__(/*! ./asset/data/reset.data.png */ "./asset/data/reset.data.png"),
+    lootText: __webpack_require__(/*! ./asset/data/loottext.data.png */ "./asset/data/loottext.data.png"),
+    dropText: __webpack_require__(/*! ./asset/data/droptext.data.png */ "./asset/data/droptext.data.png"),
+});
+var font = __webpack_require__(/*! ./asset/data/fonts/chatbox/12pt.fontmeta.json */ "./asset/data/fonts/chatbox/12pt.fontmeta.json");
+const lastKnownMapPosition = { mapPosition: { x: undefined, y: undefined }, runPosition: { x: undefined, y: undefined } };
+async function tryFindMap() {
+    if (lastKnownMapPosition.mapPosition.x === undefined) {
+        let client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
+        let homeTeleport = {
+            screenPosition: client_screen.findSubimage(dataImages.homeTeleport),
+        };
+        let runIcon = {
+            screenPosition: client_screen.findSubimage(dataImages.runBorder),
+        };
+        if (homeTeleport.screenPosition[0] !== undefined &&
+            runIcon.screenPosition[0] !== undefined) {
+            let mapPosition = {
+                x: homeTeleport.screenPosition[0].x,
+                y: homeTeleport.screenPosition[0].y + 28,
+            };
+            let runPosition = {
+                x: runIcon.screenPosition[0].x + dataImages.runBorder.width,
+                y: runIcon.screenPosition[0].y,
+            };
+            lastKnownMapPosition.mapPosition = mapPosition;
+            lastKnownMapPosition.runPosition = runPosition;
+            alt1.overLaySetGroup('Map');
+            alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.runPosition.y, lastKnownMapPosition.runPosition.x -
+                lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.mapPosition.y, 500, 2);
+        }
+    }
+    else {
+        captureMap(lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.runPosition.y, lastKnownMapPosition.runPosition.x -
+            lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.mapPosition.y);
+    }
+}
+let mobReader = new _MobReaderExtended__WEBPACK_IMPORTED_MODULE_0__["default"]();
+async function tryFindMonster() {
+    if (mobReader) {
+        let state = mobReader.read();
+        console.log(state);
+        if (state !== null) {
+            try {
+                helperItems.Mob.innerText = state.name;
+                helperItems.Mob.setAttribute('data-found', "true");
+                helperItems.Mob.setAttribute('data-lvl', state.level.toString());
+            }
+            catch (e) { } //nothing
+        }
+    }
+}
+const lastKnownLootPosition = { dropText: { x: undefined, y: undefined }, resetButton: { x: undefined, y: undefined } };
+async function tryFindLoot() {
+    if (lastKnownLootPosition.dropText.x === undefined) {
+        console.log(`Attempting to capture Runemetrics dropsmenu`);
+        let client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
+        let dropText = {
+            screenPosition: client_screen.findSubimage(dataImages.dropText),
+        };
+        let resetButton = {
+            screenPosition: client_screen.findSubimage(dataImages.resetButton),
+        };
+        if (dropText.screenPosition[0] !== undefined &&
+            resetButton.screenPosition[0] !== undefined) {
+            let dropTextPosition = {
+                x: dropText.screenPosition[0].x,
+                y: dropText.screenPosition[0].y,
+            };
+            let resetButtonPosition = {
+                x: resetButton.screenPosition[0].x,
+                y: resetButton.screenPosition[0].y,
+            };
+            lastKnownLootPosition.dropText = dropTextPosition;
+            lastKnownLootPosition.resetButton = resetButtonPosition;
+            alt1.overLaySetGroup('Loot');
+            alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lastKnownLootPosition.dropText.x, lastKnownLootPosition.dropText.y, lastKnownLootPosition.resetButton.x -
+                lastKnownLootPosition.dropText.x +
+                22, lastKnownLootPosition.resetButton.y -
+                lastKnownLootPosition.dropText.y -
+                4, 500, 2);
+        }
+    }
+    else {
+        captureLoot(lastKnownLootPosition.dropText.x, lastKnownLootPosition.dropText.y, lastKnownLootPosition.resetButton.x + 22, lastKnownLootPosition.resetButton.y - 4);
+    }
+}
+async function captureMap(x, y, w, h) {
+    let mapImage = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHold(x, y, w, h);
+    let mapDataRaw = mapImage.toData();
+    let mapData = mapDataRaw.toPngBase64();
+    globalThis.current_map_data = mapDataRaw;
+    if (helperItems.Map.classList.contains('visible')) {
+        if (helperItems.Map.querySelectorAll('img').length == 0) {
+            let img = document.createElement('img');
+            img.id = 'MapImage';
+            img.src = 'data:image/png;base64,' + mapData;
+            helperItems.Map.appendChild(img);
+        }
+        else {
+            helperItems.Map.querySelector('#MapImage').setAttribute('src', 'data:image/png;base64,' + mapData);
+        }
+    }
+}
+async function captureLoot(x, y, x2, y2) {
+    let lootImage = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHold(x, y, x2 - x, y2 - y);
+    let lootData = lootImage.toData().toPngBase64();
+    if (helperItems.Loot.querySelectorAll('img').length == 0) {
+        let img = document.createElement('img');
+        img.id = 'LootImage';
+        img.src = 'data:image/png;base64,' + lootData;
+        helperItems.Loot.appendChild(img);
+    }
+    else {
+        helperItems.Loot.querySelector('#LootImage').setAttribute('src', 'data:image/png;base64,' + lootData);
+    }
+}
+function startApp() {
+    if (!window.alt1) {
+        helperItems.Output.insertAdjacentHTML('beforeend', `<div>You need to run this page in alt1 to capture the screen</div>`);
+        return;
+    }
+    if (!alt1.permissionPixel) {
+        helperItems.Output.insertAdjacentHTML('beforeend', `<div><p>Page is not installed as app or capture permission is not enabled</p></div>`);
+        return;
+    }
+    if (!alt1.permissionOverlay) {
+        helperItems.Output.insertAdjacentHTML('beforeend', `<div><p>Attempted to use Overlay but app overlay permission is not enabled. Please enable "Show Overlay" permission in Alt1 settinsg (wrench icon in corner).</p></div>`);
+        return;
+    }
+    setInterval(tryFindMap, 400);
+    setInterval(tryFindLoot, 400);
+    setInterval(tryFindMonster, 400);
+}
+//const settingsObject = {
+//	settingsHeader: sauce.createHeading('h2', 'Settings'),
+//};
+window.onload = function () {
+    //check if we are running inside alt1 by checking if the alt1 global exists
+    if (window.alt1) {
+        //tell alt1 about the app
+        //this makes alt1 show the add app button when running inside the embedded browser
+        //also updates app settings if they are changed
+        alt1.identifyAppUrl('./appconfig.json');
+        //Object.values(settingsObject).forEach((val) => {
+        //	helperItems.settings.before(val);
+        //});
+        startApp();
+    }
+    else {
+        let addappurl = `alt1://addapp/${new URL('./appconfig.json', document.location.href).href}`;
+        helperItems.Output.insertAdjacentHTML('beforeend', `
+			Alt1 not detected, click <a href='${addappurl}'>here</a> to add this app to Alt1
+		`);
+    }
+};
+
+__webpack_async_result__();
+} catch(e) { __webpack_async_result__(e); } });
 
 /***/ }),
 
@@ -3986,6 +4196,75 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_alt1_base__;
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/async module */
+/******/ 	(() => {
+/******/ 		var webpackQueues = typeof Symbol === "function" ? Symbol("webpack queues") : "__webpack_queues__";
+/******/ 		var webpackExports = typeof Symbol === "function" ? Symbol("webpack exports") : "__webpack_exports__";
+/******/ 		var webpackError = typeof Symbol === "function" ? Symbol("webpack error") : "__webpack_error__";
+/******/ 		var resolveQueue = (queue) => {
+/******/ 			if(queue && queue.d < 1) {
+/******/ 				queue.d = 1;
+/******/ 				queue.forEach((fn) => (fn.r--));
+/******/ 				queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
+/******/ 			}
+/******/ 		}
+/******/ 		var wrapDeps = (deps) => (deps.map((dep) => {
+/******/ 			if(dep !== null && typeof dep === "object") {
+/******/ 				if(dep[webpackQueues]) return dep;
+/******/ 				if(dep.then) {
+/******/ 					var queue = [];
+/******/ 					queue.d = 0;
+/******/ 					dep.then((r) => {
+/******/ 						obj[webpackExports] = r;
+/******/ 						resolveQueue(queue);
+/******/ 					}, (e) => {
+/******/ 						obj[webpackError] = e;
+/******/ 						resolveQueue(queue);
+/******/ 					});
+/******/ 					var obj = {};
+/******/ 					obj[webpackQueues] = (fn) => (fn(queue));
+/******/ 					return obj;
+/******/ 				}
+/******/ 			}
+/******/ 			var ret = {};
+/******/ 			ret[webpackQueues] = x => {};
+/******/ 			ret[webpackExports] = dep;
+/******/ 			return ret;
+/******/ 		}));
+/******/ 		__webpack_require__.a = (module, body, hasAwait) => {
+/******/ 			var queue;
+/******/ 			hasAwait && ((queue = []).d = -1);
+/******/ 			var depQueues = new Set();
+/******/ 			var exports = module.exports;
+/******/ 			var currentDeps;
+/******/ 			var outerResolve;
+/******/ 			var reject;
+/******/ 			var promise = new Promise((resolve, rej) => {
+/******/ 				reject = rej;
+/******/ 				outerResolve = resolve;
+/******/ 			});
+/******/ 			promise[webpackExports] = exports;
+/******/ 			promise[webpackQueues] = (fn) => (queue && fn(queue), depQueues.forEach(fn), promise["catch"](x => {}));
+/******/ 			module.exports = promise;
+/******/ 			body((deps) => {
+/******/ 				currentDeps = wrapDeps(deps);
+/******/ 				var fn;
+/******/ 				var getResult = () => (currentDeps.map((d) => {
+/******/ 					if(d[webpackError]) throw d[webpackError];
+/******/ 					return d[webpackExports];
+/******/ 				}))
+/******/ 				var promise = new Promise((resolve) => {
+/******/ 					fn = () => (resolve(getResult));
+/******/ 					fn.r = 0;
+/******/ 					var fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
+/******/ 					currentDeps.map((dep) => (dep[webpackQueues](fnQueue)));
+/******/ 				});
+/******/ 				return fn.r ? promise : getResult();
+/******/ 			}, (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue)));
+/******/ 			queue && queue.d < 0 && (queue.d = 0);
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
@@ -4093,275 +4372,12 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_alt1_base__;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
-(() => {
-"use strict";
-/*!******************!*\
-  !*** ./index.ts ***!
-  \******************/
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   startApp: () => (/* binding */ startApp)
-/* harmony export */ });
-/* harmony import */ var alt1__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! alt1 */ "../node_modules/alt1/dist/base/index.js");
-/* harmony import */ var alt1__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(alt1__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _MobReaderExtended__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MobReaderExtended */ "./MobReaderExtended.ts");
-/* harmony import */ var _index_html__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.html */ "./index.html");
-/* harmony import */ var _appconfig_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./appconfig.json */ "./appconfig.json");
-/* harmony import */ var _icon_png__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./icon.png */ "./icon.png");
-/* harmony import */ var _css_styles_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./css/styles.css */ "./css/styles.css");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-// alt1 base libs, provides all the commonly used methods for image matching and capture
-// also gives your editor info about the window.alt1 api
-
-
-// tell webpack that this file relies index.html, appconfig.json and icon.png, this makes webpack
-// add these files to the output directory
-// this works because in /webpack.config.js we told webpack to treat all html, json and imageimports
-// as assets
-
-
-
-
-function getByID(id) {
-    return document.getElementById(id);
-}
-var helperItems = {
-    Output: getByID('output'),
-    Canvas: getByID('Canvas'),
-    Map: getByID('Map'),
-    Mob: getByID('Mob'),
-    Loot: getByID('Loot'),
-    settings: getByID('Settings'),
-};
-var dataImages = alt1__WEBPACK_IMPORTED_MODULE_5__.webpackImages({
-    homeTeleport: __webpack_require__(/*! ./asset/data/map-corner.data.png */ "./asset/data/map-corner.data.png"),
-    lootButton: __webpack_require__(/*! ./asset/data/lootbutton.data.png */ "./asset/data/lootbutton.data.png"),
-    runBorder: __webpack_require__(/*! ./asset/data/map-border-corner.data.png */ "./asset/data/map-border-corner.data.png"),
-    scrollTop: __webpack_require__(/*! ./asset/data/scrolltop.data.png */ "./asset/data/scrolltop.data.png"),
-    resetButton: __webpack_require__(/*! ./asset/data/reset.data.png */ "./asset/data/reset.data.png"),
-    lootText: __webpack_require__(/*! ./asset/data/loottext.data.png */ "./asset/data/loottext.data.png"),
-    dropText: __webpack_require__(/*! ./asset/data/droptext.data.png */ "./asset/data/droptext.data.png"),
-});
-var font = __webpack_require__(/*! ./asset/data/fonts/chatbox/12pt.fontmeta.json */ "./asset/data/fonts/chatbox/12pt.fontmeta.json");
-var lastKnownMapPosition = { mapPosition: { x: undefined, y: undefined }, runPosition: { x: undefined, y: undefined } };
-function tryFindMap() {
-    return __awaiter(this, void 0, void 0, function () {
-        var client_screen, homeTeleport, runIcon, mapPosition, runPosition;
-        return __generator(this, function (_a) {
-            if (lastKnownMapPosition.mapPosition.x === undefined) {
-                client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
-                homeTeleport = {
-                    screenPosition: client_screen.findSubimage(dataImages.homeTeleport),
-                };
-                runIcon = {
-                    screenPosition: client_screen.findSubimage(dataImages.runBorder),
-                };
-                if (homeTeleport.screenPosition[0] !== undefined &&
-                    runIcon.screenPosition[0] !== undefined) {
-                    mapPosition = {
-                        x: homeTeleport.screenPosition[0].x,
-                        y: homeTeleport.screenPosition[0].y + 28,
-                    };
-                    runPosition = {
-                        x: runIcon.screenPosition[0].x + dataImages.runBorder.width,
-                        y: runIcon.screenPosition[0].y,
-                    };
-                    lastKnownMapPosition.mapPosition = mapPosition;
-                    lastKnownMapPosition.runPosition = runPosition;
-                    alt1.overLaySetGroup('Map');
-                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.runPosition.y, lastKnownMapPosition.runPosition.x -
-                        lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.mapPosition.y, 500, 2);
-                }
-            }
-            else {
-                captureMap(lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.runPosition.y, lastKnownMapPosition.runPosition.x -
-                    lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.mapPosition.y);
-            }
-            return [2 /*return*/];
-        });
-    });
-}
-var mobReader = new _MobReaderExtended__WEBPACK_IMPORTED_MODULE_0__["default"]();
-function tryFindMonster() {
-    return __awaiter(this, void 0, void 0, function () {
-        var state;
-        return __generator(this, function (_a) {
-            if (mobReader) {
-                state = mobReader.read();
-                console.log(state);
-                if (state !== null) {
-                    try {
-                        helperItems.Mob.innerText = state.name;
-                        helperItems.Mob.setAttribute('data-found', "true");
-                        helperItems.Mob.setAttribute('data-lvl', state.level.toString());
-                    }
-                    catch (e) { } //nothing
-                }
-            }
-            return [2 /*return*/];
-        });
-    });
-}
-var lastKnownLootPosition = { dropText: { x: undefined, y: undefined }, resetButton: { x: undefined, y: undefined } };
-function tryFindLoot() {
-    return __awaiter(this, void 0, void 0, function () {
-        var client_screen, dropText, resetButton, dropTextPosition, resetButtonPosition;
-        return __generator(this, function (_a) {
-            if (lastKnownLootPosition.dropText.x === undefined) {
-                console.log("Attempting to capture Runemetrics dropsmenu");
-                client_screen = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHoldFullRs();
-                dropText = {
-                    screenPosition: client_screen.findSubimage(dataImages.dropText),
-                };
-                resetButton = {
-                    screenPosition: client_screen.findSubimage(dataImages.resetButton),
-                };
-                if (dropText.screenPosition[0] !== undefined &&
-                    resetButton.screenPosition[0] !== undefined) {
-                    dropTextPosition = {
-                        x: dropText.screenPosition[0].x,
-                        y: dropText.screenPosition[0].y,
-                    };
-                    resetButtonPosition = {
-                        x: resetButton.screenPosition[0].x,
-                        y: resetButton.screenPosition[0].y,
-                    };
-                    lastKnownLootPosition.dropText = dropTextPosition;
-                    lastKnownLootPosition.resetButton = resetButtonPosition;
-                    alt1.overLaySetGroup('Loot');
-                    alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_5__.mixColor(255, 255, 255), lastKnownLootPosition.dropText.x, lastKnownLootPosition.dropText.y, lastKnownLootPosition.resetButton.x -
-                        lastKnownLootPosition.dropText.x +
-                        22, lastKnownLootPosition.resetButton.y -
-                        lastKnownLootPosition.dropText.y -
-                        4, 500, 2);
-                }
-            }
-            else {
-                captureLoot(lastKnownLootPosition.dropText.x, lastKnownLootPosition.dropText.y, lastKnownLootPosition.resetButton.x + 22, lastKnownLootPosition.resetButton.y - 4);
-            }
-            return [2 /*return*/];
-        });
-    });
-}
-function captureMap(x, y, w, h) {
-    return __awaiter(this, void 0, void 0, function () {
-        var mapImage, mapDataRaw, mapData, img;
-        return __generator(this, function (_a) {
-            mapImage = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHold(x, y, w, h);
-            mapDataRaw = mapImage.toData();
-            mapData = mapDataRaw.toPngBase64();
-            globalThis.current_map_data = mapDataRaw;
-            if (helperItems.Map.classList.contains('visible')) {
-                if (helperItems.Map.querySelectorAll('img').length == 0) {
-                    img = document.createElement('img');
-                    img.id = 'MapImage';
-                    img.src = 'data:image/png;base64,' + mapData;
-                    helperItems.Map.appendChild(img);
-                }
-                else {
-                    helperItems.Map.querySelector('#MapImage').setAttribute('src', 'data:image/png;base64,' + mapData);
-                }
-            }
-            return [2 /*return*/];
-        });
-    });
-}
-function captureLoot(x, y, x2, y2) {
-    return __awaiter(this, void 0, void 0, function () {
-        var lootImage, lootData, img;
-        return __generator(this, function (_a) {
-            lootImage = alt1__WEBPACK_IMPORTED_MODULE_5__.captureHold(x, y, x2 - x, y2 - y);
-            lootData = lootImage.toData().toPngBase64();
-            if (helperItems.Loot.querySelectorAll('img').length == 0) {
-                img = document.createElement('img');
-                img.id = 'LootImage';
-                img.src = 'data:image/png;base64,' + lootData;
-                helperItems.Loot.appendChild(img);
-            }
-            else {
-                helperItems.Loot.querySelector('#LootImage').setAttribute('src', 'data:image/png;base64,' + lootData);
-            }
-            return [2 /*return*/];
-        });
-    });
-}
-function startApp() {
-    if (!window.alt1) {
-        helperItems.Output.insertAdjacentHTML('beforeend', "<div>You need to run this page in alt1 to capture the screen</div>");
-        return;
-    }
-    if (!alt1.permissionPixel) {
-        helperItems.Output.insertAdjacentHTML('beforeend', "<div><p>Page is not installed as app or capture permission is not enabled</p></div>");
-        return;
-    }
-    if (!alt1.permissionOverlay) {
-        helperItems.Output.insertAdjacentHTML('beforeend', "<div><p>Attempted to use Overlay but app overlay permission is not enabled. Please enable \"Show Overlay\" permission in Alt1 settinsg (wrench icon in corner).</p></div>");
-        return;
-    }
-    setInterval(tryFindMap, 400);
-    setInterval(tryFindLoot, 400);
-    setInterval(tryFindMonster, 400);
-}
-//const settingsObject = {
-//	settingsHeader: sauce.createHeading('h2', 'Settings'),
-//};
-window.onload = function () {
-    //check if we are running inside alt1 by checking if the alt1 global exists
-    if (window.alt1) {
-        //tell alt1 about the app
-        //this makes alt1 show the add app button when running inside the embedded browser
-        //also updates app settings if they are changed
-        alt1.identifyAppUrl('./appconfig.json');
-        //Object.values(settingsObject).forEach((val) => {
-        //	helperItems.settings.before(val);
-        //});
-        startApp();
-    }
-    else {
-        var addappurl = "alt1://addapp/".concat(new URL('./appconfig.json', document.location.href).href);
-        helperItems.Output.insertAdjacentHTML('beforeend', "\n\t\t\tAlt1 not detected, click <a href='".concat(addappurl, "'>here</a> to add this app to Alt1\n\t\t"));
-    }
-};
-
-})();
-
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module used 'module' so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__("./index.ts");
+/******/ 	
 /******/ 	return __webpack_exports__;
 /******/ })()
 ;

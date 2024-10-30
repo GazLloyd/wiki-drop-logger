@@ -877,6 +877,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var alt1_base__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(alt1_base__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var alt1_ocr__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alt1/ocr */ "../node_modules/alt1/dist/ocr/index.js");
 /* harmony import */ var alt1_ocr__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(alt1_ocr__WEBPACK_IMPORTED_MODULE_1__);
+//import * as MobReader from "alt1/targetmob";
 
 
 
@@ -898,7 +899,7 @@ var TargetMobReader /*extends MobReader.default*/ = /** @class */ (function () {
         var pos = img.findSubimage(imgs.detectimg);
         if (pos.length != 0) {
             var data = img.toData(pos[0].x - 151, pos[0].y - 16, 220, 44);
-            globalThis.console.log(chatfont, chatfont_mono, imgs, chatfont.chars, chatfont_mono.chars);
+            globalThis.console.log(chatfont, chatfont_mono, typeof (chatfont), typeof (chatfont_mono), imgs, chatfont.chars, chatfont_mono.chars);
             var mobname = alt1_ocr__WEBPACK_IMPORTED_MODULE_1__.findReadLine(data, chatfont, [[255, 255, 255]], 62, 18, 20, 1);
             var mobhp = alt1_ocr__WEBPACK_IMPORTED_MODULE_1__.findReadLine(data, chatfont, [[255, 203, 5]], 92, 39, 20, 1);
             var moblvl = alt1_ocr__WEBPACK_IMPORTED_MODULE_1__.findReadLine(data, chatfont_mono, [[0x04, 0xc3, 0x0b]], 182, 11, 20, 1);

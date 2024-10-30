@@ -10,6 +10,8 @@ var imgs = webpackImages({
 	detectimg: require("./asset/data/detectimg.data.png")
 });
 
+globalThis.console.log(chatfont, chatfont_mono, imgs);
+
 export default class TargetMobReader /*extends MobReader.default*/ {
 
 	state: { hp: number, name: string, level: number } | null = null;

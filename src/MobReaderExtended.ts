@@ -3,8 +3,8 @@ import * as a1lib from "alt1/base";
 import * as OCR from "alt1/ocr";
 import { webpackImages, ImgRef } from "alt1/base";
 
-var chatfont = require("./asset/data/fonts/aa_8px.fontmeta.json");
-var chatfont_mono = require("./asset/data/fonts/aa_8px_mono.fontmeta.json");
+var chatfont = await (await fetch(require("./asset/data/fonts/aa_8px.fontmeta.json"))).json();
+var chatfont_mono = await (await fetch(require("./asset/data/fonts/aa_8px_mono.fontmeta.json"))).json();
 
 var imgs = webpackImages({
 	detectimg: require("./asset/data/detectimg.data.png")

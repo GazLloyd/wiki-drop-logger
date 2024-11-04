@@ -253,6 +253,9 @@
 							try {
 								[totalLootData, lootDiff] = await updateQuantity(totalLootData, parsed);
 							} catch(e){
+								setTimeout(() => {
+									readImage(canvas, ctx);
+								}, 250)
 								return
 							}
 						}

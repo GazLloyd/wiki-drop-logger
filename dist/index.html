@@ -87,13 +87,10 @@
 			/* This function courtesy of ChatGPT */
 			/* frick AI */
 			async function generateTable(data) {
-				if (data === undefined) {
-					return;
-				}
 				let html = '<table>\n';
 				html += '<tr><th>Drop</th><th>Quantity</th></tr>\n';
 
-				if (data.length === 0) {
+				if (data.length === 0 || data === undefined) {
 					html += `<tr><td colspan="2">Cleared drop log!</td></tr>\n`;
 				} else {
 					data.forEach(item => {

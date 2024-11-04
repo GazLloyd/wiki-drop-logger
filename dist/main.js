@@ -4209,7 +4209,9 @@ let helperItems = {
     Map: getByID('Map'),
     Mob: getByID('Mob'),
     Loot: getByID('Loot'),
+    LootImage: getByID('LootImage'),
     settings: getByID('Settings'),
+    resetButton: getByID('ResetPositions')
 };
 var dataImages = alt1__WEBPACK_IMPORTED_MODULE_4__.webpackImages({
     homeTeleport: __webpack_require__(/*! ./asset/data/map-corner.data.png */ "./asset/data/map-corner.data.png"),
@@ -4222,6 +4224,17 @@ var dataImages = alt1__WEBPACK_IMPORTED_MODULE_4__.webpackImages({
 });
 var font = __webpack_require__(/*! ./asset/data/fonts/chatbox/12pt.fontmeta.json */ "./asset/data/fonts/chatbox/12pt.fontmeta.json");
 const lastKnownMapPosition = { mapPosition: { x: undefined, y: undefined }, runPosition: { x: undefined, y: undefined } };
+const lastKnownLootPosition = { dropText: { x: undefined, y: undefined }, resetButton: { x: undefined, y: undefined } };
+function resetPositions() {
+    lastKnownMapPosition.mapPosition.x = undefined;
+    lastKnownMapPosition.mapPosition.y = undefined;
+    lastKnownMapPosition.runPosition.x = undefined;
+    lastKnownMapPosition.runPosition.y = undefined;
+    lastKnownLootPosition.dropText.x = undefined;
+    lastKnownLootPosition.dropText.y = undefined;
+    lastKnownLootPosition.resetButton.x = undefined;
+    lastKnownLootPosition.resetButton.y = undefined;
+}
 async function tryFindMap() {
     if (lastKnownMapPosition.mapPosition.x === undefined) {
         let client_screen = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHoldFullRs();
@@ -4268,7 +4281,6 @@ async function tryFindMonster() {
         }
     }
 }
-const lastKnownLootPosition = { dropText: { x: undefined, y: undefined }, resetButton: { x: undefined, y: undefined } };
 async function tryFindLoot() {
     if (lastKnownLootPosition.dropText.x === undefined) {
         console.log(`Attempting to capture Runemetrics dropsmenu`);
@@ -4308,6 +4320,9 @@ async function captureMap(x, y, w, h) {
     let mapDataRaw = mapImage.toData();
     let mapData = mapDataRaw.toPngBase64();
     globalThis.current_map_data = mapDataRaw;
+    if (!helperItems.Map.classList.contains('found')) {
+        helperItems.Map.classList.add('found');
+    }
     if (helperItems.Map.classList.contains('visible')) {
         if (helperItems.Map.querySelectorAll('img').length == 0) {
             let img = document.createElement('img');
@@ -4323,14 +4338,9 @@ async function captureMap(x, y, w, h) {
 async function captureLoot(x, y, x2, y2) {
     let lootImage = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHold(x, y, x2 - x, y2 - y);
     let lootData = lootImage.toData().toPngBase64();
-    if (helperItems.Loot.querySelectorAll('img').length == 0) {
-        let img = document.createElement('img');
-        img.id = 'LootImage';
-        img.src = 'data:image/png;base64,' + lootData;
-        helperItems.Loot.appendChild(img);
-    }
-    else {
-        helperItems.Loot.querySelector('#LootImage').setAttribute('src', 'data:image/png;base64,' + lootData);
+    helperItems.LootImage.setAttribute('src', 'data:image/png;base64,' + lootData);
+    if (!helperItems.LootImage.classList.contains('found')) {
+        helperItems.LootImage.classList.add('found');
     }
 }
 function startApp() {
@@ -4349,6 +4359,7 @@ function startApp() {
     setInterval(tryFindMap, 400);
     setInterval(tryFindLoot, 400);
     setInterval(tryFindMonster, 400);
+    helperItems.resetButton.addEventListener('click', (ev) => { resetPositions(); });
 }
 //const settingsObject = {
 //	settingsHeader: sauce.createHeading('h2', 'Settings'),

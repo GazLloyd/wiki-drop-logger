@@ -10,6 +10,8 @@
 		<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
 		<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js "></script>
 		<script>
+			const SCALE_CANVAS = 2.25; // scaling the text up helps tesseract's OCR
+
 			// byte array to hex string: https://www.xaymar.com/articles/2020/12/08/fastest-uint8array-to-hex-string-conversion-in-javascript/
 			// Pre-Init
 			const LUT_HEX_4b = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
@@ -160,7 +162,7 @@
 			}
 
 			function threshold(grayscale){
-			const thresholdValue = 200;
+				const thresholdValue = 200;
 				if (grayscale < thresholdValue) {
 					return true;
 				}else{
@@ -211,6 +213,12 @@
 					console.log('Worker created');
 				}
 				var input_image = document.getElementById('LootImage');
+				if (!input_image.classList.contains('found')) {
+					setTimeout(() => {
+						readImage(canvas, ctx);
+					}, 250);
+					return;
+				}
 				ctx.drawImage(input_image, 0, 0);
 				const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
 				imgData.data = reverseColors(imgData)
@@ -249,10 +257,10 @@
 							}
 						}
 						const tableHTML = await generateTable(totalLootData);
+						document.getElementById('LootOutput').innerHTML = tableHTML;
 						if (lootDiff.length>0) {
 							prevCanvasData = currCanvasData;
 							currCanvasData = await canvasToBlob(canvas);
-							document.getElementById('LootOutput').innerHTML = tableHTML;
 							console.log(lootDiff);
 							sendToAPI(lootDiff, kc);//.then(()=>{}); // not awaiting, we don't want to wait for it here
 							//pendingLootDiffs.push(lootDiff);
@@ -389,7 +397,7 @@
 				setTimeout(() => {
 					const canvas = document.querySelector('#Canvas');
 					const ctx = canvas.getContext('2d', { willReadFrequently: true });
-					ctx.scale(2.25, 2.25);
+					ctx.scale(SCALE_CANVAS,SCALE_CANVAS);
 					readImage(canvas, ctx);
 				}, 3000);
 			});
@@ -434,6 +442,9 @@
 				</div>
 				<div class="setting">
 					<span>Show map: <span class="toggle" data-toggle="Map">[show]</span></span>
+				</div>
+				<div class="setting">
+					<span>Reset tracked positions: <input id="ResetPositions" type="button" value="Reset"></span>
 				</div>
 			</div>
 		</div>

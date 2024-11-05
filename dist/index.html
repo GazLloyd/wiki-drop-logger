@@ -48,10 +48,8 @@
 				if (text === undefined || text === '') {
 					return [];
 				}
-
-				let regex = /\,/g;
-				// Split the text into lines
-				const lines = text.replace(regex, '').split('\n');
+				// remove commas, split into lines, trim, remove empty lines
+				const lines = text.replace(/\,/g, '').split('\n').map(el=>el.trim()).filter(el=>el!=='');
 				if (lines[0] === 'Drop Quantity') {
 					// Remove the header line
 					lines.shift();
@@ -64,7 +62,11 @@
 				const items = [];
 
 				// Iterate over each line
-				lines.forEach(line => {
+				for (let line of lines) {
+					if (line.trim() === '') {
+						// double check for empty lines
+						continue;
+					}
 					// Split each line into words
 					const words = line.split(' ');
 
@@ -79,7 +81,7 @@
 						return [];
 					}
 					items.push({ 'name': name, 'quantity': quantity });
-				});
+				}
 				if (items.length === 0) return false;
 				return items;
 			}
@@ -237,18 +239,22 @@
 					const { data: { text } } = await worker.recognize(canvasData);
 					if (text !== undefined) {
 						const parsed = await parseText(text);
+						let has_changed = false;
 						if (parsed === undefined) {
 							return //nothing
 						}
 						else if (parsed === false || parsed.length === 0) { //explicitly false
 							totalLootData = undefined;
 							lootDiff = [];
+							has_changed = true;
 						} else if (totalLootData === undefined) {
 							totalLootData = parsed;
 							lootDiff = [];
+							has_changed = true;
 						} else {
 							try {
 								[totalLootData, lootDiff] = await updateQuantity(totalLootData, parsed);
+								has_changed = lootDiff.length > 0;
 							} catch(e){
 								setTimeout(() => {
 									readImage(canvas, ctx);
@@ -256,8 +262,10 @@
 								return
 							}
 						}
-						const tableHTML = await generateTable(totalLootData);
-						document.getElementById('LootOutput').innerHTML = tableHTML;
+						if (has_changed) {
+							const tableHTML = await generateTable(totalLootData);
+							document.getElementById('LootOutput').innerHTML = tableHTML;
+						}
 						if (lootDiff.length>0) {
 							prevCanvasData = currCanvasData;
 							currCanvasData = await canvasToBlob(canvas);

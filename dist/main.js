@@ -4234,6 +4234,8 @@ function resetPositions() {
     lastKnownLootPosition.dropText.y = undefined;
     lastKnownLootPosition.resetButton.x = undefined;
     lastKnownLootPosition.resetButton.y = undefined;
+    helperItems.LootImage.classList.remove('found');
+    helperItems.Map.classList.remove('found');
 }
 async function tryFindMap() {
     if (lastKnownMapPosition.mapPosition.x === undefined) {

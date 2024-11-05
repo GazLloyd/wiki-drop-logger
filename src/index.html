@@ -143,6 +143,7 @@
 					if (!totalLootData.find(element => element.name === item.name)) {
 						totalLootData.push(item);
 						addedItem = true;
+						diffs.push({ name: item.name, quantity: item.quantity })
 					}
 				});
 

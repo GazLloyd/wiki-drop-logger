@@ -46,7 +46,7 @@
 			/* This function courtesy of ChatGPT */
 			async function parseText(text) {
 				if (text === undefined || text === '') {
-					return
+					return [];
 				}
 
 				let regex = /\,/g;
@@ -76,7 +76,7 @@
 
 					// Construct the object and push it to the array
 					if (name === '' || quantity === null || isNaN(quantity) || quantity < 1) {
-						return
+						return [];
 					}
 					items.push({ 'name': name, 'quantity': quantity });
 				});
@@ -90,7 +90,7 @@
 				let html = '<table>\n';
 				html += '<tr><th>Drop</th><th>Quantity</th></tr>\n';
 
-				if (data.length === 0 || data === undefined) {
+				if (data === undefined || data.length === 0) {
 					html += `<tr><td colspan="2">Cleared drop log!</td></tr>\n`;
 				} else {
 					data.forEach(item => {

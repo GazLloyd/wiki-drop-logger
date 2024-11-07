@@ -98,6 +98,15 @@ div.hidden {
   display:block !important;
 }
 
+span.helplinks img {
+  width: 2em;
+  height:auto;
+  margin-bottom: -0.6em;
+}
+span.helplinks a {
+  color: #DDD;
+}
+
 hr {
   opacity: .5;
 }

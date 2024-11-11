@@ -126,7 +126,7 @@
 
 				// Update quantities in dataArray if corresponding name exists in dataArray2
 				let updatedQuantity = false;
-				totalLootData.forEach(item => {
+				for (let item of totalLootData) {
 					if (quantityMap.hasOwnProperty(item.name)) {
 						if (item.quantity !== quantityMap[item.name]) {
 							updatedQuantity = true;
@@ -135,17 +135,17 @@
 						item.quantity = quantityMap[item.name];
 						delete quantityMap[item.name]; // Remove updated items from quantityMap
 					}
-				});
+				}
 
 				// Append new objects from dataArray2 to dataArray
 				let addedItem = false;
-				parsed.forEach(item => {
+				for (let item of parsed) {
 					if (!totalLootData.find(element => element.name === item.name)) {
 						totalLootData.push(item);
 						addedItem = true;
 						diffs.push({ name: item.name, quantity: item.quantity })
 					}
-				});
+				}
 
 				// New drops update quantity as well - so this counts new and updated drops
 				if (updatedQuantity || addedItem) {
@@ -351,6 +351,10 @@
 				if (!hasFoundMobName()) return;
 				let mobname = document.getElementById('Mob').innerText;
 				let username = await getUsername();
+				if (diffs.find(el=>el.qty < 1) !== undefined) {
+					console.log('Failed parse (negative quantity), not sending to API', kcid, diffs);
+					return;
+				}
 				let data = {
 					monsterName: mobname,
 					username: username,

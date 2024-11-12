@@ -45,14 +45,14 @@
 
 			/* This function courtesy of ChatGPT */
 			async function parseText(text) {
-				console.log('Parsed text: ',text);
+				//console.log('Parsed text: ',text);
 				if (text === undefined || text === '') {
 					return [];
 				}
 				// remove commas, split into lines, trim, remove empty lines
 				const lines = text.replace(/\,/g, '').split('\n').map(el=>el.trim()).filter(el=>el!=='');
-				console.log('Lines: ', lines);
-				if (lines[0] === 'Drop Quantity') {
+				//console.log('Lines: ', lines);
+				if (lines[0] === 'Drop Quantity' || lines[0] === 'Drop Qty') {
 					// Remove the header line
 					lines.shift();
 				}
@@ -80,7 +80,7 @@
 
 					// Construct the object and push it to the array
 					if (name === '' || quantity === null || isNaN(quantity) || quantity < 1) {
-						return false; //false for bad parse
+						return undefined; //false for bad parse
 					}
 					items.push({ 'name': name, 'quantity': quantity });
 				}
@@ -242,6 +242,7 @@
 					const { data: { text } } = await worker.recognize(canvasData);
 					if (text !== undefined) {
 						const parsed = await parseText(text);
+						console.log('parsed text: ', parsed);
 						let has_changed = false;
 						if (parsed === undefined) {
 							return //nothing

@@ -216,9 +216,6 @@
 				}
 				var input_image = document.getElementById('LootImage');
 				if (!input_image.classList.contains('found')) {
-					setTimeout(() => {
-						readImage(canvas, ctx);
-					}, 250);
 					return;
 				}
 				ctx.drawImage(input_image, 0, 0);
@@ -232,9 +229,6 @@
 					if (lastCanvasData !== undefined) {
 						if (canvasData.slice(0,-100) == lastCanvasData.slice(0,-100)) {
 							console.log('Drops image is same as last check - skipping OCR step');
-							setTimeout(() => {
-								readImage(canvas, ctx);
-							}, 250)
 							return;
 						}
 					}
@@ -248,7 +242,7 @@
 							return //nothing
 						}
 						else if (parsed === false || parsed.length === 0) { //explicitly false
-							totalLootData = undefined;
+							totalLootData = [];
 							lootDiff = [];
 							has_changed = true;
 						} else if (totalLootData === undefined) {
@@ -260,9 +254,6 @@
 								[totalLootData, lootDiff] = await updateQuantity(totalLootData, parsed);
 								has_changed = lootDiff.length > 0;
 							} catch(e){
-								setTimeout(() => {
-									readImage(canvas, ctx);
-								}, 250)
 								return
 							}
 						}
@@ -283,10 +274,14 @@
 					}
 					lastCanvasData = canvasData;
 				}
-				setTimeout(() => {
-					readImage(canvas, ctx);
-				}, 250);
 			}
+			async function doReadImage(canvas, ctx) {
+				// wrapper function
+				// allows readImage to return early without needing to duplicate the setTimeout everywhere
+				await readImage(canvas, ctx);
+				setTimeout(doReadImage, 250, canvas, ctx);
+			}
+			
 			var usernametyping = false,
 				usernameTimout = -1;
 			// waits for typing to finish
@@ -414,7 +409,7 @@
 					const canvas = document.querySelector('#Canvas');
 					const ctx = canvas.getContext('2d', { willReadFrequently: true });
 					ctx.scale(SCALE_CANVAS,SCALE_CANVAS);
-					readImage(canvas, ctx);
+					doReadImage(canvas, ctx);
 				}, 3000);
 			});
 

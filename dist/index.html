@@ -45,11 +45,13 @@
 
 			/* This function courtesy of ChatGPT */
 			async function parseText(text) {
+				console.log('Parsed text: ',text);
 				if (text === undefined || text === '') {
 					return [];
 				}
 				// remove commas, split into lines, trim, remove empty lines
 				const lines = text.replace(/\,/g, '').split('\n').map(el=>el.trim()).filter(el=>el!=='');
+				console.log('Lines: ', lines);
 				if (lines[0] === 'Drop Quantity') {
 					// Remove the header line
 					lines.shift();

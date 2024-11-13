@@ -227,7 +227,7 @@
 
 				if (input_image.getAttribute('src').length > 0) {
 					if (lastCanvasData !== undefined) {
-						if (canvasData.slice(0,-100) == lastCanvasData.slice(0,-100)) {
+						if (canvasData.slice(0,-100) === lastCanvasData.slice(0,-100)) {
 							console.log('Drops image is same as last check - skipping OCR step');
 							return;
 						}
@@ -277,11 +277,11 @@
 			}
 			async function doReadImage(canvas, ctx) {
 				// wrapper function
-				// allows readImage to return early without needing to duplicate the setTimeout everywhere
+				// allows readImage to return early without needing to duplicate the setTimeout repeatedly
 				await readImage(canvas, ctx);
 				setTimeout(doReadImage, 250, canvas, ctx);
 			}
-			
+
 			var usernametyping = false,
 				usernameTimout = -1;
 			// waits for typing to finish
@@ -349,10 +349,10 @@
 				if (!hasFoundMobName()) return;
 				let mobname = document.getElementById('Mob').innerText;
 				let username = await getUsername();
-				if (diffs.find(el=>el.qty < 1) !== undefined) {
+				/*if (diffs.find(el=>el.quantity < 1) !== undefined) {
 					console.log('Failed parse (negative quantity), not sending to API', kcid, diffs);
 					return;
-				}
+				}*/
 				let data = {
 					monsterName: mobname,
 					username: username,

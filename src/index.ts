@@ -5,6 +5,7 @@ import * as a1lib from 'alt1';
 import * as MobReader from 'alt1/targetmob';
 import * as OCR from 'alt1/ocr';
 import * as sauce from './a1sauce';
+import * as DropsMenuReader from "alt1/dropsmenu";
 
 // tell webpack that this file relies index.html, appconfig.json and icon.png, this makes webpack
 // add these files to the output directory
@@ -255,6 +256,7 @@ window.onload = function () {
 		//also updates app settings if they are changed
 
 		alt1.identifyAppUrl('./appconfig.json');
+		globalThis.DropsMenuReader = DropsMenuReader;
 		//Object.values(settingsObject).forEach((val) => {
 		//	helperItems.settings.before(val);
 		//});

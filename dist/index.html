@@ -245,7 +245,7 @@
 							totalLootData = [];
 							lootDiff = [];
 							has_changed = true;
-						} else if (totalLootData === undefined) {
+						} else if (totalLootData === undefined || totalLootData.length === 0) {
 							totalLootData = parsed;
 							lootDiff = parsed;
 							has_changed = true;

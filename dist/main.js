@@ -4282,13 +4282,14 @@ async function tryFindMap() {
 globalThis.mobReader = new (alt1_targetmob__WEBPACK_IMPORTED_MODULE_5___default())();
 async function tryFindMonster() {
     if (globalThis.mobReader) {
-        let state = globalThis.mobReader.read();
+        let img = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHoldFullRs();
+        let state = globalThis.mobReader.read(img);
         //console.log(state);
         if (state !== null) {
             try {
                 helperItems.Mob.innerText = state.name;
                 helperItems.Mob.setAttribute('data-found', "true");
-                globalThis.target_interface_data = alt1__WEBPACK_IMPORTED_MODULE_4__.capture(globalThis.mobReader.lastpos.x - 151, globalThis.mobReader.lastpos.y - 16, 220, 44);
+                globalThis.target_interface_data = img.toData(globalThis.mobReader.lastpos.x - 151, globalThis.mobReader.lastpos.y - 16, 220, 44);
             }
             catch (e) { } //nothing
         }

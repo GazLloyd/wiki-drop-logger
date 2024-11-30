@@ -113,13 +113,14 @@ globalThis.mobReader = new MobReader.default();
 
 async function tryFindMonster() {
 	if (globalThis.mobReader) {
-		let state = globalThis.mobReader.read();
+		let img = a1lib.captureHoldFullRs();
+		let state = globalThis.mobReader.read(img);
 		//console.log(state);
 		if (state !== null) {
 			try {
 				helperItems.Mob.innerText = state.name;
 				helperItems.Mob.setAttribute('data-found', "true");
-				globalThis.target_interface_data = a1lib.capture(globalThis.mobReader.lastpos.x-151, globalThis.mobReader.lastpos.y-16, 220, 44);
+				globalThis.target_interface_data = img.toData(globalThis.mobReader.lastpos.x-151, globalThis.mobReader.lastpos.y-16, 220, 44);
 			} catch(e) {}//nothing
 		}
 	}

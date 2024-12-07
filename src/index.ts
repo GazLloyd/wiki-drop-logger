@@ -52,8 +52,6 @@ const getByID = (id: string) => {
 };
 // end utils
 
-
-
 const GRAY_THRESHOLD = 200; // grayscale value threshold for white vs black
 const PIXEL_DIFF_THRESHOLD = 4; // number of pixels that can be different
 
@@ -203,7 +201,6 @@ const tryFindMonster = async () => {
 	// NOTE not saving current location of MobReader, as it can move around if it is locked to the mob's head
 	let img = a1lib.captureHoldFullRs();
 	let mobstate = state.mobReader.read(img);
-	//console.log(state);
 	if (mobstate !== null) {
 		try {
 			helperElements.Mob.innerText = mobstate.name;
@@ -336,6 +333,7 @@ const compareLootImages = () => {
 		state.kc++;
 		// pass in the ImageDatas so it isn't relying on state
 		sendToAPI(state.kc, state.mapData, state.mobData, state.prevLootData, state.lootData);
+		state.prevLootData = state.lootData;
 	}
 
 };
@@ -433,13 +431,8 @@ const hasFoundAllThings = (mapData:ImageData|null, mobData:ImageData|null, prevL
 };
 
 const sendToAPI = async (kcid:number, mapData:ImageData, mobData:ImageData, prevLootData:ImageData, lootData:ImageData) => {
-	console.log('sendToAPI', kcid);
 	if (!hasFoundAllThings(mapData, mobData, prevLootData, lootData)) return; // check for everything
 	await getUsername();
-	/*if (diffs.find(el=>el.quantity < 1) !== undefined) {
-		console.log('Failed parse (negative quantity), not sending to API', kcid, diffs);
-		return;
-	}*/
 	let data = {
 		monsterName: state.mobName,
 		username: state.username,
@@ -491,24 +484,21 @@ export const startApp = () => {
 		return;
 	}
 
-	document.addEventListener('DOMContentLoaded', () => {
-		helperElements.username.value = localStorage.getItem('username');
-		setUsername();
-		helperElements.username.addEventListener('input', setUsername);
-		helperElements.username.addEventListener('change', setUsername);
-		document.querySelectorAll('.toggle').forEach((el:HTMLElement)=>{
-			el.addEventListener('click', (ev)=>{
-				let tog = document.getElementById(el.getAttribute('data-toggle'));
-				if (tog !== null && tog.classList.contains('visible')) {
-					tog.className = 'hidden';
-					el.innerText = '[show]';
-				} else {
-					tog.className = 'visible';
-					el.innerText = '[hide]';
-				}
-			})
+	helperElements.username.value = localStorage.getItem('username');
+	setUsername();
+	helperElements.username.addEventListener('input', setUsername);
+	helperElements.username.addEventListener('change', setUsername);
+	document.querySelectorAll('.toggle').forEach((el:HTMLElement)=>{
+		el.addEventListener('click', (ev)=>{
+			let tog = document.getElementById(el.getAttribute('data-toggle'));
+			if (tog !== null && tog.classList.contains('visible')) {
+				tog.className = 'hidden';
+				el.innerText = '[show]';
+			} else {
+				tog.className = 'visible';
+				el.innerText = '[hide]';
+			}
 		});
-
 	});
 
 	setInterval(tryFindMap, 400);
@@ -516,10 +506,6 @@ export const startApp = () => {
 	setInterval(tryFindMonster, 400);
 	helperElements.resetButton.addEventListener('click', (ev)=>{resetPositions()});
 };
-
-//const settingsObject = {
-//	settingsHeader: sauce.createHeading('h2', 'Settings'),
-//};
 
 window.onload = function () {
 	//check if we are running inside alt1 by checking if the alt1 global exists
@@ -529,10 +515,6 @@ window.onload = function () {
 		//also updates app settings if they are changed
 
 		alt1.identifyAppUrl('./appconfig.json');
-		//globalThis.DropsMenuReader = DropsMenuReader;
-		//Object.values(settingsObject).forEach((val) => {
-		//	helperItems.settings.before(val);
-		//});
 		startApp();
 	} else {
 		let addappurl = `alt1://addapp/${

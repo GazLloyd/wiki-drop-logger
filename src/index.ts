@@ -452,10 +452,10 @@ const sendToAPI = async (kcid:number, mapData:ImageData, mobData:ImageData, prev
 	console.log(r.status, jsr);
 	if (jsr.success) {
 		div.className = 'success';
-		div.innerText +=- ' - success!'
+		div.innerText += ' - success!'
 	} else {
 		div.className = 'failure';
-		div.innerText +=- ' - failure'
+		div.innerText += ' - failure'
 		div.setAttribute('title', jsr.error+'\n'+jsr.details);
 	}
 };

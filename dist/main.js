@@ -4433,7 +4433,7 @@ const compareImages = (image1, image2) => {
     for (let i = 0; i < len; i += 4) {
         // since these are either pure black or pure white (0 or 255 in RGB), we can just check one of the colors and do equality
         // a generalised solution would be abs(red1-red2)+abs(gre1-gre2)+abs(blu1-blu2) >= threshold
-        if (image1.data[i] === image2.data[i]) {
+        if (image1.data[i] !== image2.data[i]) {
             diffs++;
             if (diffs >= PIXEL_DIFF_THRESHOLD) {
                 return true;

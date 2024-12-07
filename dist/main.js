@@ -178,7 +178,7 @@ div.success {
   margin-right: 0.5em;
 }
 
-#Settings[data-needs-username="1"] {
+#Settings.needsUsername {
   display:block !important;
 }
 

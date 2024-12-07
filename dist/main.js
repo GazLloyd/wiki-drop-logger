@@ -4211,20 +4211,55 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function getByID(id) {
-    return document.getElementById(id);
+// utils
+// byte array to hex string: https://www.xaymar.com/articles/2020/12/08/fastest-uint8array-to-hex-string-conversion-in-javascript/
+// Pre-Init
+const LUT_HEX_4b = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
+const LUT_HEX_8b = new Array(0x100);
+for (let n = 0; n < 0x100; n++) {
+    LUT_HEX_8b[n] = `${LUT_HEX_4b[(n >>> 4) & 0xF]}${LUT_HEX_4b[n & 0xF]}`;
 }
-let helperItems = {
-    Output: getByID('output'),
-    Canvas: getByID('Canvas'),
-    Map: getByID('Map'),
-    Mob: getByID('Mob'),
-    Loot: getByID('Loot'),
-    LootImage: getByID('LootImage'),
-    settings: getByID('Settings'),
-    resetButton: getByID('ResetPositions')
+// End Pre-Init
+const _toHex = (buffer, length) => {
+    let out = '';
+    for (let idx = 0, edx = length; idx < edx; idx++) {
+        out += LUT_HEX_8b[buffer[idx]];
+    }
+    return out;
 };
-var dataImages = alt1__WEBPACK_IMPORTED_MODULE_4__.webpackImages({
+const toHex = (buffer) => {
+    return _toHex(buffer, buffer.length);
+};
+const arrayBufferToHex = (buffer) => {
+    let view = new Uint8Array(buffer);
+    return _toHex(view, view.byteLength);
+};
+const timeout = async (x) => {
+    return new Promise(resolve => setTimeout(resolve, x));
+};
+// make canvas.toBlob a promise
+const canvasToBlob = async (canvas) => {
+    return new Promise(resolve => canvas.toBlob(resolve));
+};
+const getByID = (id) => {
+    return document.getElementById(id);
+};
+// end utils
+const GRAY_THRESHOLD = 200; // grayscale value threshold for white vs black
+const PIXEL_DIFF_THRESHOLD = 4; // number of pixels that can be different
+const helperElements = {
+    Output: getByID('output'),
+    Mob: getByID('Mob'),
+    settings: getByID('Settings'),
+    resetButton: getByID('ResetPositions'),
+    username: getByID('username'),
+    messages: getByID('MessageList'),
+    foundMob: getByID('FoundMob'),
+    foundMap: getByID('FoundMap'),
+    foundLoot: getByID('FoundLoot'),
+    foundUsername: getByID('FoundUsername'),
+};
+const dataImages = alt1__WEBPACK_IMPORTED_MODULE_4__.webpackImages({
     homeTeleport: __webpack_require__(/*! ./asset/data/map-corner.data.png */ "./asset/data/map-corner.data.png"),
     lootButton: __webpack_require__(/*! ./asset/data/lootbutton.data.png */ "./asset/data/lootbutton.data.png"),
     runBorder: __webpack_require__(/*! ./asset/data/map-border-corner.data.png */ "./asset/data/map-border-corner.data.png"),
@@ -4233,23 +4268,51 @@ var dataImages = alt1__WEBPACK_IMPORTED_MODULE_4__.webpackImages({
     lootText: __webpack_require__(/*! ./asset/data/loottext.data.png */ "./asset/data/loottext.data.png"),
     dropText: __webpack_require__(/*! ./asset/data/droptext.data.png */ "./asset/data/droptext.data.png"),
 });
-var font = __webpack_require__(/*! ./asset/data/fonts/chatbox/12pt.fontmeta.json */ "./asset/data/fonts/chatbox/12pt.fontmeta.json");
-const lastKnownMapPosition = { mapPosition: { x: undefined, y: undefined }, runPosition: { x: undefined, y: undefined } };
-const lastKnownLootPosition = { dropText: { x: undefined, y: undefined }, resetButton: { x: undefined, y: undefined } };
-function resetPositions() {
-    lastKnownMapPosition.mapPosition.x = undefined;
-    lastKnownMapPosition.mapPosition.y = undefined;
-    lastKnownMapPosition.runPosition.x = undefined;
-    lastKnownMapPosition.runPosition.y = undefined;
-    lastKnownLootPosition.dropText.x = undefined;
-    lastKnownLootPosition.dropText.y = undefined;
-    lastKnownLootPosition.resetButton.x = undefined;
-    lastKnownLootPosition.resetButton.y = undefined;
-    helperItems.LootImage.classList.remove('found');
-    helperItems.Map.classList.remove('found');
-}
-async function tryFindMap() {
-    if (lastKnownMapPosition.mapPosition.x === undefined) {
+const font = __webpack_require__(/*! ./asset/data/fonts/chatbox/12pt.fontmeta.json */ "./asset/data/fonts/chatbox/12pt.fontmeta.json");
+const state = {
+    mapPos: { x: undefined, y: undefined, w: undefined, h: undefined },
+    lootPos: { x: undefined, y: undefined, w: undefined, h: undefined },
+    kc: 0,
+    mapData: null,
+    lootData: null,
+    prevLootData: null,
+    mobReader: new (alt1_targetmob__WEBPACK_IMPORTED_MODULE_5___default())(),
+    mobData: null,
+    mobName: undefined,
+    hasFound: {
+        loot: false,
+        map: false,
+        mob: false
+    },
+    username: undefined,
+    usernameIsTyping: false,
+    usernameTimeout: -1,
+    usernameIsGood: false,
+    tooltipIssues: {
+        loot: false,
+        map: false,
+        mob: false,
+        username: false
+    }
+};
+globalThis.lootTrackerState = state;
+const updateFoundElements = () => {
+    helperElements.foundLoot.className = state.hasFound.loot ? 'found' : '';
+    helperElements.foundMap.className = state.hasFound.map ? 'found' : '';
+    helperElements.foundMob.className = state.hasFound.mob ? 'found' : '';
+    helperElements.foundUsername.className = state.usernameIsGood ? 'found' : '';
+};
+const resetPositions = () => {
+    state.mapPos = { x: undefined, y: undefined, w: undefined, h: undefined },
+        state.lootPos = { x: undefined, y: undefined, w: undefined, h: undefined },
+        state.mobName = undefined;
+    state.hasFound.loot = false;
+    state.hasFound.map = false;
+    state.hasFound.mob = false;
+    updateFoundElements();
+};
+const tryFindMap = async () => {
+    if (!state.hasFound.map || state.mapPos.x === undefined) {
         let client_screen = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHoldFullRs();
         let homeTeleport = {
             screenPosition: client_screen.findSubimage(dataImages.homeTeleport),
@@ -4259,44 +4322,40 @@ async function tryFindMap() {
         };
         if (homeTeleport.screenPosition[0] !== undefined &&
             runIcon.screenPosition[0] !== undefined) {
-            let mapPosition = {
+            state.mapPos = {
                 x: homeTeleport.screenPosition[0].x,
-                y: homeTeleport.screenPosition[0].y + 28,
-            };
-            let runPosition = {
-                x: runIcon.screenPosition[0].x + dataImages.runBorder.width,
                 y: runIcon.screenPosition[0].y,
+                w: runIcon.screenPosition[0].x + dataImages.runBorder.width - homeTeleport.screenPosition[0].x,
+                h: homeTeleport.screenPosition[0].y + 28 - runIcon.screenPosition[0].y
             };
-            lastKnownMapPosition.mapPosition = mapPosition;
-            lastKnownMapPosition.runPosition = runPosition;
             alt1.overLaySetGroup('Map');
-            alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_4__.mixColor(255, 255, 255), lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.runPosition.y, lastKnownMapPosition.runPosition.x -
-                lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.mapPosition.y, 500, 2);
+            alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_4__.mixColor(255, 255, 255), state.mapPos.x, state.mapPos.y, state.mapPos.w, state.mapPos.h, 1000, 2);
+            state.hasFound.map = true;
+            updateFoundElements();
         }
     }
-    else {
-        captureMap(lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.runPosition.y, lastKnownMapPosition.runPosition.x -
-            lastKnownMapPosition.mapPosition.x, lastKnownMapPosition.mapPosition.y);
+    if (state.hasFound.map) {
+        await captureMap();
     }
-}
-globalThis.mobReader = new (alt1_targetmob__WEBPACK_IMPORTED_MODULE_5___default())();
-async function tryFindMonster() {
-    if (globalThis.mobReader) {
-        let img = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHoldFullRs();
-        let state = globalThis.mobReader.read(img);
-        //console.log(state);
-        if (state !== null) {
-            try {
-                helperItems.Mob.innerText = state.name;
-                helperItems.Mob.setAttribute('data-found', "true");
-                globalThis.target_interface_data = img.toData(globalThis.mobReader.lastpos.x - 151, globalThis.mobReader.lastpos.y - 16, 220, 44);
-            }
-            catch (e) { } //nothing
+};
+const tryFindMonster = async () => {
+    // NOTE not saving current location of MobReader, as it can move around if it is locked to the mob's head
+    let img = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHoldFullRs();
+    let mobstate = state.mobReader.read(img);
+    //console.log(state);
+    if (mobstate !== null) {
+        try {
+            helperElements.Mob.innerText = mobstate.name;
+            helperElements.Mob.classList.add('found');
+            state.hasFound.mob = true;
+            state.mobName = mobstate.name;
+            state.mobData = img.toData(state.mobReader.lastpos.x - 151, state.mobReader.lastpos.y - 16, 220, 44);
         }
+        catch (e) { } //nothing
     }
-}
-async function tryFindLoot() {
-    if (lastKnownLootPosition.dropText.x === undefined) {
+};
+const tryFindLoot = async () => {
+    if (!state.hasFound.loot || state.lootPos.x === undefined) {
         console.log(`Attempting to capture Runemetrics dropsmenu`);
         let client_screen = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHoldFullRs();
         let dropText = {
@@ -4307,74 +4366,257 @@ async function tryFindLoot() {
         };
         if (dropText.screenPosition[0] !== undefined &&
             resetButton.screenPosition[0] !== undefined) {
-            let dropTextPosition = {
+            state.lootPos = {
                 x: dropText.screenPosition[0].x,
                 y: dropText.screenPosition[0].y,
+                w: resetButton.screenPosition[0].x - dropText.screenPosition[0].x + 22,
+                h: resetButton.screenPosition[0].y - dropText.screenPosition[0].y - 4
             };
-            let resetButtonPosition = {
-                x: resetButton.screenPosition[0].x,
-                y: resetButton.screenPosition[0].y,
-            };
-            lastKnownLootPosition.dropText = dropTextPosition;
-            lastKnownLootPosition.resetButton = resetButtonPosition;
             alt1.overLaySetGroup('Loot');
-            alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_4__.mixColor(255, 255, 255), lastKnownLootPosition.dropText.x, lastKnownLootPosition.dropText.y, lastKnownLootPosition.resetButton.x -
-                lastKnownLootPosition.dropText.x +
-                22, lastKnownLootPosition.resetButton.y -
-                lastKnownLootPosition.dropText.y -
-                4, 500, 2);
+            alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_4__.mixColor(255, 255, 255), state.lootPos.x, state.lootPos.y, state.lootPos.w, state.lootPos.h, 500, 2);
+            state.hasFound.loot = true;
+            updateFoundElements();
         }
     }
-    else {
-        captureLoot(lastKnownLootPosition.dropText.x, lastKnownLootPosition.dropText.y, lastKnownLootPosition.resetButton.x + 22, lastKnownLootPosition.resetButton.y - 4);
+    if (state.hasFound.loot) {
+        await captureLoot();
     }
-}
-async function captureMap(x, y, w, h) {
-    let mapImage = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHold(x, y, w, h);
-    let mapDataRaw = mapImage.toData();
-    let mapData = mapDataRaw.toPngBase64();
-    globalThis.current_map_data = mapDataRaw;
-    if (!helperItems.Map.classList.contains('found')) {
-        helperItems.Map.classList.add('found');
+};
+const captureMap = async () => {
+    let mapImage = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHold(state.mapPos.x, state.mapPos.y, state.mapPos.w, state.mapPos.h);
+    state.mapData = mapImage.toData();
+};
+const captureLoot = async () => {
+    let lootImage = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHold(state.lootPos.x, state.lootPos.y, state.lootPos.w, state.lootPos.h);
+    state.lootData = lootImage.toData();
+    await compareLootImages();
+};
+// converts one RGB pixel to a grayscale value
+const grayscalePixel = (red, green, blue) => {
+    return (red * 6966 + green * 23436 + blue * 2366) >> 15;
+};
+// convert an ImageData to a binary image (only 0,0,0 black or 255,255,255 white) based on they grayscale value of the pixel
+// ultimately makes the image be black text on a white background
+const binaryImage = (img) => {
+    let data = img.data;
+    for (i = 0; i < data.length; i += 4) {
+        data[i] = 255 - data[i];
+        data[i + 1] = 255 - data[i + 1];
+        data[i + 2] = 255 - data[i + 2];
+        data[i + 3] = 255;
     }
-    if (helperItems.Map.classList.contains('visible')) {
-        if (helperItems.Map.querySelectorAll('img').length == 0) {
-            let img = document.createElement('img');
-            img.id = 'MapImage';
-            img.src = 'data:image/png;base64,' + mapData;
-            helperItems.Map.appendChild(img);
+    for (var i = 0; i < data.length; i += 4) {
+        const red = data[i];
+        const green = data[i + 1];
+        const blue = data[i + 2];
+        if (grayscalePixel(red, green, blue) < GRAY_THRESHOLD) {
+            data[i] = 0;
+            data[i + 1] = 0;
+            data[i + 2] = 0;
         }
         else {
-            helperItems.Map.querySelector('#MapImage').setAttribute('src', 'data:image/png;base64,' + mapData);
+            data[i] = 255;
+            data[i + 1] = 255;
+            data[i + 2] = 255;
+        }
+        data[i + 3] = 255; // remove any alpha just to be sure (255 => fully opaque)
+    }
+    return img;
+};
+// compares two ImageDatas, after they have been through binaryImage so they are just black and white
+const compareImages = (image1, image2) => {
+    let len = image1.data.length;
+    // if size changed, consider as different
+    if (len !== image2.data.length)
+        return true;
+    // skip 4 at a time - ImageData.data is one flat array of R,G,B,A for each pixel
+    let diffs = 0;
+    for (let i = 0; i < len; i += 4) {
+        // since these are either pure black or pure white (0 or 255 in RGB), we can just check one of the colors and do equality
+        // a generalised solution would be abs(red1-red2)+abs(gre1-gre2)+abs(blu1-blu2) >= threshold
+        if (image1.data[i] === image2.data[i]) {
+            diffs++;
+            if (diffs >= PIXEL_DIFF_THRESHOLD) {
+                return true;
+            }
         }
     }
-}
-async function captureLoot(x, y, x2, y2) {
-    let lootImage = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHold(x, y, x2 - x, y2 - y);
-    let lootData = lootImage.toData().toPngBase64();
-    helperItems.LootImage.setAttribute('src', 'data:image/png;base64,' + lootData);
-    if (!helperItems.LootImage.classList.contains('found')) {
-        helperItems.LootImage.classList.add('found');
+    return diffs >= PIXEL_DIFF_THRESHOLD;
+};
+const compareLootImages = () => {
+    // binary the lootData image
+    binaryImage(state.lootData);
+    // if the previous is empty we can just skip anything else
+    if (state.prevLootData === null) {
+        state.prevLootData = state.lootData;
+        return;
     }
-}
-function startApp() {
+    if (compareImages(state.prevLootData, state.lootData)) {
+        state.kc++;
+        // pass in the ImageDatas so it isn't relying on state
+        sendToAPI(state.kc, state.mapData, state.mobData, state.prevLootData, state.lootData);
+    }
+};
+// username functions
+const finishedUsernameTyping = async () => {
+    while (state.usernameIsTyping) {
+        await timeout(200);
+    }
+    return true;
+};
+const usernameIsGood = () => {
+    let uname = state.username;
+    if (uname === undefined || uname === null || uname === '' || uname === 'undefined' || uname === 'null') {
+        state.usernameIsGood = false;
+        helperElements.settings.classList.add('needsUsername');
+    }
+    else {
+        state.usernameIsGood = true;
+        helperElements.settings.classList.remove('needsUsername');
+    }
+    state.tooltipIssues.username = !state.usernameIsGood;
+    tooltipUpdate();
+    updateFoundElements();
+    return state.usernameIsGood;
+};
+const setUsername = (ev) => {
+    let uname = helperElements.username.value;
+    uname = uname.trim();
+    window.localStorage.setItem('username', uname);
+    state.username = uname;
+    usernameIsGood();
+    if (ev !== undefined && ev !== null) {
+        // this is the event
+        clearTimeout(state.usernameTimeout);
+        if (ev.type === 'input') {
+            state.usernameIsTyping = true;
+            state.usernameTimeout = setTimeout(() => {
+                state.usernameIsTyping = false;
+            }, 3000);
+        }
+        else if (ev.type === 'change') {
+            state.usernameIsTyping = false;
+        }
+    }
+};
+// waits for the username to be entered and valid
+const getUsername = async () => {
+    while (true) {
+        await finishedUsernameTyping();
+        if (usernameIsGood()) {
+            return state.username;
+        }
+        await timeout(200);
+    }
+};
+//end username functions
+const tooltipUpdate = () => {
+    const tooltipStr = [];
+    if (state.tooltipIssues.username) {
+        tooltipStr.push('- Username is missing or not valid');
+    }
+    if (state.tooltipIssues.loot) {
+        tooltipStr.push('- Loot interface not found (is it visible and unobscured?)');
+    }
+    if (state.tooltipIssues.mob) {
+        tooltipStr.push('- Target information not found (is it visible and unobscured?)');
+    }
+    if (state.tooltipIssues.map) {
+        tooltipStr.push('- Game map not found');
+    }
+    if (tooltipStr.length > 0) {
+        tooltipStr.unshift('Issues found, data submission paused!');
+        alt1.setTooltip(tooltipStr.join('\n'));
+    }
+    else {
+        alt1.clearTooltip();
+    }
+};
+const addMessage = (msg) => {
+    const div = document.createElement('div');
+    div.innerText = msg;
+    helperElements.messages.after(div);
+    return div;
+};
+const hasFoundAllThings = (mapData, mobData, prevLootData, lootData) => {
+    state.tooltipIssues.loot = !state.hasFound.loot || lootData === null || prevLootData === null;
+    state.tooltipIssues.map = !state.hasFound.map || mapData === null;
+    state.tooltipIssues.mob = !state.hasFound.mob || mobData === null;
+    state.tooltipIssues.username = !state.usernameIsGood;
+    tooltipUpdate();
+    return !(state.tooltipIssues.loot || state.tooltipIssues.map || state.tooltipIssues.mob); //username is allowed to be invalid as we can wait for it
+};
+const sendToAPI = async (kcid, mapData, mobData, prevLootData, lootData) => {
+    console.log('sendToAPI', kcid);
+    if (!hasFoundAllThings(mapData, mobData, prevLootData, lootData))
+        return; // check for everything
+    await getUsername();
+    /*if (diffs.find(el=>el.quantity < 1) !== undefined) {
+        console.log('Failed parse (negative quantity), not sending to API', kcid, diffs);
+        return;
+    }*/
+    let data = {
+        monsterName: state.mobName,
+        username: state.username,
+        loot: {},
+        mapPng: arrayBufferToHex(await mapData.toFileBytes('image/png')),
+        targetPng: arrayBufferToHex(await mobData.toFileBytes('image/png')),
+        beforePng: arrayBufferToHex(await prevLootData.toFileBytes('image/png')),
+        afterPng: arrayBufferToHex(await lootData.toFileBytes('image/png'))
+    };
+    const div = addMessage(`Submitted kill ${kcid}`);
+    div.className = 'pending';
+    console.log(`sending request for username: ${data.username} - mob: ${data.monsterName} - lootdiff: ${JSON.stringify(data.loot)} - map bytes length: ${data.mapPng.length} - before bytes length: ${data.beforePng.length} - after bytes length: ${data.afterPng.length}`);
+    let r = await fetch('https://chisel.weirdgloop.org/droplogs-alt1/submit', { method: 'POST', body: JSON.stringify(data) });
+    let jsr = await r.json();
+    console.log(r.status, jsr);
+    if (jsr.success) {
+        div.className = 'success';
+        div.innerText += -' - success!';
+    }
+    else {
+        div.className = 'failure';
+        div.innerText += -' - failure';
+        div.setAttribute('title', jsr.error + '\n' + jsr.details);
+    }
+};
+const startApp = () => {
     if (!window.alt1) {
-        helperItems.Output.insertAdjacentHTML('beforeend', `<div>You need to run this page in alt1 to capture the screen</div>`);
+        helperElements.Output.insertAdjacentHTML('beforeend', `<div>You need to run this page in alt1 to capture the screen</div>`);
         return;
     }
     if (!alt1.permissionPixel) {
-        helperItems.Output.insertAdjacentHTML('beforeend', `<div><p>Page is not installed as app or capture permission is not enabled</p></div>`);
+        helperElements.Output.insertAdjacentHTML('beforeend', `<div><p>Page is not installed as app or capture permission is not enabled</p></div>`);
         return;
     }
     if (!alt1.permissionOverlay) {
-        helperItems.Output.insertAdjacentHTML('beforeend', `<div><p>Attempted to use Overlay but app overlay permission is not enabled. Please enable "Show Overlay" permission in Alt1 settinsg (wrench icon in corner).</p></div>`);
+        helperElements.Output.insertAdjacentHTML('beforeend', `<div><p>Attempted to use Overlay but app overlay permission is not enabled. Please enable "Show Overlay" permission in Alt1 settinsg (wrench icon in corner).</p></div>`);
         return;
     }
+    document.addEventListener('DOMContentLoaded', () => {
+        helperElements.username.value = localStorage.getItem('username');
+        setUsername();
+        helperElements.username.addEventListener('input', setUsername);
+        helperElements.username.addEventListener('change', setUsername);
+        document.querySelectorAll('.toggle').forEach((el) => {
+            el.addEventListener('click', (ev) => {
+                let tog = document.getElementById(el.getAttribute('data-toggle'));
+                if (tog !== null && tog.classList.contains('visible')) {
+                    tog.className = 'hidden';
+                    el.innerText = '[show]';
+                }
+                else {
+                    tog.className = 'visible';
+                    el.innerText = '[hide]';
+                }
+            });
+        });
+    });
     setInterval(tryFindMap, 400);
     setInterval(tryFindLoot, 400);
     setInterval(tryFindMonster, 400);
-    helperItems.resetButton.addEventListener('click', (ev) => { resetPositions(); });
-}
+    helperElements.resetButton.addEventListener('click', (ev) => { resetPositions(); });
+};
 //const settingsObject = {
 //	settingsHeader: sauce.createHeading('h2', 'Settings'),
 //};
@@ -4393,7 +4635,7 @@ window.onload = function () {
     }
     else {
         let addappurl = `alt1://addapp/${new URL('./appconfig.json', document.location.href).href}`;
-        helperItems.Output.insertAdjacentHTML('beforeend', `
+        helperElements.Output.insertAdjacentHTML('beforeend', `
 			Alt1 not detected, click <a href='${addappurl}'>here</a> to add this app to Alt1
 		`);
     }

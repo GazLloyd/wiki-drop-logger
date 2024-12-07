@@ -142,6 +142,10 @@ div.visible {
 div.hidden {
   display: none;
 }
+div.success {
+  background-color: #00ff0055;
+}
+
 
 #Mob:before {
   content: "NPC: ";
@@ -157,45 +161,8 @@ div.hidden {
   margin-left: 0.5em;
   margin-right: 0.5em;
 }
-#RecentLoot table tr:nth-child(n+10) {
+#MessagesList div:nth-child(n+10) {
     display:none;
-}
-
-#LootOutput {
-  width: 95%;
-  margin: .5rem auto 1.5rem;
-  text-align: left;
-  max-height: 350px;
-  overflow-y: auto;
-  display: flex;
-  justify-content: center;
-}
-
-.loottable table {
-  border-spacing: 0;
-}
-
-.loottable td {
-  padding: .25rem 3rem .25rem 0;
-  font-size: 12px;
-  font-family: 'Noto Sans', sans-serif;
-  text-shadow: 1px 1px 0px rgba(0,0,0,.8);
-}
-
-.loottable tr {
-  background-color: rgba(0, 0, 0, .1);
-}
-
-.loottable tr:hover {
-  background-color: rgba(0, 0, 0, 0);
-}
-
-.loottable tr:nth-child(2n) {
-  background-color: rgba(255, 255, 255, .05);
-}
-
-.loottable tr:nth-child(2n):hover {
-  background-color: rgba(255, 255, 255, .1);
 }
 
 #Settings {
@@ -224,6 +191,24 @@ span.helplinks a {
   color: #DDD;
 }
 
+#FoundInterfaces > div {
+  display: flex;
+}
+#FoundInterfaces > div > div {
+  margin: 0 1em;
+  width: 8em;
+}
+#FoundInterfaces > div > div.found {
+  background-color: #00ff0022;
+}
+#FoundInterfaces > div > div.found:after {
+  content: '✔️';
+  margin-left: 0.5em;
+}
+#FoundInterfaces {
+  margin-bottom: 0.5em;
+}
+
 hr {
   opacity: .5;
 }
@@ -235,13 +220,6 @@ h2 {
 h3 {
   margin-top: .75rem;
   margin-bottom: .35rem;
-}
-
-.flex {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: .5rem;
 }
 
 #Settings .setting {
@@ -260,10 +238,6 @@ input[type="number"] {
 
 input[type="number"].per-row {
   margin-left: 0;
-}
-
-select {
-  margin: 0 .25rem 0 1rem;
 }
 
 .nisimgbutton {
@@ -4567,11 +4541,11 @@ const sendToAPI = async (kcid, mapData, mobData, prevLootData, lootData) => {
     console.log(r.status, jsr);
     if (jsr.success) {
         div.className = 'success';
-        div.innerText += -' - success!';
+        div.innerText += ' - success!';
     }
     else {
         div.className = 'failure';
-        div.innerText += -' - failure';
+        div.innerText += ' - failure';
         div.setAttribute('title', jsr.error + '\n' + jsr.details);
     }
 };

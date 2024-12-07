@@ -4,13 +4,9 @@
 		"watch": "webpack --watch"
 	},
 	"dependencies": {
-		"alt1": "^0.0.4",
-		"lodash": "^4.17.21",
-		"luxon": "^3.4.3",
-		"tesseract.js": "^5.1.0"
+		"alt1": "^0.0.4"
 	},
 	"devDependencies": {
-		"@types/lodash": "^4.14.202",
 		"@types/node": "^12.12.54",
 		"css-loader": "^6.8.1",
 		"sharp": "^0.31.3",

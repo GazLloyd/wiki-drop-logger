@@ -4174,9 +4174,6 @@ __webpack_require__.r(__webpack_exports__);
 // also gives your editor info about the window.alt1 api
 
 
-//import * as OCR from 'alt1/ocr';
-//import * as sauce from './a1sauce';
-//import * as DropsMenuReader from "alt1/dropsmenu";
 // tell webpack that this file relies index.html, appconfig.json and icon.png, this makes webpack
 // add these files to the output directory
 // this works because in /webpack.config.js we told webpack to treat all html, json and imageimports
@@ -4250,6 +4247,7 @@ const state = {
     mapData: null,
     lootData: null,
     prevLootData: null,
+    prevLootBW: null,
     mobReader: new (alt1_targetmob__WEBPACK_IMPORTED_MODULE_5___default())(),
     mobData: null,
     mobName: undefined,
@@ -4368,46 +4366,29 @@ const captureLoot = async () => {
 const grayscalePixel = (red, green, blue) => {
     return (red * 6966 + green * 23436 + blue * 2366) >> 15;
 };
-// convert an ImageData to a binary image (only 0,0,0 black or 255,255,255 white) based on they grayscale value of the pixel
+// convert an ImageData to a boolean image (only true for black or false for white) based on they grayscale value of the pixel
 // ultimately makes the image be black text on a white background
 const binaryImage = (img) => {
+    let bwImg = [];
     let data = img.data;
-    for (i = 0; i < data.length; i += 4) {
-        data[i] = 255 - data[i];
-        data[i + 1] = 255 - data[i + 1];
-        data[i + 2] = 255 - data[i + 2];
-        data[i + 3] = 255;
-    }
     for (var i = 0; i < data.length; i += 4) {
-        const red = data[i];
-        const green = data[i + 1];
-        const blue = data[i + 2];
-        if (grayscalePixel(red, green, blue) < GRAY_THRESHOLD) {
-            data[i] = 0;
-            data[i + 1] = 0;
-            data[i + 2] = 0;
-        }
-        else {
-            data[i] = 255;
-            data[i + 1] = 255;
-            data[i + 2] = 255;
-        }
-        data[i + 3] = 255; // remove any alpha just to be sure (255 => fully opaque)
+        const red = 255 - data[i];
+        const green = 255 - data[i + 1];
+        const blue = 255 - data[i + 2];
+        data[i + 3] = 255; // just overwrite any alpha to fully opaque
+        bwImg.push(grayscalePixel(red, green, blue) < GRAY_THRESHOLD);
     }
-    return img;
+    return bwImg;
 };
 // compares two ImageDatas, after they have been through binaryImage so they are just black and white
 const compareImages = (image1, image2) => {
-    let len = image1.data.length;
+    let len = image1.length;
     // if size changed, consider as different
-    if (len !== image2.data.length)
+    if (len !== image2.length)
         return true;
-    // skip 4 at a time - ImageData.data is one flat array of R,G,B,A for each pixel
     let diffs = 0;
-    for (let i = 0; i < len; i += 4) {
-        // since these are either pure black or pure white (0 or 255 in RGB), we can just check one of the colors and do equality
-        // a generalised solution would be abs(red1-red2)+abs(gre1-gre2)+abs(blu1-blu2) >= threshold
-        if (image1.data[i] !== image2.data[i]) {
+    for (let i = 0; i < len; i++) {
+        if (image1[i] !== image2[i]) {
             diffs++;
             if (diffs >= PIXEL_DIFF_THRESHOLD) {
                 return true;
@@ -4418,17 +4399,19 @@ const compareImages = (image1, image2) => {
 };
 const compareLootImages = () => {
     // binary the lootData image
-    binaryImage(state.lootData);
+    let lootBW = binaryImage(state.lootData);
     // if the previous is empty we can just skip anything else
     if (state.prevLootData === null) {
         state.prevLootData = state.lootData;
+        state.prevLootBW = lootBW;
         return;
     }
-    if (compareImages(state.prevLootData, state.lootData)) {
+    if (compareImages(state.prevLootBW, lootBW)) {
         state.kc++;
         // pass in the ImageDatas so it isn't relying on state
         sendToAPI(state.kc, state.mapData, state.mobData, state.prevLootData, state.lootData);
         state.prevLootData = state.lootData;
+        state.prevLootBW = lootBW;
     }
 };
 // username functions

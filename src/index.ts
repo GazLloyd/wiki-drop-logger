@@ -144,8 +144,8 @@ const updateFoundElements = () => {
 };
 
 const resetPositions = () => {
-	state.mapPos = {x:undefined, y:undefined, w:undefined, h:undefined},
-	state.lootPos = {x:undefined, y:undefined, w:undefined, h:undefined},
+	state.mapPos = {x:undefined, y:undefined, w:undefined, h:undefined};
+	state.lootPos = {x:undefined, y:undefined, w:undefined, h:undefined};
 	state.mobName = undefined;
 	state.hasFound.loot = false;
 	state.hasFound.map = false;
@@ -215,23 +215,19 @@ const tryFindLoot = async () => {
 		console.log(`Attempting to capture Runemetrics dropsmenu`);
 		let client_screen = a1lib.captureHoldFullRs();
 
-		let dropText = {
-			screenPosition: client_screen.findSubimage(dataImages.dropText),
-		};
+		const dropText = client_screen.findSubimage(dataImages.dropText);
 
-		let resetButton = {
-			screenPosition: client_screen.findSubimage(dataImages.resetButton),
-		};
+		const resetButton = client_screen.findSubimage(dataImages.resetButton);
 
 		if (
-			dropText.screenPosition[0] !== undefined &&
-			resetButton.screenPosition[0] !== undefined
+			dropText[0] !== undefined &&
+			resetButton[0] !== undefined
 		) {
 			state.lootPos = {
-				x: dropText.screenPosition[0].x,
-				y: dropText.screenPosition[0].y,
-				w: resetButton.screenPosition[0].x - dropText.screenPosition[0].x + 22,
-				h: resetButton.screenPosition[0].y - dropText.screenPosition[0].y - 4
+				x: dropText[0].x,
+				y: dropText[0].y,
+				w: resetButton[0].x - dropText[0].x + 22,
+				h: resetButton[0].y - dropText[0].y - 4
 			};
 
 			alt1.overLaySetGroup('Loot');
@@ -253,6 +249,11 @@ const tryFindLoot = async () => {
 	}
 };
 
+const imgContainsLoot = (img:a1lib.ImgRefBind) => {
+	const dropText = img.findSubimage(dataImages.dropText);
+	return dropText[0] !== undefined;
+};
+
 const captureMap = async () => {
 	let mapImage = a1lib.captureHold(state.mapPos.x, state.mapPos.y, state.mapPos.w, state.mapPos.h);
 	state.mapData = mapImage.toData();
@@ -260,8 +261,14 @@ const captureMap = async () => {
 
 const captureLoot = async () => {
 	let lootImage = a1lib.captureHold(state.lootPos.x, state.lootPos.y, state.lootPos.w, state.lootPos.h);
-	state.lootData = lootImage.toData();
-	await compareLootImages();
+	if (imgContainsLoot(lootImage)) {
+		state.lootData = lootImage.toData();
+		compareLootImages();
+	} else {
+		state.lootPos = {x:undefined, y:undefined, w:undefined, h:undefined};
+		state.hasFound.loot = false;
+		await tryFindLoot();
+	}
 };
 
 // converts one RGB pixel to a grayscale value

@@ -4275,9 +4275,9 @@ const updateFoundElements = () => {
     helperElements.foundUsername.className = state.usernameIsGood ? 'found' : '';
 };
 const resetPositions = () => {
-    state.mapPos = { x: undefined, y: undefined, w: undefined, h: undefined },
-        state.lootPos = { x: undefined, y: undefined, w: undefined, h: undefined },
-        state.mobName = undefined;
+    state.mapPos = { x: undefined, y: undefined, w: undefined, h: undefined };
+    state.lootPos = { x: undefined, y: undefined, w: undefined, h: undefined };
+    state.mobName = undefined;
     state.hasFound.loot = false;
     state.hasFound.map = false;
     state.hasFound.mob = false;
@@ -4329,19 +4329,15 @@ const tryFindLoot = async () => {
     if (!state.hasFound.loot || state.lootPos.x === undefined) {
         console.log(`Attempting to capture Runemetrics dropsmenu`);
         let client_screen = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHoldFullRs();
-        let dropText = {
-            screenPosition: client_screen.findSubimage(dataImages.dropText),
-        };
-        let resetButton = {
-            screenPosition: client_screen.findSubimage(dataImages.resetButton),
-        };
-        if (dropText.screenPosition[0] !== undefined &&
-            resetButton.screenPosition[0] !== undefined) {
+        const dropText = client_screen.findSubimage(dataImages.dropText);
+        const resetButton = client_screen.findSubimage(dataImages.resetButton);
+        if (dropText[0] !== undefined &&
+            resetButton[0] !== undefined) {
             state.lootPos = {
-                x: dropText.screenPosition[0].x,
-                y: dropText.screenPosition[0].y,
-                w: resetButton.screenPosition[0].x - dropText.screenPosition[0].x + 22,
-                h: resetButton.screenPosition[0].y - dropText.screenPosition[0].y - 4
+                x: dropText[0].x,
+                y: dropText[0].y,
+                w: resetButton[0].x - dropText[0].x + 22,
+                h: resetButton[0].y - dropText[0].y - 4
             };
             alt1.overLaySetGroup('Loot');
             alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_4__.mixColor(255, 255, 255), state.lootPos.x, state.lootPos.y, state.lootPos.w, state.lootPos.h, 500, 2);
@@ -4353,14 +4349,25 @@ const tryFindLoot = async () => {
         await captureLoot();
     }
 };
+const imgContainsLoot = (img) => {
+    const dropText = img.findSubimage(dataImages.dropText);
+    return dropText[0] !== undefined;
+};
 const captureMap = async () => {
     let mapImage = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHold(state.mapPos.x, state.mapPos.y, state.mapPos.w, state.mapPos.h);
     state.mapData = mapImage.toData();
 };
 const captureLoot = async () => {
     let lootImage = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHold(state.lootPos.x, state.lootPos.y, state.lootPos.w, state.lootPos.h);
-    state.lootData = lootImage.toData();
-    await compareLootImages();
+    if (imgContainsLoot(lootImage)) {
+        state.lootData = lootImage.toData();
+        compareLootImages();
+    }
+    else {
+        state.lootPos = { x: undefined, y: undefined, w: undefined, h: undefined };
+        state.hasFound.loot = false;
+        await tryFindLoot();
+    }
 };
 // converts one RGB pixel to a grayscale value
 const grayscalePixel = (red, green, blue) => {

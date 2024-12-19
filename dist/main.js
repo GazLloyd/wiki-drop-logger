@@ -4265,9 +4265,20 @@ const state = {
         map: false,
         mob: false,
         username: false
-    }
+    },
+    imgDataHistory: [],
+    dev: false
 };
 globalThis.lootTrackerState = state;
+const addImageDataHistory = (img) => {
+    state.imgDataHistory.unshift(img);
+    while (state.imgDataHistory.length > 10) {
+        state.imgDataHistory.pop();
+    }
+};
+globalThis.toggleDev = () => {
+    state.dev = !state.dev;
+};
 const updateFoundElements = () => {
     helperElements.foundLoot.className = state.hasFound.loot ? 'found' : '';
     helperElements.foundMap.className = state.hasFound.map ? 'found' : '';
@@ -4321,6 +4332,7 @@ const tryFindMonster = async () => {
             state.hasFound.mob = true;
             state.mobName = mobstate.name;
             state.mobData = img.toData(state.mobReader.lastpos.x - 151, state.mobReader.lastpos.y - 16, 220, 44);
+            updateFoundElements();
         }
         catch (e) { } //nothing
     }
@@ -4387,6 +4399,17 @@ const binaryImage = (img) => {
     }
     return bwImg;
 };
+const binaryImageData = (img, w, h) => {
+    const data = [];
+    for (let i = 0; i < img.length; i++) {
+        let v = img[i] ? 0 : 255;
+        data.push(v); //r
+        data.push(v); //g
+        data.push(v); //b
+        data.push(255); //a
+    }
+    return new ImageData(new Uint8ClampedArray(data), w, h);
+};
 // compares two ImageDatas, after they have been through binaryImage so they are just black and white
 const compareImages = (image1, image2) => {
     let len = image1.length;
@@ -4414,12 +4437,33 @@ const compareLootImages = () => {
         return;
     }
     if (compareImages(state.prevLootBW, lootBW)) {
+        if (state.dev) {
+            updateDevCanvases(state.prevLootData, state.prevLootBW, state.lootData, lootBW);
+        }
         state.kc++;
         // pass in the ImageDatas so it isn't relying on state
         sendToAPI(state.kc, state.mapData, state.mobData, state.prevLootData, state.lootData);
         state.prevLootData = state.lootData;
         state.prevLootBW = lootBW;
     }
+};
+const updateDevCanvases = (prevLootData, prevLootBW, lootData, lootBW) => {
+    const cnvbef = getByID('canvas-before'), cnvbefbw = getByID('canvas-before-bw'), cnvaf = getByID('canvas-after'), cnvafbw = getByID('canvas-after-bw');
+    const ctxbef = cnvbef.getContext('2d'), ctxbefbw = cnvbefbw.getContext('2d'), ctxaf = cnvaf.getContext('2d'), ctxafbw = cnvafbw.getContext('2d');
+    let w = prevLootData.width, h = prevLootData.height;
+    cnvbef.width = w;
+    cnvbef.height = h;
+    ctxbef.putImageData(prevLootData, 0, 0);
+    cnvbefbw.width = w;
+    cnvbefbw.height = h;
+    ctxbefbw.putImageData(binaryImageData(prevLootBW, w, h), 0, 0);
+    cnvaf.width = w;
+    cnvaf.height = h;
+    ctxaf.putImageData(lootData, 0, 0);
+    cnvafbw.width = w;
+    cnvafbw.height = h;
+    ctxafbw.putImageData(binaryImageData(lootBW, w, h), 0, 0);
+    addImageDataHistory(lootData);
 };
 // username functions
 const finishedUsernameTyping = async () => {
@@ -4458,7 +4502,7 @@ const setUsername = (ev) => {
                 state.usernameIsTyping = false;
             }, 3000);
         }
-        else if (ev.type === 'change') {
+        else if (ev.type === 'change') { //change triggered when pressing the enter key or unfocusing the element
             state.usernameIsTyping = false;
         }
     }

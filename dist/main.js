@@ -4216,7 +4216,7 @@ const getByID = (id) => {
     return document.getElementById(id);
 };
 // end utils
-const GRAY_THRESHOLD = 200; // grayscale value threshold for white vs black
+const GRAY_THRESHOLD = 185; // grayscale value threshold for white vs black
 const PIXEL_DIFF_THRESHOLD = 4; // number of pixels that can be different
 const helperElements = {
     Output: getByID('output'),

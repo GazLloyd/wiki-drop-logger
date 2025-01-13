@@ -4281,7 +4281,7 @@ const addImageDataHistory = (img) => {
 };
 globalThis.toggleDev = () => {
     state.dev = !state.dev;
-    getByID('dev').classList.toggle('hidden', state.dev);
+    getByID('dev').classList.toggle('hidden', !state.dev);
 };
 const updateFoundElements = () => {
     helperElements.foundLoot.className = state.hasFound.loot ? 'found' : '';

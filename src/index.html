@@ -36,21 +36,29 @@
 					<span>Reset tracked positions: <input id="ResetPositions" type="button" value="Reset"></span>
 				</div>
 				<div class="setting">
+					<span>Show/hide debug canvases <small>(this may impact performance)</small>: <input id="ToggleDev" type="button" value="Show debug"></span>
+				</div>
+				<div class="setting">
 					<span class="helplinks"><a href="https://runescape.wiki/w/User:Gaz_Lloyd/droplog" target="_blank"><img src="https://runescape.wiki/images/Favicon.ico"> Help with this app</a> &bull; <a href="https://github.com/GazLloyd/wiki-drop-logger" target="_blank"><img src="https://github.com/fluidicon.png"> Source code</a></span>
 				</div>
 			</div>
 		</div>
 		<div id="dev" class="hidden">
 			<h2>dev</h2>
+			<h3>before</h3>
 			<canvas id="canvas-before"></canvas>
 			<canvas id="canvas-before-bw"></canvas>
 			<br>
+			<h3>after</h3>
 			<canvas id="canvas-after"></canvas>
 			<canvas id="canvas-after-bw"></canvas>
 			<br>
+			<h3>diff</h3>
 			<canvas id="canvas-diff"></canvas>
 			<div id="dev-diff"></div>
-
+			<h3>other</h3>
+			<canvas id="canvas-mob"></canvas>
+			<canvas id="canvas-map"></canvas>
 		</div>
 		<script src="./main.js" defer></script>
 	</body>

@@ -10,6 +10,8 @@ body {
   overflow-y: scroll;
   margin: 0;
   font-family: 'trajan-pro-3', sans-serif;
+  cursor: default;
+  user-select: none;
 }
 
 #app {
@@ -90,6 +92,10 @@ span.helplinks a {
 }
 #FoundInterfaces {
   margin-bottom: 0.5em;
+}
+
+.toggle {
+  cursor: pointer;
 }
 
 hr {

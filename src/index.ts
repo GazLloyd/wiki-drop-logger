@@ -65,6 +65,8 @@ const helperElements = {
 	foundMap: getByID('FoundMap'),
 	foundLoot: getByID('FoundLoot'),
 	foundUsername: getByID('FoundUsername'),
+	devSection: getByID('dev'),
+	toggleDevButton: <HTMLInputElement>getByID('ToggleDev')
 };
 
 const dataImages = a1lib.webpackImages({
@@ -150,10 +152,12 @@ const addImageDataHistory = (img:ImageData) => {
 	}
 };
 
-globalThis.toggleDev = () => {
-	state.dev = !state.dev;
-	getByID('dev').classList.toggle('hidden', !state.dev);
+const toggleDev = (isVisible?:boolean) => {
+	state.dev = isVisible === undefined ? !state.dev : isVisible;
+	helperElements.devSection.classList.toggle('hidden', !state.dev);
+	helperElements.toggleDevButton.value = state.dev ? 'Hide debug' : 'Show debug';
 };
+globalThis.toggleDev = toggleDev;
 
 const updateFoundElements = () => {
 	helperElements.foundLoot.className =  state.hasFound.loot ? 'found' : '';
@@ -353,7 +357,7 @@ const compareLootImages = () => {
 	}
 	if (compareImages(state.prevLootBW, lootBW)) {
 		if (state.dev) {
-			updateDevCanvases(state.prevLootData, state.prevLootBW, state.lootData, lootBW);
+			updateDevCanvases(state.prevLootData, state.prevLootBW, state.lootData, lootBW, state.mapData, state.mobData);
 		}
 		state.kc++;
 		// pass in the ImageDatas so it isn't relying on state
@@ -364,9 +368,9 @@ const compareLootImages = () => {
 
 };
 
-const updateDevCanvases = (prevLootData:ImageData, prevLootBW:boolean[], lootData:ImageData, lootBW:boolean[]) => {
-	const cnvbef = getCanvasByID('canvas-before'), cnvbefbw = getCanvasByID('canvas-before-bw'), cnvaf = getCanvasByID('canvas-after'), cnvafbw = getCanvasByID('canvas-after-bw'), cnvdiff = getCanvasByID('canvas-diff'), numele = getByID('dev-diff');
-	const ctxbef = cnvbef.getContext('2d'), ctxbefbw = cnvbefbw.getContext('2d'), ctxaf = cnvaf.getContext('2d'), ctxafbw = cnvafbw.getContext('2d'), ctxdiff = cnvdiff.getContext('2d');
+const updateDevCanvases = (prevLootData:ImageData, prevLootBW:boolean[], lootData:ImageData, lootBW:boolean[], map:ImageData, mob: ImageData) => {
+	const cnvbef = getCanvasByID('canvas-before'), cnvbefbw = getCanvasByID('canvas-before-bw'), cnvaf = getCanvasByID('canvas-after'), cnvafbw = getCanvasByID('canvas-after-bw'), cnvdiff = getCanvasByID('canvas-diff'), numele = getByID('dev-diff'), cnvmap = getCanvasByID('canvas-map'), cnvmob = getCanvasByID('canvas-mob');
+	const ctxbef = cnvbef.getContext('2d'), ctxbefbw = cnvbefbw.getContext('2d'), ctxaf = cnvaf.getContext('2d'), ctxafbw = cnvafbw.getContext('2d'), ctxdiff = cnvdiff.getContext('2d'), ctxmap = cnvmap.getContext('2d'), ctxmob = cnvmob.getContext('2d');
 	let w = prevLootData.width, h = prevLootData.height;
 
 	cnvbef.width = w;
@@ -402,8 +406,14 @@ const updateDevCanvases = (prevLootData:ImageData, prevLootBW:boolean[], lootDat
 		cnvdiff.height = h;
 		ctxdiff.putImageData(binaryImageData(diffimg,w,h), 0, 0);
 		numele.innerText = `Number of diffs: ${diffs}`
-
 	}
+
+	cnvmap.width = map.width;
+	cnvmap.height = map.height;
+	ctxmap.putImageData(map, 0, 0);
+	cnvmob.width = mob.width;
+	cnvmob.height = mob.height;
+	ctxmob.putImageData(mob, 0, 0);
 
 	addImageDataHistory(lootData);
 };
@@ -570,6 +580,7 @@ export const startApp = () => {
 			}
 		});
 	});
+	helperElements.toggleDevButton.addEventListener('click', ev=>{toggleDev()});
 
 	setInterval(tryFindMap, 400);
 	setInterval(tryFindLoot, 400);

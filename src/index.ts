@@ -52,7 +52,7 @@ const getCanvasByID = (id:string)=>{
 // end utils
 
 const GRAY_THRESHOLD = 170; // grayscale value threshold for white vs black
-const PIXEL_DIFF_THRESHOLD = 4; // number of pixels that can be different
+const PIXEL_DIFF_THRESHOLD = 6; // number of pixels that can be different
 
 const helperElements = {
 	Output: getByID('output'),
@@ -152,6 +152,7 @@ const addImageDataHistory = (img:ImageData) => {
 
 globalThis.toggleDev = () => {
 	state.dev = !state.dev;
+	getByID('dev').classList.toggle('hidden', state.dev);
 };
 
 const updateFoundElements = () => {

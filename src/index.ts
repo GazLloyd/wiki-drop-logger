@@ -46,6 +46,9 @@ const canvasToBlob = async (canvas: HTMLCanvasElement): Promise<Blob> => {
 const getByID = (id: string) => {
 	return document.getElementById(id);
 };
+const getCanvasByID = (id:string)=>{
+	return <HTMLCanvasElement>getByID(id);
+};
 // end utils
 
 const GRAY_THRESHOLD = 185; // grayscale value threshold for white vs black
@@ -361,8 +364,8 @@ const compareLootImages = () => {
 };
 
 const updateDevCanvases = (prevLootData:ImageData, prevLootBW:boolean[], lootData:ImageData, lootBW:boolean[]) => {
-	const cnvbef = <HTMLCanvasElement>getByID('canvas-before'), cnvbefbw = <HTMLCanvasElement>getByID('canvas-before-bw'), cnvaf = <HTMLCanvasElement>getByID('canvas-after'), cnvafbw = <HTMLCanvasElement>getByID('canvas-after-bw');
-	const ctxbef = cnvbef.getContext('2d'), ctxbefbw = cnvbefbw.getContext('2d'), ctxaf = cnvaf.getContext('2d'), ctxafbw = cnvafbw.getContext('2d');
+	const cnvbef = getCanvasByID('canvas-before'), cnvbefbw = getCanvasByID('canvas-before-bw'), cnvaf = getCanvasByID('canvas-after'), cnvafbw = getCanvasByID('canvas-after-bw'), cnvdiff = getCanvasByID('canvas-diff'), numele = getByID('dev-diff');
+	const ctxbef = cnvbef.getContext('2d'), ctxbefbw = cnvbefbw.getContext('2d'), ctxaf = cnvaf.getContext('2d'), ctxafbw = cnvafbw.getContext('2d'), ctxdiff = cnvdiff.getContext('2d');
 	let w = prevLootData.width, h = prevLootData.height;
 
 	cnvbef.width = w;
@@ -380,6 +383,26 @@ const updateDevCanvases = (prevLootData:ImageData, prevLootBW:boolean[], lootDat
 	cnvafbw.width = w;
 	cnvafbw.height = h;
 	ctxafbw.putImageData(binaryImageData(lootBW,w,h), 0, 0);
+
+	let len = prevLootBW.length, diffimg = [];
+	// if size changed, consider as different
+	if (len !== lootBW.length) {
+		numele.innerText = `Images are different sizes: ${len} to ${lootBW.length}`
+	} else {
+		let diffs = 0;
+		for (let i=0; i<len; i++) {
+			let d = prevLootBW[i] === lootBW[i];
+			diffimg.push(d);
+			if (!d) {
+				diffs++;
+			}
+		}
+		cnvdiff.width = w;
+		cnvdiff.height = h;
+		ctxdiff.putImageData(binaryImageData(diffimg,w,h), 0, 0);
+		numele.innerText = `Number of diffs: ${diffs}`
+
+	}
 
 	addImageDataHistory(lootData);
 };

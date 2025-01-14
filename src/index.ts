@@ -108,7 +108,8 @@ type LootTrackerState = {
 		loot: boolean,
 		map: boolean,
 		mob: boolean,
-		username: boolean
+		username: boolean,
+		lootFull: boolean
 	},
 	imgDataHistory: ImageData[],
 	dev: boolean
@@ -138,7 +139,8 @@ const state:LootTrackerState = {
 		loot: false,
 		map: false,
 		mob: false,
-		username: false
+		username: false,
+		lootFull: false
 	},
 	imgDataHistory: [],
 	dev: false
@@ -240,7 +242,6 @@ const tryFindLoot = async () => {
 		let client_screen = a1lib.captureHoldFullRs();
 
 		const dropText = client_screen.findSubimage(dataImages.dropText);
-
 		const resetButton = client_screen.findSubimage(dataImages.resetButton);
 
 		if (
@@ -286,6 +287,10 @@ const captureMap = async () => {
 const captureLoot = async () => {
 	let lootImage = a1lib.captureHold(state.lootPos.x, state.lootPos.y, state.lootPos.w, state.lootPos.h);
 	if (imgContainsLoot(lootImage)) {
+		const scroll = lootImage.findSubimage(dataImages.scrollTop);
+		// scrollbar found
+		state.tooltipIssues.lootFull = scroll[0] !== undefined;
+		tooltipUpdate();
 		state.lootData = lootImage.toData();
 		compareLootImages();
 	} else {
@@ -479,6 +484,9 @@ const tooltipUpdate = () => {
 	if (state.tooltipIssues.loot) {
 		tooltipStr.push('- Loot interface not found (is it visible and unobscured?)');
 	}
+	if (state.tooltipIssues.lootFull) {
+		tooltipStr.push('- Loot interface is full; please resize or clear it');
+	}
 	if (state.tooltipIssues.mob) {
 		tooltipStr.push('- Target information not found (is it visible and unobscured?)');
 	}
@@ -507,7 +515,7 @@ const hasFoundAllThings = (mapData:ImageData|null, mobData:ImageData|null, prevL
 	state.tooltipIssues.mob = !state.hasFound.mob || mobData === null;
 	state.tooltipIssues.username = !state.usernameIsGood;
 	tooltipUpdate();
-	return !(state.tooltipIssues.loot || state.tooltipIssues.map || state.tooltipIssues.mob); //username is allowed to be invalid as we can wait for it
+	return !(state.tooltipIssues.loot || state.tooltipIssues.lootFull || state.tooltipIssues.map || state.tooltipIssues.mob); //username is allowed to be invalid as we can wait for it
 };
 
 const sendToAPI = async (kcid:number, mapData:ImageData, mobData:ImageData, prevLootData:ImageData, lootData:ImageData) => {

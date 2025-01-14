@@ -78,6 +78,8 @@ span.helplinks a {
 
 #FoundInterfaces > div {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 #FoundInterfaces > div > div {
   margin: 0 1em;

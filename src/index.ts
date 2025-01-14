@@ -251,7 +251,7 @@ const tryFindLoot = async () => {
 			state.lootPos = {
 				x: dropText[0].x,
 				y: dropText[0].y,
-				w: resetButton[0].x - dropText[0].x + 22,
+				w: resetButton[0].x - dropText[0].x + 26,
 				h: resetButton[0].y - dropText[0].y - 4
 			};
 

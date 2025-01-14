@@ -195,6 +195,8 @@ span.helplinks a {
 
 #FoundInterfaces > div {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 #FoundInterfaces > div > div {
   margin: 0 1em;
@@ -4275,7 +4277,8 @@ const state = {
         loot: false,
         map: false,
         mob: false,
-        username: false
+        username: false,
+        lootFull: false
     },
     imgDataHistory: [],
     dev: false
@@ -4386,6 +4389,10 @@ const captureMap = async () => {
 const captureLoot = async () => {
     let lootImage = alt1__WEBPACK_IMPORTED_MODULE_4__.captureHold(state.lootPos.x, state.lootPos.y, state.lootPos.w, state.lootPos.h);
     if (imgContainsLoot(lootImage)) {
+        const scroll = lootImage.findSubimage(dataImages.scrollTop);
+        // scrollbar found
+        state.tooltipIssues.lootFull = scroll[0] !== undefined;
+        tooltipUpdate();
         state.lootData = lootImage.toData();
         compareLootImages();
     }
@@ -4565,6 +4572,9 @@ const tooltipUpdate = () => {
     if (state.tooltipIssues.loot) {
         tooltipStr.push('- Loot interface not found (is it visible and unobscured?)');
     }
+    if (state.tooltipIssues.lootFull) {
+        tooltipStr.push('- Loot interface is full; please resize or clear it');
+    }
     if (state.tooltipIssues.mob) {
         tooltipStr.push('- Target information not found (is it visible and unobscured?)');
     }
@@ -4591,7 +4601,7 @@ const hasFoundAllThings = (mapData, mobData, prevLootData, lootData) => {
     state.tooltipIssues.mob = !state.hasFound.mob || mobData === null;
     state.tooltipIssues.username = !state.usernameIsGood;
     tooltipUpdate();
-    return !(state.tooltipIssues.loot || state.tooltipIssues.map || state.tooltipIssues.mob); //username is allowed to be invalid as we can wait for it
+    return !(state.tooltipIssues.loot || state.tooltipIssues.lootFull || state.tooltipIssues.map || state.tooltipIssues.mob); //username is allowed to be invalid as we can wait for it
 };
 const sendToAPI = async (kcid, mapData, mobData, prevLootData, lootData) => {
     if (!hasFoundAllThings(mapData, mobData, prevLootData, lootData))

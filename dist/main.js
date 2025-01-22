@@ -854,17 +854,6 @@ module.exports = "data:font/opentype;base64,d09GRk9UVE8AAIM0AAwAAAAAr4QAAAAAAAAA
 
 /***/ }),
 
-/***/ "./asset/data/fonts/chatbox/12pt.fontmeta.json":
-/*!*****************************************************!*\
-  !*** ./asset/data/fonts/chatbox/12pt.fontmeta.json ***!
-  \*****************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "12pt.fontmeta.json";
-
-/***/ }),
-
 /***/ "./appconfig.json":
 /*!************************!*\
   !*** ./appconfig.json ***!
@@ -4229,6 +4218,8 @@ const getCanvasByID = (id) => {
 // end utils
 const GRAY_THRESHOLD = 170; // grayscale value threshold for white vs black
 const PIXEL_DIFF_THRESHOLD = 6; // number of pixels that can be different
+const MIN_LOOT_WIDTH = 280; // minimum width of the loot interface to be considered OK
+const MIN_LOOT_HEIGHT = 300; // minimum width of the loot interface to be considered OK
 const helperElements = {
     Output: getByID('output'),
     Mob: getByID('Mob'),
@@ -4252,7 +4243,6 @@ const dataImages = alt1__WEBPACK_IMPORTED_MODULE_4__.webpackImages({
     lootText: __webpack_require__(/*! ./asset/data/loottext.data.png */ "./asset/data/loottext.data.png"),
     dropText: __webpack_require__(/*! ./asset/data/droptext.data.png */ "./asset/data/droptext.data.png"),
 });
-const font = __webpack_require__(/*! ./asset/data/fonts/chatbox/12pt.fontmeta.json */ "./asset/data/fonts/chatbox/12pt.fontmeta.json");
 const state = {
     mapPos: { x: undefined, y: undefined, w: undefined, h: undefined },
     lootPos: { x: undefined, y: undefined, w: undefined, h: undefined },
@@ -4275,6 +4265,7 @@ const state = {
     usernameIsGood: false,
     tooltipIssues: {
         loot: false,
+        lootSmall: false,
         map: false,
         mob: false,
         username: false,
@@ -4371,6 +4362,7 @@ const tryFindLoot = async () => {
             alt1.overLaySetGroup('Loot');
             alt1.overLayRect(alt1__WEBPACK_IMPORTED_MODULE_4__.mixColor(255, 255, 255), state.lootPos.x, state.lootPos.y, state.lootPos.w, state.lootPos.h, 500, 2);
             state.hasFound.loot = true;
+            state.tooltipIssues.lootSmall = state.lootPos.w < MIN_LOOT_WIDTH || state.lootPos.h < MIN_LOOT_HEIGHT;
             updateFoundElements();
         }
     }
@@ -4575,6 +4567,9 @@ const tooltipUpdate = () => {
     if (state.tooltipIssues.lootFull) {
         tooltipStr.push('- Loot interface is full; please resize or clear it');
     }
+    if (state.tooltipIssues.lootSmall) {
+        tooltipStr.push(`- Loot interface is too small; please make it larger (at least ${MIN_LOOT_WIDTH}x${MIN_LOOT_HEIGHT}px)`);
+    }
     if (state.tooltipIssues.mob) {
         tooltipStr.push('- Target information not found (is it visible and unobscured?)');
     }
@@ -4601,7 +4596,7 @@ const hasFoundAllThings = (mapData, mobData, prevLootData, lootData) => {
     state.tooltipIssues.mob = !state.hasFound.mob || mobData === null;
     state.tooltipIssues.username = !state.usernameIsGood;
     tooltipUpdate();
-    return !(state.tooltipIssues.loot || state.tooltipIssues.lootFull || state.tooltipIssues.map || state.tooltipIssues.mob); //username is allowed to be invalid as we can wait for it
+    return !(state.tooltipIssues.loot || state.tooltipIssues.lootFull || state.tooltipIssues.lootSmall || state.tooltipIssues.map || state.tooltipIssues.mob); //username is allowed to be invalid as we can wait for it
 };
 const sendToAPI = async (kcid, mapData, mobData, prevLootData, lootData) => {
     if (!hasFoundAllThings(mapData, mobData, prevLootData, lootData))

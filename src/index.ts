@@ -53,6 +53,8 @@ const getCanvasByID = (id:string)=>{
 
 const GRAY_THRESHOLD = 170; // grayscale value threshold for white vs black
 const PIXEL_DIFF_THRESHOLD = 6; // number of pixels that can be different
+const MIN_LOOT_WIDTH = 280; // minimum width of the loot interface to be considered OK
+const MIN_LOOT_HEIGHT = 300; // minimum width of the loot interface to be considered OK
 
 const helperElements = {
 	Output: getByID('output'),
@@ -79,8 +81,6 @@ const dataImages = a1lib.webpackImages({
 	dropText: require('./asset/data/droptext.data.png'),
 });
 
-const font = require('./asset/data/fonts/chatbox/12pt.fontmeta.json');
-
 type Rect = {
 	x: number, y: number, w: number, h:number
 }
@@ -106,6 +106,7 @@ type LootTrackerState = {
 	usernameIsGood: boolean,
 	tooltipIssues: {
 		loot: boolean,
+		lootSmall: boolean,
 		map: boolean,
 		mob: boolean,
 		username: boolean,
@@ -137,6 +138,7 @@ const state:LootTrackerState = {
 	usernameIsGood: false,
 	tooltipIssues: {
 		loot: false,
+		lootSmall: false,
 		map: false,
 		mob: false,
 		username: false,
@@ -266,6 +268,7 @@ const tryFindLoot = async () => {
 				2
 			);
 			state.hasFound.loot = true;
+			state.tooltipIssues.lootSmall = state.lootPos.w < MIN_LOOT_WIDTH || state.lootPos.h < MIN_LOOT_HEIGHT;
 			updateFoundElements();
 		}
 	}
@@ -487,6 +490,9 @@ const tooltipUpdate = () => {
 	if (state.tooltipIssues.lootFull) {
 		tooltipStr.push('- Loot interface is full; please resize or clear it');
 	}
+	if (state.tooltipIssues.lootSmall) {
+		tooltipStr.push(`- Loot interface is too small; please make it larger (at least ${MIN_LOOT_WIDTH}x${MIN_LOOT_HEIGHT}px)`);
+	}
 	if (state.tooltipIssues.mob) {
 		tooltipStr.push('- Target information not found (is it visible and unobscured?)');
 	}
@@ -515,7 +521,7 @@ const hasFoundAllThings = (mapData:ImageData|null, mobData:ImageData|null, prevL
 	state.tooltipIssues.mob = !state.hasFound.mob || mobData === null;
 	state.tooltipIssues.username = !state.usernameIsGood;
 	tooltipUpdate();
-	return !(state.tooltipIssues.loot || state.tooltipIssues.lootFull || state.tooltipIssues.map || state.tooltipIssues.mob); //username is allowed to be invalid as we can wait for it
+	return !(state.tooltipIssues.loot || state.tooltipIssues.lootFull ||state.tooltipIssues.lootSmall || state.tooltipIssues.map || state.tooltipIssues.mob); //username is allowed to be invalid as we can wait for it
 };
 
 const sendToAPI = async (kcid:number, mapData:ImageData, mobData:ImageData, prevLootData:ImageData, lootData:ImageData) => {
